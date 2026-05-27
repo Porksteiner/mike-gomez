@@ -1,0 +1,94 @@
+---
+const faqs = [
+  {
+    q: "Who owns the code I'm paying you to build?",
+    a: "You do. Once final payment clears, all source code, designs, and assets are yours — 100%. I keep the right to mention the project in my portfolio, that's it.",
+  },
+  {
+    q: "Will you sign an NDA?",
+    a: "Yes. Send me yours, or use a one-page mutual NDA — happy to provide one. I keep client details confidential by default whether or not we sign anything.",
+  },
+  {
+    q: "What if we go over budget or scope?",
+    a: "I quote fixed prices on a fixed scope. If you add scope mid-build, I'll quote the addition before any extra work starts. If I underestimate, that's on me — the original price holds.",
+  },
+  {
+    q: "Do you do the design too, or do I bring designs?",
+    a: "Either works. For most projects I design and build together — it's faster and the result is more coherent. If you have a designer already (or existing brand guidelines), I'll work to them.",
+  },
+  {
+    q: "What are your payment terms?",
+    a: "50% to start, 50% on launch. For longer projects we split the back half into milestone payments. Invoices via Stripe — credit card, ACH, or wire all work.",
+  },
+  {
+    q: "What if I'm not happy with the work?",
+    a: "Tell me early. I share work weekly so issues surface before they're expensive. If we get to launch and something isn't right, fixes during the 30-day support window are free.",
+  },
+];
+---
+
+<section
+  id="faq"
+  class="relative py-32 sm:py-44 border-t border-iron bg-void"
+>
+  <div class="max-w-[1600px] mx-auto px-6 sm:px-10 lg:px-14">
+    <div class="grid grid-cols-12 gap-6 mb-16 sm:mb-20">
+      <div class="col-span-12 md:col-span-3 reveal">
+        <p class="text-[11px] uppercase tracking-[0.22em] font-mono text-gold">
+          <span class="inline-block w-6 h-px bg-gold align-middle mr-2"></span>
+          FAQ
+        </p>
+      </div>
+      <div class="col-span-12 md:col-span-9 reveal reveal-delay-1">
+        <h2
+          class="font-display uppercase leading-[0.9] text-[clamp(40px,7vw,96px)] tracking-[-0.01em]"
+        >
+          <span class="block">Common</span>
+          <span class="block text-stroke">questions.</span>
+        </h2>
+      </div>
+    </div>
+
+    <div class="max-w-4xl mx-auto">
+      {
+        faqs.map((f, i) => (
+          <details
+            class={`reveal reveal-delay-${(i % 4) + 1} group border-b border-iron`}
+          >
+            <summary class="flex items-start gap-6 py-6 sm:py-7 cursor-pointer list-none text-bone hover:text-gold transition">
+              <span class="flex-1 font-display uppercase text-[clamp(18px,2vw,28px)] leading-snug tracking-[-0.01em] pr-4">
+                {f.q}
+              </span>
+              <span
+                class="flex-shrink-0 mt-1 w-7 h-7 flex items-center justify-center text-smoke group-open:text-gold group-hover:text-gold transition"
+                aria-hidden="true"
+              >
+                <svg
+                  class="w-4 h-4 transition-transform group-open:rotate-45"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path d="M12 5v14M5 12h14" />
+                </svg>
+              </span>
+            </summary>
+            <div class="pb-7 pr-12 -mt-2 text-paper text-[16px] sm:text-[17px] leading-relaxed">
+              <p>{f.a}</p>
+            </div>
+          </details>
+        ))
+      }
+    </div>
+
+    <p class="mt-12 text-center text-[11px] uppercase tracking-[0.2em] font-mono text-smoke">
+      Question not answered?
+      <a href="#contact" class="link-flare text-gold hover:text-bone transition not-italic">
+        Ask before booking &rarr;
+      </a>
+    </p>
+  </div>
+</section>

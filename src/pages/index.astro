@@ -3,12 +3,14 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 import Header from "../components/Header.astro";
 import Hero from "../components/Hero.astro";
 import Manifesto from "../components/Manifesto.astro";
-import Capabilities from "../components/Capabilities.astro";
-import Stack from "../components/Stack.astro";
 import Work from "../components/Work.astro";
+import Testimonials from "../components/Testimonials.astro";
 import Numbers from "../components/Numbers.astro";
+import Capabilities from "../components/Capabilities.astro";
 import Now from "../components/Now.astro";
 import Process from "../components/Process.astro";
+import FAQ from "../components/FAQ.astro";
+import Stack from "../components/Stack.astro";
 import Contact from "../components/Contact.astro";
 import Footer from "../components/Footer.astro";
 ---
@@ -16,28 +18,39 @@ import Footer from "../components/Footer.astro";
 <BaseLayout>
   <Header />
   <main>
+    {/*
+      Section order optimized for conversion:
+      hook → trust → work → social proof → quick stats →
+      capabilities → recency → process → objections → tech detail → CTA
+    */}
     <Hero />
 
     <div class="section-divider"><span class="mark">§ Commitments</span></div>
     <Manifesto />
 
-    <div class="section-divider"><span class="mark">§ Capabilities</span></div>
-    <Capabilities />
-
-    <div class="section-divider"><span class="mark">§ Stack</span></div>
-    <Stack />
-
     <div class="section-divider"><span class="mark">§ Selected work</span></div>
     <Work />
 
+    <div class="section-divider"><span class="mark">§ What clients say</span></div>
+    <Testimonials />
+
     <div class="section-divider"><span class="mark">§ By the numbers</span></div>
     <Numbers />
+
+    <div class="section-divider"><span class="mark">§ Capabilities</span></div>
+    <Capabilities />
 
     <div class="section-divider"><span class="mark">§ Now</span></div>
     <Now />
 
     <div class="section-divider"><span class="mark">§ Process</span></div>
     <Process />
+
+    <div class="section-divider"><span class="mark">§ FAQ</span></div>
+    <FAQ />
+
+    <div class="section-divider"><span class="mark">§ Stack</span></div>
+    <Stack />
 
     <div class="section-divider"><span class="mark">§ Contact</span></div>
     <Contact />

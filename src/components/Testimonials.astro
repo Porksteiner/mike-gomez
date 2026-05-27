@@ -1,0 +1,97 @@
+---
+/*
+  TESTIMONIALS — social proof.
+
+  The three quotes below are PLACEHOLDERS in the right voice & format.
+  Replace each one with a real testimonial from a real client.
+
+  Text-only is fine. Even one real one will outperform any design tweak.
+
+  Format for each:
+    - quote: 1–2 sentences. Concrete (what changed / what shipped / what they got).
+    - name + title + company on the byline.
+
+  Where to start: ask Uncle Isaac (Unlearn Your Credit Habits) for one
+  once that project launches. Ask anyone you've ever shipped for. Ask now.
+*/
+
+const testimonials = [
+  {
+    quote: "[REPLACE — short, concrete quote about what Mike shipped and what changed because of it.]",
+    name: "[Client name]",
+    title: "[Title]",
+    company: "[Company]",
+  },
+  {
+    quote: "[REPLACE — another testimonial. Mention a specific outcome, not adjectives.]",
+    name: "[Client name]",
+    title: "[Title]",
+    company: "[Company]",
+  },
+  {
+    quote: "[REPLACE — one more. Even one sentence is enough.]",
+    name: "[Client name]",
+    title: "[Title]",
+    company: "[Company]",
+  },
+];
+---
+
+<section
+  id="testimonials"
+  class="relative py-32 sm:py-44 border-t border-iron bg-coal"
+>
+  <div class="max-w-[1600px] mx-auto px-6 sm:px-10 lg:px-14">
+    <div class="grid grid-cols-12 gap-6 mb-20">
+      <div class="col-span-12 md:col-span-3 reveal">
+        <p class="text-[11px] uppercase tracking-[0.22em] font-mono text-gold">
+          <span class="inline-block w-6 h-px bg-gold align-middle mr-2"></span>
+          What clients say
+        </p>
+      </div>
+      <div class="col-span-12 md:col-span-9 reveal reveal-delay-1">
+        <h2
+          class="font-display uppercase leading-[0.9] text-[clamp(40px,7vw,96px)] tracking-[-0.01em]"
+        >
+          <span class="block">In their</span>
+          <span class="block text-stroke">own words.</span>
+        </h2>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      {
+        testimonials.map((t, i) => (
+          <figure
+            class={`reveal reveal-delay-${(i % 4) + 1} flex flex-col gap-6 p-7 sm:p-8 border border-iron bg-void hover:border-gold/40 transition`}
+          >
+            {/* Gold open quote */}
+            <span
+              class="font-display text-6xl leading-none text-gold/70 select-none"
+              aria-hidden="true"
+            >
+              &ldquo;
+            </span>
+
+            <blockquote
+              class="font-display uppercase text-[clamp(20px,1.8vw,28px)] leading-[1.15] tracking-[-0.01em] text-bone -mt-2"
+            >
+              {t.quote}
+            </blockquote>
+
+            <figcaption class="mt-auto pt-6 border-t border-iron font-mono text-[11px] uppercase tracking-[0.18em] text-smoke leading-relaxed">
+              <span class="block text-bone">{t.name}</span>
+              <span class="block mt-0.5">
+                {t.title} &nbsp;·&nbsp; {t.company}
+              </span>
+            </figcaption>
+          </figure>
+        ))
+      }
+    </div>
+
+    <p class="mt-12 text-center text-[11px] uppercase tracking-[0.2em] font-mono text-smoke italic">
+      Worked with me? <a href="#contact" class="link-flare text-gold hover:text-bone transition not-italic">Send me a line for the wall &rarr;</a>
+    </p>
+  </div>
+</section>

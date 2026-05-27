@@ -114,30 +114,5 @@
     });
   }
 
-  /* ====================================================
-     5. Hero numeric counter (incrementing project count)
-     ==================================================== */
-  const counterEl = document.getElementById("project-counter");
-  if (counterEl) {
-    const target = 412;
-    let current = 0;
-    const step = () => {
-      current += Math.max(1, Math.round((target - current) / 18));
-      if (current >= target) {
-        current = target;
-        counterEl.textContent = String(target);
-        return;
-      }
-      counterEl.textContent = String(current).padStart(3, "0");
-      requestAnimationFrame(step);
-    };
-    // Start when scrolled near
-    const obs = new IntersectionObserver((entries) => {
-      if (entries[0].isIntersecting) {
-        step();
-        obs.disconnect();
-      }
-    });
-    obs.observe(counterEl);
-  }
+  // (Animated counter removed — static stats only, no risk of broken render.)
 })();
