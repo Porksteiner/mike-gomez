@@ -4,7 +4,7 @@ import Header from "../components/Header.astro";
 import Hero from "../components/Hero.astro";
 import Manifesto from "../components/Manifesto.astro";
 import Work from "../components/Work.astro";
-import Testimonials from "../components/Testimonials.astro";
+// import Testimonials from "../components/Testimonials.astro"; // hidden — re-enable once real testimonials are in
 import Numbers from "../components/Numbers.astro";
 import Capabilities from "../components/Capabilities.astro";
 import Now from "../components/Now.astro";
@@ -18,11 +18,6 @@ import Footer from "../components/Footer.astro";
 <BaseLayout>
   <Header />
   <main>
-    {/*
-      Section order optimized for conversion:
-      hook → trust → work → social proof → quick stats →
-      capabilities → recency → process → objections → tech detail → CTA
-    */}
     <Hero />
 
     <div class="section-divider"><span class="mark">§ Commitments</span></div>
@@ -31,8 +26,7 @@ import Footer from "../components/Footer.astro";
     <div class="section-divider"><span class="mark">§ Selected work</span></div>
     <Work />
 
-    <div class="section-divider"><span class="mark">§ What clients say</span></div>
-    <Testimonials />
+    {/* Testimonials hidden until real ones are in — see Testimonials.astro */}
 
     <div class="section-divider"><span class="mark">§ By the numbers</span></div>
     <Numbers />

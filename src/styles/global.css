@@ -2,26 +2,26 @@
 
 @theme {
   /* ========================================================
-     PALETTE — desert / golden cream on warm black
+     PALETTE — light desert (inverted from previous dark theme)
      ======================================================== */
 
-  /* Warm darks */
-  --color-void: #050403;
-  --color-coal: #0e0a04;
-  --color-graphite: #1a140d;
-  --color-iron: #2d2418;
-  --color-ash: #4a3a24;
-  --color-smoke: #8b7a5e;
+  /* Cream backgrounds (where the dark blacks used to be) */
+  --color-void: #faf6ed;        /* page base */
+  --color-coal: #f0e8d4;        /* alt/elevated sections */
+  --color-graphite: #e4d4b0;
+  --color-iron: #d4c4a0;        /* borders */
+  --color-ash: #a89070;
+  --color-smoke: #6b5a3f;       /* muted text — still readable on cream */
 
-  /* Warm lights (replaces pure white) */
-  --color-bone: #f5ead4;
-  --color-paper: #e8d8b8;
+  /* Dark text (where the cream text used to be) */
+  --color-bone: #2d1f0a;        /* primary text — deep espresso */
+  --color-paper: #4a3a24;       /* body copy */
 
-  /* Desert accents — honey gold + bronze + earth */
-  --color-honey: #e8c688;
-  --color-gold: #d4af6d;
-  --color-bronze: #a8854a;
-  --color-earth: #6b4423;
+  /* Accents — deeper gold + bronze for contrast on cream */
+  --color-honey: #d4a86b;
+  --color-gold: #a8854a;
+  --color-bronze: #7d4719;
+  --color-earth: #3d2814;
 
   /* ========================================================
      TYPOGRAPHY
@@ -38,7 +38,7 @@
 html {
   scroll-behavior: smooth;
   background: var(--color-void);
-  color-scheme: dark;
+  color-scheme: light;
 }
 
 body {
@@ -63,7 +63,7 @@ body {
 }
 
 /* ========================================================
-   UTILITY: warm film grain
+   FILM GRAIN — multiply on light so the noise reads
    ======================================================== */
 .grain::before {
   content: "";
@@ -71,8 +71,8 @@ body {
   inset: -50%;
   pointer-events: none;
   z-index: 100;
-  opacity: 0.05;
-  mix-blend-mode: overlay;
+  opacity: 0.06;
+  mix-blend-mode: multiply;
   background-image: url("data:image/svg+xml;utf8,<svg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)' opacity='1'/></svg>");
 }
 
@@ -92,7 +92,7 @@ body {
 .marquee--reverse { animation-direction: reverse; }
 
 /* ========================================================
-   SCROLL REVEAL — JS-gated with no-JS fallback
+   SCROLL REVEAL
    ======================================================== */
 .reveal { opacity: 1; transform: none; }
 html.js .reveal {
@@ -118,7 +118,7 @@ html.js .reveal.in { opacity: 1; transform: translateY(0); }
 .slow-spin { animation: slow-spin 80s linear infinite; }
 
 /* ========================================================
-   OUTLINED TYPE
+   OUTLINED TYPE — outline in dark espresso on cream bg
    ======================================================== */
 .text-stroke {
   color: transparent;
@@ -130,18 +130,17 @@ html.js .reveal.in { opacity: 1; transform: translateY(0); }
 }
 
 /* ========================================================
-   CUSTOM CURSOR — gold
+   CUSTOM CURSOR — dark dot, dark ring (visible on cream)
    ======================================================== */
 .cursor-dot {
   position: fixed;
   top: 0; left: 0;
   width: 8px; height: 8px;
-  background: var(--color-gold);
+  background: var(--color-bone);
   border-radius: 50%;
   pointer-events: none;
   z-index: 9999;
   transform: translate(-50%, -50%);
-  mix-blend-mode: difference;
   transition: width 0.2s ease, height 0.2s ease, background 0.2s ease;
 }
 .cursor-ring {
@@ -155,7 +154,6 @@ html.js .reveal.in { opacity: 1; transform: translateY(0); }
   transform: translate(-50%, -50%);
   transition: width 0.25s ease, height 0.25s ease,
     border-color 0.25s ease, opacity 0.25s ease;
-  mix-blend-mode: difference;
 }
 .cursor-hover .cursor-dot { width: 0; height: 0; }
 .cursor-hover .cursor-ring {
@@ -210,12 +208,8 @@ html.js .reveal.in { opacity: 1; transform: translateY(0); }
 }
 
 /* ========================================================
-   LIGHTER TEXTURE — cream patterns on the dark
+   LIGHTER TEXTURE — dark patterns on cream
    ======================================================== */
-
-/* Every section gets a subtle cream dot grid.
-   Uses ::before so it paints UNDER subsequent positioned content
-   (which is more reliable than juggling z-index across components). */
 main > section {
   position: relative;
 }
@@ -225,14 +219,12 @@ main > section::before {
   inset: 0;
   pointer-events: none;
   background-image: radial-gradient(
-    rgba(245, 234, 212, 0.06) 1px,
+    rgba(45, 31, 10, 0.06) 1px,
     transparent 1px
   );
   background-size: 28px 28px;
 }
 
-/* Diagonal hatch overlay on alternating sections — uses ::after
-   to avoid clashing with the global ::before pattern. */
 main > section.lift-hatch::after {
   content: "";
   position: absolute;
@@ -242,19 +234,18 @@ main > section.lift-hatch::after {
     -45deg,
     transparent,
     transparent 38px,
-    rgba(245, 234, 212, 0.03) 38px,
-    rgba(245, 234, 212, 0.03) 39px
+    rgba(45, 31, 10, 0.035) 38px,
+    rgba(45, 31, 10, 0.035) 39px
   );
 }
 
-/* Decorative section divider strip */
 .section-divider {
   position: relative;
   height: 48px;
   background: var(--color-void);
   overflow: hidden;
-  border-top: 1px solid rgba(245, 234, 212, 0.08);
-  border-bottom: 1px solid rgba(245, 234, 212, 0.08);
+  border-top: 1px solid rgba(45, 31, 10, 0.1);
+  border-bottom: 1px solid rgba(45, 31, 10, 0.1);
 }
 .section-divider::before {
   content: "";
@@ -262,8 +253,8 @@ main > section.lift-hatch::after {
   inset: 0;
   background-image: repeating-linear-gradient(
     90deg,
-    rgba(245, 234, 212, 0.1),
-    rgba(245, 234, 212, 0.1) 1px,
+    rgba(45, 31, 10, 0.12),
+    rgba(45, 31, 10, 0.12) 1px,
     transparent 1px,
     transparent 14px
   );
@@ -294,12 +285,11 @@ main > section.lift-hatch::after {
   opacity: 0.5;
 }
 
-/* Editorial corner brackets — a single decorative L-shape utility */
 .corner-mark {
   position: absolute;
   width: 14px;
   height: 14px;
-  border: 1px solid rgba(245, 234, 212, 0.3);
+  border: 1px solid rgba(45, 31, 10, 0.3);
   pointer-events: none;
 }
 .corner-mark.tl { top: 18px; left: 18px; border-right: none; border-bottom: none; }
