@@ -23,9 +23,9 @@ const caps = [
   },
   {
     n: "04",
-    title: "Hard integrations",
+    title: "Integrations",
     body:
-      "Stripe payments. Plaid for credit/banking. OpenAI/Anthropic for AI features. Auth, webhooks, the unsexy plumbing that has to actually work.",
+      "Stripe payments. Plaid for credit and banking. OpenAI and Anthropic for AI features. The plumbing that has to actually work, set up so it does.",
     stack: "Stripe · Plaid · Supabase · Webhooks",
   },
 ];
@@ -38,9 +38,8 @@ const caps = [
   <div class="max-w-[1600px] mx-auto px-6 sm:px-10 lg:px-14">
     <div class="grid grid-cols-12 gap-6 mb-20">
       <div class="col-span-12 md:col-span-3 reveal">
-        <p class="text-[11px] uppercase tracking-[0.22em] font-mono text-flare">
-          <span class="inline-block w-6 h-px bg-flare align-middle mr-2"
-          ></span>
+        <p class="text-[11px] uppercase tracking-[0.22em] font-mono text-gold">
+          <span class="inline-block w-6 h-px bg-gold align-middle mr-2"></span>
           What I build
         </p>
       </div>
@@ -48,8 +47,8 @@ const caps = [
         <h2
           class="font-display uppercase leading-[0.9] text-[clamp(40px,7vw,96px)] tracking-[-0.01em]"
         >
-          Four lanes.<br />
-          <span class="text-stroke">No drift.</span>
+          Four areas<br />
+          <span class="text-stroke">of focus.</span>
         </h2>
       </div>
     </div>
@@ -60,11 +59,11 @@ const caps = [
           <li
             class={`reveal reveal-delay-${(i % 4) + 1} grid grid-cols-12 gap-6 py-10 sm:py-14 border-t border-iron last:border-b group`}
           >
-            <span class="col-span-3 md:col-span-1 font-mono text-flare text-sm pt-2 tracking-widest">
+            <span class="col-span-3 md:col-span-1 font-mono text-gold text-sm pt-2 tracking-widest">
               {c.n}
             </span>
             <div class="col-span-9 md:col-span-4">
-              <h3 class="font-display uppercase text-[clamp(28px,4vw,52px)] leading-[1] tracking-[-0.01em] mb-3 group-hover:text-flare transition-colors">
+              <h3 class="font-display uppercase text-[clamp(28px,4vw,52px)] leading-[1] tracking-[-0.01em] mb-3 group-hover:text-gold transition-colors">
                 {c.title}
               </h3>
               <p class="font-mono text-[12px] uppercase tracking-[0.18em] text-smoke">

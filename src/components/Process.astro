@@ -3,7 +3,7 @@ const steps = [
   {
     n: "01",
     name: "Intro call",
-    body: "30 minutes. We talk about what you're trying to ship, by when, and whether I'm the right person. No deck, no slides.",
+    body: "Thirty minutes. We talk about what you're trying to build, by when, and whether I'm the right person. No deck, no slides.",
     duration: "Day 0",
   },
   {
@@ -21,7 +21,7 @@ const steps = [
   {
     n: "04",
     name: "Ship + 30 days of support",
-    body: "Launch, hand-off, and 30 days of free bug fixes after. After that I'm available for retainer or one-off updates.",
+    body: "Launch, hand-off, and thirty days of free bug fixes after. After that I'm available for retainer or one-off updates.",
     duration: "Final + 30",
   },
 ];
@@ -31,9 +31,8 @@ const steps = [
   <div class="max-w-[1600px] mx-auto px-6 sm:px-10 lg:px-14">
     <div class="grid grid-cols-12 gap-6 mb-20">
       <div class="col-span-12 md:col-span-3 reveal">
-        <p class="text-[11px] uppercase tracking-[0.22em] font-mono text-flare">
-          <span class="inline-block w-6 h-px bg-flare align-middle mr-2"
-          ></span>
+        <p class="text-[11px] uppercase tracking-[0.22em] font-mono text-gold">
+          <span class="inline-block w-6 h-px bg-gold align-middle mr-2"></span>
           Process
         </p>
       </div>
@@ -54,19 +53,13 @@ const steps = [
             class={`reveal reveal-delay-${(i % 4) + 1} bg-void p-6 sm:p-8 flex flex-col gap-4 min-h-[280px]`}
           >
             <div class="flex items-start justify-between">
-              <span class="font-mono text-[11px] uppercase tracking-[0.22em] text-flare">
-                {s.n}
-              </span>
-              <span class="font-mono text-[10px] uppercase tracking-[0.2em] text-smoke">
-                {s.duration}
-              </span>
+              <span class="font-mono text-[11px] uppercase tracking-[0.22em] text-gold">{s.n}</span>
+              <span class="font-mono text-[10px] uppercase tracking-[0.2em] text-smoke">{s.duration}</span>
             </div>
             <h3 class="font-display uppercase text-[clamp(28px,3vw,36px)] leading-[1] tracking-[-0.01em]">
               {s.name}
             </h3>
-            <p class="text-paper text-[14px] leading-relaxed mt-auto">
-              {s.body}
-            </p>
+            <p class="text-paper text-[14px] leading-relaxed mt-auto">{s.body}</p>
           </div>
         ))
       }

@@ -2,21 +2,26 @@
 
 @theme {
   /* ========================================================
-     PALETTE — high-contrast red + black + bone
+     PALETTE — desert / golden cream on warm black
      ======================================================== */
-  --color-void: #050505;
-  --color-coal: #0d0d10;
-  --color-graphite: #18181b;
-  --color-iron: #27272a;
-  --color-ash: #3f3f46;
-  --color-smoke: #71717a;
-  --color-bone: #fafafa;
-  --color-paper: #ededed;
 
-  --color-blood: #7f1d1d;
-  --color-rust: #b91c1c;
-  --color-flare: #ef4444;
-  --color-ember: #fca5a5;
+  /* Warm darks */
+  --color-void: #050403;
+  --color-coal: #0e0a04;
+  --color-graphite: #1a140d;
+  --color-iron: #2d2418;
+  --color-ash: #4a3a24;
+  --color-smoke: #8b7a5e;
+
+  /* Warm lights (replaces pure white) */
+  --color-bone: #f5ead4;
+  --color-paper: #e8d8b8;
+
+  /* Desert accents — honey gold + bronze + earth */
+  --color-honey: #e8c688;
+  --color-gold: #d4af6d;
+  --color-bronze: #a8854a;
+  --color-earth: #6b4423;
 
   /* ========================================================
      TYPOGRAPHY
@@ -46,11 +51,10 @@ body {
 }
 
 ::selection {
-  background: var(--color-flare);
+  background: var(--color-gold);
   color: var(--color-void);
 }
 
-/* Hide native cursor on devices with hover (desktop) when custom cursor is active */
 @media (hover: hover) and (pointer: fine) {
   body.cursor-on,
   body.cursor-on * {
@@ -59,7 +63,7 @@ body {
 }
 
 /* ========================================================
-   UTILITY: film grain noise overlay
+   UTILITY: warm film grain
    ======================================================== */
 .grain::before {
   content: "";
@@ -76,33 +80,21 @@ body {
    MARQUEE
    ======================================================== */
 @keyframes marquee {
-  from {
-    transform: translateX(0);
-  }
-  to {
-    transform: translateX(-50%);
-  }
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
 }
 .marquee {
   display: flex;
   width: max-content;
   animation: marquee 40s linear infinite;
 }
-.marquee--fast {
-  animation-duration: 22s;
-}
-.marquee--reverse {
-  animation-direction: reverse;
-}
+.marquee--fast { animation-duration: 22s; }
+.marquee--reverse { animation-direction: reverse; }
 
 /* ========================================================
-   SCROLL REVEAL — JS-enhanced, with no-JS fallback
+   SCROLL REVEAL — JS-gated with no-JS fallback
    ======================================================== */
-.reveal {
-  opacity: 1;
-  transform: none;
-}
-/* Only hide if JS has tagged the html element */
+.reveal { opacity: 1; transform: none; }
 html.js .reveal {
   opacity: 0;
   transform: translateY(28px);
@@ -110,37 +102,20 @@ html.js .reveal {
     opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1),
     transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
 }
-html.js .reveal.in {
-  opacity: 1;
-  transform: translateY(0);
-}
-.reveal-delay-1 {
-  transition-delay: 0.08s;
-}
-.reveal-delay-2 {
-  transition-delay: 0.16s;
-}
-.reveal-delay-3 {
-  transition-delay: 0.24s;
-}
-.reveal-delay-4 {
-  transition-delay: 0.32s;
-}
+html.js .reveal.in { opacity: 1; transform: translateY(0); }
+.reveal-delay-1 { transition-delay: 0.08s; }
+.reveal-delay-2 { transition-delay: 0.16s; }
+.reveal-delay-3 { transition-delay: 0.24s; }
+.reveal-delay-4 { transition-delay: 0.32s; }
 
 /* ========================================================
-   ROTATING MARK (hero ambient motion)
+   ROTATING MARK
    ======================================================== */
 @keyframes slow-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
 }
-.slow-spin {
-  animation: slow-spin 80s linear infinite;
-}
+.slow-spin { animation: slow-spin 80s linear infinite; }
 
 /* ========================================================
    OUTLINED TYPE
@@ -149,21 +124,19 @@ html.js .reveal.in {
   color: transparent;
   -webkit-text-stroke: 1.5px var(--color-bone);
 }
-.text-stroke-red {
+.text-stroke-gold {
   color: transparent;
-  -webkit-text-stroke: 1.5px var(--color-flare);
+  -webkit-text-stroke: 1.5px var(--color-gold);
 }
 
 /* ========================================================
-   CUSTOM CURSOR
+   CUSTOM CURSOR — gold
    ======================================================== */
 .cursor-dot {
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 8px;
-  height: 8px;
-  background: var(--color-flare);
+  top: 0; left: 0;
+  width: 8px; height: 8px;
+  background: var(--color-gold);
   border-radius: 50%;
   pointer-events: none;
   z-index: 9999;
@@ -173,10 +146,8 @@ html.js .reveal.in {
 }
 .cursor-ring {
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 36px;
-  height: 36px;
+  top: 0; left: 0;
+  width: 36px; height: 36px;
   border: 1px solid var(--color-bone);
   border-radius: 50%;
   pointer-events: none;
@@ -186,14 +157,10 @@ html.js .reveal.in {
     border-color 0.25s ease, opacity 0.25s ease;
   mix-blend-mode: difference;
 }
-.cursor-hover .cursor-dot {
-  width: 0;
-  height: 0;
-}
+.cursor-hover .cursor-dot { width: 0; height: 0; }
 .cursor-hover .cursor-ring {
-  width: 64px;
-  height: 64px;
-  border-color: var(--color-flare);
+  width: 64px; height: 64px;
+  border-color: var(--color-gold);
 }
 
 /* ========================================================
@@ -201,10 +168,9 @@ html.js .reveal.in {
    ======================================================== */
 .scroll-progress {
   position: fixed;
-  top: 0;
-  left: 0;
+  top: 0; left: 0;
   height: 2px;
-  background: var(--color-flare);
+  background: var(--color-gold);
   z-index: 9999;
   transform-origin: left;
   transform: scaleX(0);
@@ -212,7 +178,7 @@ html.js .reveal.in {
 }
 
 /* ========================================================
-   LINK HOVER
+   EDITORIAL LINK UNDERLINE
    ======================================================== */
 .link-flare {
   position: relative;
@@ -221,8 +187,7 @@ html.js .reveal.in {
 .link-flare::after {
   content: "";
   position: absolute;
-  left: 0;
-  bottom: -3px;
+  left: 0; bottom: -3px;
   width: 100%;
   height: 1px;
   background: currentColor;
@@ -239,7 +204,7 @@ html.js .reveal.in {
    FOCUS
    ======================================================== */
 *:focus-visible {
-  outline: 2px solid var(--color-flare);
+  outline: 2px solid var(--color-gold);
   outline-offset: 3px;
   border-radius: 2px;
 }

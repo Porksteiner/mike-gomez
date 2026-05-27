@@ -4,22 +4,15 @@ const year = new Date().getFullYear();
 
 <footer class="relative bg-coal border-t border-iron pt-20 pb-10">
   <div class="max-w-[1600px] mx-auto px-6 sm:px-10 lg:px-14">
-    {/* Mark + tagline */}
     <div class="grid grid-cols-12 gap-6 mb-16">
       <div class="col-span-12 md:col-span-7">
         <div class="flex items-center gap-3 mb-6">
           <svg viewBox="0 0 32 32" class="w-8 h-8" aria-hidden="true">
-            <rect width="32" height="32" fill="#050505" stroke="#ef4444" stroke-width="1.5" />
-            <text
-              x="16"
-              y="23"
-              text-anchor="middle"
-              font-family="Anton, Impact, sans-serif"
-              font-size="18"
-              font-weight="700"
-              fill="#ef4444"
-              letter-spacing="-0.5"
-            >MG</text>
+            <rect width="32" height="32" fill="#050403" stroke="#d4af6d" stroke-width="1.5" />
+            <text x="16" y="23" text-anchor="middle"
+                  font-family="Anton, Impact, sans-serif"
+                  font-size="18" font-weight="700"
+                  fill="#d4af6d" letter-spacing="-0.5">MG</text>
           </svg>
           <span class="font-display text-2xl tracking-[0.14em] uppercase leading-none">
             Mike Gomez
@@ -28,58 +21,48 @@ const year = new Date().getFullYear();
         <p
           class="font-display uppercase text-[clamp(28px,4vw,52px)] leading-[0.95] tracking-[-0.01em] max-w-2xl"
         >
-          Solo developer for<br />
-          <span class="text-flare">people who actually ship.</span>
+          Built with <span class="text-gold">care.</span><br />
+          Shipped on time.
         </p>
       </div>
 
       <div class="col-span-6 md:col-span-2 md:col-start-9">
-        <p
-          class="text-[11px] uppercase tracking-[0.22em] font-mono text-smoke mb-4"
-        >
-          Site
-        </p>
+        <p class="text-[11px] uppercase tracking-[0.22em] font-mono text-smoke mb-4">Site</p>
         <ul class="space-y-2 text-[14px]">
-          <li><a href="#work" class="link-flare hover:text-flare transition">Work</a></li>
-          <li><a href="#stack" class="link-flare hover:text-flare transition">Stack</a></li>
-          <li><a href="#now" class="link-flare hover:text-flare transition">Now</a></li>
-          <li><a href="#process" class="link-flare hover:text-flare transition">Process</a></li>
-          <li><a href="#contact" class="link-flare hover:text-flare transition">Contact</a></li>
+          <li><a href="#work" class="link-flare hover:text-gold transition">Work</a></li>
+          <li><a href="#stack" class="link-flare hover:text-gold transition">Stack</a></li>
+          <li><a href="#now" class="link-flare hover:text-gold transition">Now</a></li>
+          <li><a href="#process" class="link-flare hover:text-gold transition">Process</a></li>
+          <li><a href="#contact" class="link-flare hover:text-gold transition">Contact</a></li>
         </ul>
       </div>
 
       <div class="col-span-6 md:col-span-2">
-        <p
-          class="text-[11px] uppercase tracking-[0.22em] font-mono text-smoke mb-4"
-        >
-          Elsewhere
-        </p>
+        <p class="text-[11px] uppercase tracking-[0.22em] font-mono text-smoke mb-4">Elsewhere</p>
         <ul class="space-y-2 text-[14px]">
-          <li><a href="#" class="link-flare hover:text-flare transition">GitHub</a></li>
-          <li><a href="#" class="link-flare hover:text-flare transition">Twitter / X</a></li>
-          <li><a href="#" class="link-flare hover:text-flare transition">App Store</a></li>
-          <li><a href="#" class="link-flare hover:text-flare transition">LinkedIn</a></li>
+          <li><a href="#" class="link-flare hover:text-gold transition">GitHub</a></li>
+          <li><a href="#" class="link-flare hover:text-gold transition">Twitter / X</a></li>
+          <li><a href="#" class="link-flare hover:text-gold transition">App Store</a></li>
+          <li><a href="#" class="link-flare hover:text-gold transition">LinkedIn</a></li>
         </ul>
       </div>
     </div>
 
-    {/* Giant wordmark — GOMEZ. */}
     <div class="border-t border-iron pt-12 mb-12 overflow-hidden">
       <p
-        class="font-display uppercase text-[clamp(140px,26vw,460px)] leading-[0.85] tracking-[-0.03em] text-flare/90 whitespace-nowrap"
+        class="font-display uppercase text-[clamp(140px,26vw,460px)] leading-[0.85] tracking-[-0.03em] text-gold/90 whitespace-nowrap"
         aria-hidden="true"
       >
         GOMEZ<span class="text-bone">.</span>
       </p>
     </div>
 
-    {/* Bottom row */}
     <div
       class="flex flex-col sm:flex-row gap-3 justify-between items-start sm:items-center text-[11px] uppercase tracking-[0.2em] font-mono text-smoke"
     >
       <p>&copy; {year} Mike Gomez &mdash; Built solo in Astro + Tailwind</p>
       <p>
-        <span class="text-flare">●</span> Open for work
+        <span class="text-gold">●</span> Available for new work
         &nbsp;/&nbsp; mike@mikegomez.dev
       </p>
     </div>

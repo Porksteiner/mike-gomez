@@ -1,7 +1,4 @@
 ---
-// Selected work — only finished/shipped projects + 1 open slot.
-// BaitIQ gets a featured hero card showing the actual app icon.
-
 const projects = [
   {
     n: "02",
@@ -20,7 +17,7 @@ const projects = [
     year: "2026",
     services: "Web · Mobile · Whatever it takes",
     span: "lg:col-span-5",
-    art: "bg-gradient-to-br from-coal via-blood to-flare",
+    art: "bg-gradient-to-br from-coal via-earth to-gold",
     accent: "?",
   },
 ];
@@ -28,12 +25,10 @@ const projects = [
 
 <section id="work" class="relative py-32 sm:py-44 border-t border-iron bg-void">
   <div class="max-w-[1600px] mx-auto px-6 sm:px-10 lg:px-14">
-    {/* Header */}
     <div class="grid grid-cols-12 gap-6 mb-16 sm:mb-20">
       <div class="col-span-12 md:col-span-3 reveal">
-        <p class="text-[11px] uppercase tracking-[0.22em] font-mono text-flare">
-          <span class="inline-block w-6 h-px bg-flare align-middle mr-2"
-          ></span>
+        <p class="text-[11px] uppercase tracking-[0.22em] font-mono text-gold">
+          <span class="inline-block w-6 h-px bg-gold align-middle mr-2"></span>
           Selected work
         </p>
       </div>
@@ -49,7 +44,7 @@ const projects = [
             href="#contact"
             class="text-[12px] uppercase tracking-[0.2em] font-mono text-smoke hover:text-bone link-flare transition"
           >
-            Become the third &rarr;
+            Work with me &rarr;
           </a>
         </div>
       </div>
@@ -57,29 +52,20 @@ const projects = [
 
     {/* Grid */}
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-6 auto-rows-[minmax(280px,auto)]">
-      {/* ====== FEATURED — BaitIQ with real app icon ====== */}
+      {/* Featured BaitIQ card */}
       <article
-        class="reveal lg:col-span-12 group relative overflow-hidden border border-iron hover:border-flare/60 transition bg-coal"
+        class="reveal lg:col-span-12 group relative overflow-hidden border border-iron hover:border-gold/60 transition bg-coal"
       >
-        {/* Soft warm gradient backdrop */}
+        <div class="absolute inset-0 bg-gradient-to-br from-coal via-earth/40 to-void"></div>
         <div
-          class="absolute inset-0 bg-gradient-to-br from-coal via-blood/30 to-void"
+          class="absolute inset-0 opacity-[0.05] mix-blend-screen"
+          style="background-image: linear-gradient(to right, rgba(212,175,109,0.5) 1px, transparent 1px), linear-gradient(to bottom, rgba(212,175,109,0.5) 1px, transparent 1px); background-size: 40px 40px;"
         ></div>
-        {/* Subtle grid pattern */}
-        <div
-          class="absolute inset-0 opacity-[0.04] mix-blend-screen"
-          style="background-image: linear-gradient(to right, rgba(239,68,68,0.5) 1px, transparent 1px), linear-gradient(to bottom, rgba(239,68,68,0.5) 1px, transparent 1px); background-size: 40px 40px;"
-        >
-        </div>
 
         <div class="relative grid grid-cols-1 md:grid-cols-12 gap-6 sm:gap-10 p-6 sm:p-10 min-h-[360px] items-center">
-          {/* Left: app icon */}
           <div class="md:col-span-4 flex justify-center md:justify-start">
             <div class="relative">
-              {/* Soft glow */}
-              <div
-                class="absolute inset-0 -m-8 bg-flare/20 blur-3xl rounded-full"
-              ></div>
+              <div class="absolute inset-0 -m-8 bg-gold/15 blur-3xl rounded-full"></div>
               <img
                 src="/projects/baitiq-icon.png"
                 alt="BaitIQ — AI fishing intelligence app icon"
@@ -91,7 +77,6 @@ const projects = [
             </div>
           </div>
 
-          {/* Right: project meta + text */}
           <div class="md:col-span-8 flex flex-col gap-5">
             <div class="flex items-start justify-between gap-4">
               <span class="font-mono text-[11px] tracking-[0.22em] text-bone/70 uppercase">
@@ -103,7 +88,7 @@ const projects = [
             </div>
 
             <h3
-              class="font-display uppercase text-[clamp(48px,7vw,108px)] leading-[0.95] tracking-[-0.02em] group-hover:text-flare transition-colors"
+              class="font-display uppercase text-[clamp(48px,7vw,108px)] leading-[0.95] tracking-[-0.02em] group-hover:text-gold transition-colors"
             >
               BaitIQ
             </h3>
@@ -114,24 +99,15 @@ const projects = [
               <span class="text-bone">Live on the iOS App Store.</span>
             </p>
 
-            {/* App Store pill */}
             <div class="flex flex-wrap items-center gap-3 mt-2">
-              <span
-                class="inline-flex items-center gap-2 px-3 py-1.5 bg-void/60 border border-iron rounded-full text-[11px] uppercase tracking-[0.2em] font-mono text-bone/90"
-              >
+              <span class="inline-flex items-center gap-2 px-3 py-1.5 bg-void/60 border border-iron rounded-full text-[11px] uppercase tracking-[0.2em] font-mono text-bone/90">
                 <span class="relative flex w-1.5 h-1.5">
-                  <span
-                    class="absolute inline-flex w-full h-full rounded-full bg-flare opacity-75 animate-ping"
-                  ></span>
-                  <span
-                    class="relative inline-flex w-1.5 h-1.5 rounded-full bg-flare"
-                  ></span>
+                  <span class="absolute inline-flex w-full h-full rounded-full bg-gold opacity-75 animate-ping"></span>
+                  <span class="relative inline-flex w-1.5 h-1.5 rounded-full bg-gold"></span>
                 </span>
                 Available on the App Store
               </span>
-              <span
-                class="inline-flex items-center gap-2 px-3 py-1.5 bg-void/60 border border-iron rounded-full text-[11px] uppercase tracking-[0.2em] font-mono text-smoke"
-              >
+              <span class="inline-flex items-center gap-2 px-3 py-1.5 bg-void/60 border border-iron rounded-full text-[11px] uppercase tracking-[0.2em] font-mono text-smoke">
                 v2 shipping this week
               </span>
             </div>
@@ -139,16 +115,16 @@ const projects = [
         </div>
       </article>
 
-      {/* ====== Other cards (Unlearn + open slot) ====== */}
+      {/* Other cards */}
       {
         projects.map((p, i) => (
           <article
-            class={`reveal reveal-delay-${(i % 4) + 1} ${p.span} group relative overflow-hidden border border-iron hover:border-flare/60 transition`}
+            class={`reveal reveal-delay-${(i % 4) + 1} ${p.span} group relative overflow-hidden border border-iron hover:border-gold/60 transition`}
           >
             <div class={`absolute inset-0 ${p.art} transition-transform duration-700 group-hover:scale-105`}>
               <div
                 class="absolute inset-0 opacity-30 mix-blend-overlay"
-                style="background-image: radial-gradient(rgba(255,255,255,0.4) 1px, transparent 1px); background-size: 8px 8px;"
+                style="background-image: radial-gradient(rgba(245,234,212,0.4) 1px, transparent 1px); background-size: 8px 8px;"
               />
               <span class="absolute -bottom-4 -right-4 font-display text-[clamp(120px,18vw,260px)] uppercase leading-none text-void/30 select-none">
                 {p.accent}
@@ -164,9 +140,8 @@ const projects = [
                   {p.services}
                 </span>
               </div>
-
               <div>
-                <h3 class="font-display uppercase text-[clamp(36px,4vw,72px)] leading-[1] tracking-[-0.01em] mb-2 group-hover:text-flare transition-colors">
+                <h3 class="font-display uppercase text-[clamp(36px,4vw,72px)] leading-[1] tracking-[-0.01em] mb-2 group-hover:text-gold transition-colors">
                   {p.name}
                 </h3>
                 <p class="text-paper text-[15px] max-w-md">
