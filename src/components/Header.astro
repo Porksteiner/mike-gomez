@@ -1,0 +1,58 @@
+---
+// Personal header — Mike Gomez wordmark + MG monogram logo
+---
+
+<header
+  class="fixed top-0 inset-x-0 z-40 bg-void/70 backdrop-blur-md border-b border-iron"
+>
+  <div class="max-w-[1600px] mx-auto px-6 sm:px-10 lg:px-14 h-16 flex items-center justify-between">
+    {/* Brand */}
+    <a href="/" class="flex items-center gap-2.5 group" aria-label="Mike Gomez — home">
+      {/* MG monogram */}
+      <svg viewBox="0 0 32 32" class="w-7 h-7" aria-hidden="true">
+        <rect width="32" height="32" fill="#050505" stroke="#ef4444" stroke-width="1.5" />
+        <text
+          x="16"
+          y="23"
+          text-anchor="middle"
+          font-family="Anton, Impact, sans-serif"
+          font-size="18"
+          font-weight="700"
+          fill="#ef4444"
+          letter-spacing="-0.5"
+        >MG</text>
+      </svg>
+      <span class="font-display text-xl tracking-[0.14em] uppercase leading-none">
+        Mike Gomez
+      </span>
+    </a>
+
+    {/* Center nav */}
+    <nav class="hidden md:flex items-center gap-8 text-[12px] uppercase tracking-[0.18em] font-mono text-smoke">
+      <a href="#work" class="link-flare hover:text-bone transition">Work</a>
+      <a href="#stack" class="link-flare hover:text-bone transition">Stack</a>
+      <a href="#now" class="link-flare hover:text-bone transition">Now</a>
+      <a href="#process" class="link-flare hover:text-bone transition">Process</a>
+    </nav>
+
+    {/* Status + CTA */}
+    <div class="flex items-center gap-4">
+      <div class="hidden sm:flex items-center gap-2 text-[11px] uppercase tracking-[0.2em] font-mono text-smoke">
+        <span class="relative flex w-2 h-2">
+          <span class="absolute inline-flex w-full h-full rounded-full bg-flare opacity-75 animate-ping"></span>
+          <span class="relative inline-flex w-2 h-2 rounded-full bg-flare"></span>
+        </span>
+        <span>Open &mdash; 2 slots</span>
+        <span class="text-iron">/</span>
+        <span id="live-time">— PT</span>
+      </div>
+      <a
+        href="#contact"
+        data-magnetic
+        class="inline-flex items-center gap-2 px-4 py-2 bg-bone text-void font-mono text-[11px] uppercase tracking-[0.2em] font-semibold hover:bg-flare hover:text-void transition-colors will-change-transform"
+      >
+        Hire me
+      </a>
+    </div>
+  </div>
+</header>

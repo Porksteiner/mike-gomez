@@ -1,0 +1,56 @@
+---
+import "../styles/global.css";
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const {
+  title = "Mike Gomez — Solo developer building web & mobile apps that ship.",
+  description = "Mike Gomez is a freelance web and mobile developer. I build the thing you've been waiting six months to ship — websites, web apps, iOS and Android apps. Solo, fast, in production.",
+} = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="generator" content={Astro.generator} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+    <title>{title}</title>
+    <meta name="description" content={description} />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+
+    {/* Fonts */}
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Anton&family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+
+    {/* Tag html.js IMMEDIATELY so reveal styles only apply when JS is alive */}
+    <script is:inline>
+      document.documentElement.classList.add("js");
+    </script>
+  </head>
+  <body class="bg-void text-bone font-sans grain">
+    {/* Scroll progress */}
+    <div id="scroll-progress" class="scroll-progress"></div>
+
+    {/* Custom cursor (desktop only — hidden via media query when not applicable) */}
+    <div id="cursor-dot" class="cursor-dot hidden md:block"></div>
+    <div id="cursor-ring" class="cursor-ring hidden md:block"></div>
+
+    <slot />
+
+    {/* Interactivity */}
+    <script src="/scripts/site.js" is:inline></script>
+  </body>
+</html>

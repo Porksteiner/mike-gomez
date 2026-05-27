@@ -1,0 +1,75 @@
+---
+const steps = [
+  {
+    n: "01",
+    name: "Intro call",
+    body: "30 minutes. We talk about what you're trying to ship, by when, and whether I'm the right person. No deck, no slides.",
+    duration: "Day 0",
+  },
+  {
+    n: "02",
+    name: "Brief + estimate",
+    body: "Within 24 hours of the call, you get a written scope, timeline, and fixed price. If we're aligned, we start.",
+    duration: "Day 1",
+  },
+  {
+    n: "03",
+    name: "Build",
+    body: "Design and dev in parallel. Daily Loom updates if you want them, weekly demos if you don't. You see real working software inside a week.",
+    duration: "Weeks 1–N",
+  },
+  {
+    n: "04",
+    name: "Ship + 30 days of support",
+    body: "Launch, hand-off, and 30 days of free bug fixes after. After that I'm available for retainer or one-off updates.",
+    duration: "Final + 30",
+  },
+];
+---
+
+<section id="process" class="relative py-32 sm:py-44 border-t border-iron bg-coal">
+  <div class="max-w-[1600px] mx-auto px-6 sm:px-10 lg:px-14">
+    <div class="grid grid-cols-12 gap-6 mb-20">
+      <div class="col-span-12 md:col-span-3 reveal">
+        <p class="text-[11px] uppercase tracking-[0.22em] font-mono text-flare">
+          <span class="inline-block w-6 h-px bg-flare align-middle mr-2"
+          ></span>
+          Process
+        </p>
+      </div>
+      <div class="col-span-12 md:col-span-9 reveal reveal-delay-1">
+        <h2
+          class="font-display uppercase leading-[0.9] text-[clamp(40px,7vw,96px)] tracking-[-0.01em]"
+        >
+          <span class="block">From call</span>
+          <span class="block text-stroke">to live in weeks.</span>
+        </h2>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-px bg-iron border border-iron">
+      {
+        steps.map((s, i) => (
+          <div
+            class={`reveal reveal-delay-${(i % 4) + 1} bg-void p-6 sm:p-8 flex flex-col gap-4 min-h-[280px]`}
+          >
+            <div class="flex items-start justify-between">
+              <span class="font-mono text-[11px] uppercase tracking-[0.22em] text-flare">
+                {s.n}
+              </span>
+              <span class="font-mono text-[10px] uppercase tracking-[0.2em] text-smoke">
+                {s.duration}
+              </span>
+            </div>
+            <h3 class="font-display uppercase text-[clamp(28px,3vw,36px)] leading-[1] tracking-[-0.01em]">
+              {s.name}
+            </h3>
+            <p class="text-paper text-[14px] leading-relaxed mt-auto">
+              {s.body}
+            </p>
+          </div>
+        ))
+      }
+    </div>
+  </div>
+</section>

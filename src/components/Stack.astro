@@ -1,0 +1,163 @@
+---
+// Editorial wall of technologies — not a generic icon grid.
+// Mix of weights, sizes, and treatments creates a typographic composition.
+
+const tools = {
+  primary: ["TypeScript", "React", "Next.js", "Astro", "Tailwind"],
+  mobile: ["Expo", "React Native", "Swift", "EAS"],
+  backend: ["Node", "Postgres", "Supabase", "Prisma", "tRPC"],
+  ai: ["OpenAI", "Anthropic", "Vercel AI SDK", "LangChain"],
+  payments: ["Stripe", "Plaid"],
+  infra: ["Vercel", "Cloudflare", "AWS", "Railway"],
+  tooling: ["Git", "Figma", "Tauri", "Playwright"],
+};
+---
+
+<section id="stack" class="relative py-32 sm:py-44 border-t border-iron bg-void overflow-hidden">
+  {/* Bg ghost type */}
+  <div
+    aria-hidden="true"
+    class="pointer-events-none absolute top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2 font-display uppercase text-[clamp(220px,38vw,720px)] leading-[0.85] text-flare/[0.03] select-none whitespace-nowrap tracking-[-0.05em]"
+  >
+    STACK
+  </div>
+
+  <div class="relative max-w-[1600px] mx-auto px-6 sm:px-10 lg:px-14">
+    <div class="grid grid-cols-12 gap-6 mb-20">
+      <div class="col-span-12 md:col-span-3 reveal">
+        <p class="text-[11px] uppercase tracking-[0.22em] font-mono text-flare">
+          <span class="inline-block w-6 h-px bg-flare align-middle mr-2"></span>
+          Stack
+        </p>
+      </div>
+      <div class="col-span-12 md:col-span-9 reveal reveal-delay-1">
+        <h2
+          class="font-display uppercase leading-[0.9] text-[clamp(40px,7vw,96px)] tracking-[-0.01em]"
+        >
+          <span class="block">The tools, not</span>
+          <span class="block text-stroke">the religion.</span>
+        </h2>
+        <p class="mt-8 text-paper text-lg max-w-2xl leading-relaxed">
+          I pick the stack that fits the problem. Sometimes that&rsquo;s a
+          static Astro site. Sometimes it&rsquo;s a Next + Supabase + Stripe
+          app. Sometimes it&rsquo;s a React Native build shipping to the App
+          Store. These are the tools I reach for most.
+        </p>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-12 gap-x-6 gap-y-12 sm:gap-y-16">
+      <div class="col-span-12 md:col-span-12 reveal">
+        <p class="text-[11px] uppercase tracking-[0.22em] font-mono text-smoke mb-5">
+          <span class="text-flare">●</span>&nbsp;&nbsp;Primary
+        </p>
+        <div class="flex flex-wrap items-baseline gap-x-6 gap-y-2 font-display uppercase text-[clamp(36px,6vw,84px)] leading-[1] tracking-[-0.01em]">
+          {
+            tools.primary.map((t, i) => (
+              <>
+                <span class={i === 0 ? "text-flare" : "text-bone"}>{t}</span>
+                {i < tools.primary.length - 1 && <span class="text-iron text-3xl sm:text-5xl">/</span>}
+              </>
+            ))
+          }
+        </div>
+      </div>
+
+      <div class="col-span-12 md:col-span-6 reveal reveal-delay-1">
+        <p class="text-[11px] uppercase tracking-[0.22em] font-mono text-smoke mb-4">
+          Mobile
+        </p>
+        <div class="flex flex-wrap gap-x-4 gap-y-1 font-display uppercase text-[clamp(24px,3.4vw,48px)] leading-[1.05] tracking-[-0.01em]">
+          {
+            tools.mobile.map((t, i) => (
+              <>
+                <span class="text-bone">{t}</span>
+                {i < tools.mobile.length - 1 && <span class="text-iron">·</span>}
+              </>
+            ))
+          }
+        </div>
+      </div>
+
+      <div class="col-span-12 md:col-span-6 reveal reveal-delay-2">
+        <p class="text-[11px] uppercase tracking-[0.22em] font-mono text-smoke mb-4">
+          Backend &amp; Data
+        </p>
+        <div class="flex flex-wrap gap-x-4 gap-y-1 font-display uppercase text-[clamp(24px,3.4vw,48px)] leading-[1.05] tracking-[-0.01em]">
+          {
+            tools.backend.map((t, i) => (
+              <>
+                <span class="text-bone">{t}</span>
+                {i < tools.backend.length - 1 && <span class="text-iron">·</span>}
+              </>
+            ))
+          }
+        </div>
+      </div>
+
+      <div class="col-span-12 md:col-span-6 reveal">
+        <p class="text-[11px] uppercase tracking-[0.22em] font-mono text-smoke mb-4">
+          AI
+        </p>
+        <div class="flex flex-wrap gap-x-4 gap-y-1 font-display uppercase text-[clamp(24px,3.4vw,48px)] leading-[1.05] tracking-[-0.01em]">
+          {
+            tools.ai.map((t, i) => (
+              <>
+                <span class="text-bone">{t}</span>
+                {i < tools.ai.length - 1 && <span class="text-iron">·</span>}
+              </>
+            ))
+          }
+        </div>
+      </div>
+
+      <div class="col-span-12 md:col-span-6 reveal reveal-delay-1">
+        <p class="text-[11px] uppercase tracking-[0.22em] font-mono text-smoke mb-4">
+          Payments &amp; Integrations
+        </p>
+        <div class="flex flex-wrap gap-x-4 gap-y-1 font-display uppercase text-[clamp(24px,3.4vw,48px)] leading-[1.05] tracking-[-0.01em]">
+          {
+            tools.payments.map((t, i) => (
+              <>
+                <span class="text-bone">{t}</span>
+                {i < tools.payments.length - 1 && <span class="text-iron">·</span>}
+              </>
+            ))
+          }
+        </div>
+      </div>
+
+      <div class="col-span-12 md:col-span-6 reveal reveal-delay-2">
+        <p class="text-[11px] uppercase tracking-[0.22em] font-mono text-smoke mb-4">
+          Infrastructure
+        </p>
+        <div class="flex flex-wrap gap-x-4 gap-y-1 font-display uppercase text-[clamp(24px,3.4vw,48px)] leading-[1.05] tracking-[-0.01em]">
+          {
+            tools.infra.map((t, i) => (
+              <>
+                <span class="text-bone">{t}</span>
+                {i < tools.infra.length - 1 && <span class="text-iron">·</span>}
+              </>
+            ))
+          }
+        </div>
+      </div>
+
+      <div class="col-span-12 md:col-span-6 reveal reveal-delay-3">
+        <p class="text-[11px] uppercase tracking-[0.22em] font-mono text-smoke mb-4">
+          Tooling
+        </p>
+        <div class="flex flex-wrap gap-x-4 gap-y-1 font-display uppercase text-[clamp(24px,3.4vw,48px)] leading-[1.05] tracking-[-0.01em]">
+          {
+            tools.tooling.map((t, i) => (
+              <>
+                <span class="text-bone">{t}</span>
+                {i < tools.tooling.length - 1 && <span class="text-iron">·</span>}
+              </>
+            ))
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

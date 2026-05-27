@@ -1,0 +1,82 @@
+---
+const caps = [
+  {
+    n: "01",
+    title: "Marketing sites",
+    body:
+      "Fast-loading, conversion-focused landing pages and brochure sites. Custom-designed, never templated. From scoping to live in 2–4 weeks.",
+    stack: "Astro · Next.js · Tailwind · Cloudflare",
+  },
+  {
+    n: "02",
+    title: "Web applications",
+    body:
+      "Full-stack products with real users. Auth, payments, data, AI integrations. From rough sketch to v1 in 6–12 weeks.",
+    stack: "Next.js · React · TypeScript · Supabase · Stripe",
+  },
+  {
+    n: "03",
+    title: "Mobile apps",
+    body:
+      "iOS and Android apps. Shipping to the App Store and Play Store. Camera, location, payments, push, AI features — the works.",
+    stack: "Expo · React Native · EAS · OpenAI",
+  },
+  {
+    n: "04",
+    title: "Hard integrations",
+    body:
+      "Stripe payments. Plaid for credit/banking. OpenAI/Anthropic for AI features. Auth, webhooks, the unsexy plumbing that has to actually work.",
+    stack: "Stripe · Plaid · Supabase · Webhooks",
+  },
+];
+---
+
+<section
+  id="capabilities"
+  class="relative py-32 sm:py-44 border-t border-iron bg-coal"
+>
+  <div class="max-w-[1600px] mx-auto px-6 sm:px-10 lg:px-14">
+    <div class="grid grid-cols-12 gap-6 mb-20">
+      <div class="col-span-12 md:col-span-3 reveal">
+        <p class="text-[11px] uppercase tracking-[0.22em] font-mono text-flare">
+          <span class="inline-block w-6 h-px bg-flare align-middle mr-2"
+          ></span>
+          What I build
+        </p>
+      </div>
+      <div class="col-span-12 md:col-span-9 reveal reveal-delay-1">
+        <h2
+          class="font-display uppercase leading-[0.9] text-[clamp(40px,7vw,96px)] tracking-[-0.01em]"
+        >
+          Four lanes.<br />
+          <span class="text-stroke">No drift.</span>
+        </h2>
+      </div>
+    </div>
+
+    <ol>
+      {
+        caps.map((c, i) => (
+          <li
+            class={`reveal reveal-delay-${(i % 4) + 1} grid grid-cols-12 gap-6 py-10 sm:py-14 border-t border-iron last:border-b group`}
+          >
+            <span class="col-span-3 md:col-span-1 font-mono text-flare text-sm pt-2 tracking-widest">
+              {c.n}
+            </span>
+            <div class="col-span-9 md:col-span-4">
+              <h3 class="font-display uppercase text-[clamp(28px,4vw,52px)] leading-[1] tracking-[-0.01em] mb-3 group-hover:text-flare transition-colors">
+                {c.title}
+              </h3>
+              <p class="font-mono text-[12px] uppercase tracking-[0.18em] text-smoke">
+                {c.stack}
+              </p>
+            </div>
+            <p class="col-span-12 md:col-span-7 text-paper text-lg leading-relaxed md:pl-12">
+              {c.body}
+            </p>
+          </li>
+        ))
+      }
+    </ol>
+  </div>
+</section>

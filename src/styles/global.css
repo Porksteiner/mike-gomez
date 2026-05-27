@@ -1,0 +1,245 @@
+@import "tailwindcss";
+
+@theme {
+  /* ========================================================
+     PALETTE — high-contrast red + black + bone
+     ======================================================== */
+  --color-void: #050505;
+  --color-coal: #0d0d10;
+  --color-graphite: #18181b;
+  --color-iron: #27272a;
+  --color-ash: #3f3f46;
+  --color-smoke: #71717a;
+  --color-bone: #fafafa;
+  --color-paper: #ededed;
+
+  --color-blood: #7f1d1d;
+  --color-rust: #b91c1c;
+  --color-flare: #ef4444;
+  --color-ember: #fca5a5;
+
+  /* ========================================================
+     TYPOGRAPHY
+     ======================================================== */
+  --font-display: "Anton", "Impact", "Arial Black", sans-serif;
+  --font-sans:
+    "Space Grotesk", "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", "Menlo", "Monaco", ui-monospace, monospace;
+}
+
+/* ========================================================
+   BASE
+   ======================================================== */
+html {
+  scroll-behavior: smooth;
+  background: var(--color-void);
+  color-scheme: dark;
+}
+
+body {
+  font-family: var(--font-sans);
+  background: var(--color-void);
+  color: var(--color-bone);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+::selection {
+  background: var(--color-flare);
+  color: var(--color-void);
+}
+
+/* Hide native cursor on devices with hover (desktop) when custom cursor is active */
+@media (hover: hover) and (pointer: fine) {
+  body.cursor-on,
+  body.cursor-on * {
+    cursor: none !important;
+  }
+}
+
+/* ========================================================
+   UTILITY: film grain noise overlay
+   ======================================================== */
+.grain::before {
+  content: "";
+  position: fixed;
+  inset: -50%;
+  pointer-events: none;
+  z-index: 100;
+  opacity: 0.05;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml;utf8,<svg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)' opacity='1'/></svg>");
+}
+
+/* ========================================================
+   MARQUEE
+   ======================================================== */
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+.marquee {
+  display: flex;
+  width: max-content;
+  animation: marquee 40s linear infinite;
+}
+.marquee--fast {
+  animation-duration: 22s;
+}
+.marquee--reverse {
+  animation-direction: reverse;
+}
+
+/* ========================================================
+   SCROLL REVEAL — JS-enhanced, with no-JS fallback
+   ======================================================== */
+.reveal {
+  opacity: 1;
+  transform: none;
+}
+/* Only hide if JS has tagged the html element */
+html.js .reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  transition:
+    opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+}
+html.js .reveal.in {
+  opacity: 1;
+  transform: translateY(0);
+}
+.reveal-delay-1 {
+  transition-delay: 0.08s;
+}
+.reveal-delay-2 {
+  transition-delay: 0.16s;
+}
+.reveal-delay-3 {
+  transition-delay: 0.24s;
+}
+.reveal-delay-4 {
+  transition-delay: 0.32s;
+}
+
+/* ========================================================
+   ROTATING MARK (hero ambient motion)
+   ======================================================== */
+@keyframes slow-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+.slow-spin {
+  animation: slow-spin 80s linear infinite;
+}
+
+/* ========================================================
+   OUTLINED TYPE
+   ======================================================== */
+.text-stroke {
+  color: transparent;
+  -webkit-text-stroke: 1.5px var(--color-bone);
+}
+.text-stroke-red {
+  color: transparent;
+  -webkit-text-stroke: 1.5px var(--color-flare);
+}
+
+/* ========================================================
+   CUSTOM CURSOR
+   ======================================================== */
+.cursor-dot {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 8px;
+  height: 8px;
+  background: var(--color-flare);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9999;
+  transform: translate(-50%, -50%);
+  mix-blend-mode: difference;
+  transition: width 0.2s ease, height 0.2s ease, background 0.2s ease;
+}
+.cursor-ring {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 36px;
+  height: 36px;
+  border: 1px solid var(--color-bone);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9998;
+  transform: translate(-50%, -50%);
+  transition: width 0.25s ease, height 0.25s ease,
+    border-color 0.25s ease, opacity 0.25s ease;
+  mix-blend-mode: difference;
+}
+.cursor-hover .cursor-dot {
+  width: 0;
+  height: 0;
+}
+.cursor-hover .cursor-ring {
+  width: 64px;
+  height: 64px;
+  border-color: var(--color-flare);
+}
+
+/* ========================================================
+   SCROLL-PROGRESS BAR
+   ======================================================== */
+.scroll-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 2px;
+  background: var(--color-flare);
+  z-index: 9999;
+  transform-origin: left;
+  transform: scaleX(0);
+  transition: transform 0.05s linear;
+}
+
+/* ========================================================
+   LINK HOVER
+   ======================================================== */
+.link-flare {
+  position: relative;
+  display: inline-block;
+}
+.link-flare::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -3px;
+  width: 100%;
+  height: 1px;
+  background: currentColor;
+  transform: scaleX(1);
+  transform-origin: right;
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.link-flare:hover::after {
+  transform: scaleX(0);
+  transform-origin: left;
+}
+
+/* ========================================================
+   FOCUS
+   ======================================================== */
+*:focus-visible {
+  outline: 2px solid var(--color-flare);
+  outline-offset: 3px;
+  border-radius: 2px;
+}

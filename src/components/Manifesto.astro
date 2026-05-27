@@ -1,0 +1,71 @@
+---
+const beliefs = [
+  { n: "01", text: "Shipping beats perfecting. Always." },
+  { n: "02", text: "Six months without a launch means you're losing." },
+  { n: "03", text: "I write code. I don't write decks." },
+  { n: "04", text: "Working software is the only persuasion that matters." },
+  { n: "05", text: "If we can't ship in twelve weeks, we shouldn't start." },
+];
+---
+
+<section
+  id="manifesto"
+  class="relative py-32 sm:py-44 border-t border-iron bg-void"
+>
+  <div class="max-w-[1600px] mx-auto px-6 sm:px-10 lg:px-14">
+    {/* Header row */}
+    <div class="grid grid-cols-12 gap-6 mb-20 sm:mb-28">
+      <div class="col-span-12 md:col-span-3 reveal">
+        <p
+          class="text-[11px] uppercase tracking-[0.22em] font-mono text-flare mb-3"
+        >
+          <span class="inline-block w-6 h-px bg-flare align-middle mr-2"
+          ></span>
+          Principles
+        </p>
+      </div>
+      <div class="col-span-12 md:col-span-9 reveal reveal-delay-1">
+        <h2
+          class="font-display uppercase leading-[0.9] text-[clamp(40px,7vw,108px)] tracking-[-0.01em]"
+        >
+          <span class="block">I'm not here</span>
+          <span class="block"><span class="text-flare">to be polite.</span></span>
+        </h2>
+      </div>
+    </div>
+
+    {/* Beliefs */}
+    <ol class="divide-y divide-iron">
+      {
+        beliefs.map((b, i) => (
+          <li
+            class={`reveal reveal-delay-${(i % 4) + 1} grid grid-cols-12 gap-6 py-7 sm:py-9 group hover:bg-coal/40 transition`}
+          >
+            <span class="col-span-2 md:col-span-1 font-mono text-smoke text-sm pt-2">
+              {b.n}
+            </span>
+            <span class="col-span-10 md:col-span-9 font-display uppercase text-[clamp(28px,5vw,72px)] leading-[0.95] tracking-[-0.01em]">
+              {b.text}
+            </span>
+            <span class="hidden md:flex col-span-2 items-center justify-end text-flare opacity-0 group-hover:opacity-100 transition">
+              <svg viewBox="0 0 24 24" class="w-7 h-7" fill="none" stroke="currentColor" stroke-width="1.5">
+                <path d="M5 12 H19 M13 6 L19 12 L13 18" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+            </span>
+          </li>
+        ))
+      }
+    </ol>
+
+    <div class="mt-20 grid grid-cols-12 gap-6 reveal">
+      <p
+        class="col-span-12 md:col-span-6 md:col-start-4 text-paper text-lg leading-relaxed"
+      >
+        I&rsquo;ve shipped iOS apps to the App Store, websites for family
+        businesses, desktop tools, and game prototypes. Different stacks, same
+        operating mode: scope tight, ship fast, then iterate against real
+        users.
+      </p>
+    </div>
+  </div>
+</section>

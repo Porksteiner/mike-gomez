@@ -1,0 +1,88 @@
+---
+/*
+  HERO — Personal positioning. First-person, direct.
+
+  Headline: "I build the thing / you've been / waiting six months / to ship."
+  Mixed-treatment Anton serif. Italic accent on the duration.
+*/
+---
+
+<section
+  class="relative min-h-screen flex flex-col justify-end overflow-hidden pt-32 pb-12 sm:pb-16"
+>
+  {/* Ambient rotating mark */}
+  <div
+    aria-hidden="true"
+    class="pointer-events-none absolute -top-32 -right-24 sm:-right-20 w-[600px] h-[600px] sm:w-[860px] sm:h-[860px] opacity-[0.06]"
+  >
+    <svg viewBox="0 0 200 200" class="w-full h-full slow-spin text-flare">
+      <circle cx="100" cy="100" r="80" fill="none" stroke="currentColor" stroke-width="6" />
+      <circle cx="100" cy="100" r="32" fill="currentColor" />
+    </svg>
+  </div>
+
+  {/* Top label row */}
+  <div
+    class="relative max-w-[1600px] w-full mx-auto px-6 sm:px-10 lg:px-14 mb-12 sm:mb-20 grid grid-cols-12 gap-x-6 text-[11px] uppercase tracking-[0.2em] font-mono text-smoke"
+  >
+    <div class="col-span-6 reveal">
+      <span class="text-flare">●</span>&nbsp;&nbsp;Freelance developer &nbsp;/&nbsp;
+      Web &amp; Mobile
+    </div>
+    <div class="col-span-6 text-right reveal reveal-delay-1">
+      Available &nbsp;/&nbsp; 2 slots &nbsp;/&nbsp; Worldwide
+    </div>
+  </div>
+
+  {/* Headline */}
+  <h1
+    class="relative max-w-[1600px] w-full mx-auto px-6 sm:px-10 lg:px-14 font-display uppercase tracking-[-0.02em] leading-[0.85] text-[clamp(56px,12vw,208px)]"
+  >
+    <span class="block reveal">I build the thing</span>
+    <span class="block reveal reveal-delay-1">
+      <span class="text-stroke">you've been</span>
+    </span>
+    <span class="block reveal reveal-delay-2">
+      <span class="italic font-sans font-light normal-case tracking-[-0.03em] text-flare">waiting</span>
+      <span class="text-bone">&nbsp;six&nbsp;months</span>
+    </span>
+    <span class="block reveal reveal-delay-3 -mt-2 sm:-mt-4">
+      <span class="text-stroke-red">to ship.</span>
+    </span>
+  </h1>
+
+  {/* Bottom row */}
+  <div
+    class="relative max-w-[1600px] w-full mx-auto px-6 sm:px-10 lg:px-14 mt-16 sm:mt-24 grid grid-cols-12 gap-6"
+  >
+    <div class="col-span-12 md:col-span-6 reveal reveal-delay-3">
+      <p class="text-lg sm:text-xl text-paper max-w-md leading-snug">
+        I&rsquo;m a solo developer working with founders, small businesses, and
+        non-technical operators who&rsquo;d rather have a real working app
+        than another deck.
+      </p>
+    </div>
+
+    <div class="col-span-12 md:col-span-3 md:col-start-8 reveal reveal-delay-4">
+      <p class="text-[11px] uppercase tracking-[0.2em] font-mono text-smoke mb-2">
+        Currently shipping
+      </p>
+      <p class="text-paper text-[15px] leading-snug">
+        BaitIQ v2 &mdash; iOS, App Store<br />
+        Unlearn Your Credit Habits &mdash; launch
+      </p>
+    </div>
+
+    <div class="col-span-12 md:col-span-2 md:col-start-11 flex items-end justify-end reveal reveal-delay-4">
+      <a
+        href="#work"
+        class="flex flex-col items-end gap-2 text-[11px] uppercase tracking-[0.2em] font-mono text-smoke hover:text-bone transition"
+      >
+        See work
+        <svg viewBox="0 0 24 24" class="w-4 h-6" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M12 4 V20 M5 13 L12 20 L19 13" stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
+      </a>
+    </div>
+  </div>
+</section>

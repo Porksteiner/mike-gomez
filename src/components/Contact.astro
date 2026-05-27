@@ -1,0 +1,94 @@
+---
+const email = "mike@mikegomez.dev";
+---
+
+<section
+  id="contact"
+  class="relative py-32 sm:py-44 border-t border-iron bg-void overflow-hidden"
+>
+  {/* Massive bg type */}
+  <div
+    aria-hidden="true"
+    class="pointer-events-none absolute inset-x-0 -bottom-12 flex justify-center font-display uppercase text-[clamp(180px,30vw,520px)] leading-[0.85] text-flare/[0.04] select-none whitespace-nowrap"
+  >
+    Let&rsquo;s ship
+  </div>
+
+  <div class="relative max-w-[1600px] mx-auto px-6 sm:px-10 lg:px-14">
+    <div class="grid grid-cols-12 gap-6 mb-16">
+      <div class="col-span-12 md:col-span-3 reveal">
+        <p class="text-[11px] uppercase tracking-[0.22em] font-mono text-flare">
+          <span class="inline-block w-6 h-px bg-flare align-middle mr-2"
+          ></span>
+          Contact
+        </p>
+      </div>
+      <div class="col-span-12 md:col-span-9 reveal reveal-delay-1">
+        <h2
+          class="font-display uppercase leading-[0.85] text-[clamp(56px,12vw,200px)] tracking-[-0.02em]"
+        >
+          <span class="block">You bring</span>
+          <span class="block">
+            the <span class="text-flare">problem.</span>
+          </span>
+          <span class="block text-stroke">I bring the build.</span>
+        </h2>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-12 gap-6 mt-20">
+      <div class="col-span-12 md:col-span-5 md:col-start-4 reveal">
+        <p class="text-paper text-lg leading-relaxed mb-10">
+          Tell me what you&rsquo;re building, when it needs to launch, and
+          the rough budget. I answer within one business day. If we&rsquo;re
+          not a fit I&rsquo;ll tell you and point you to someone who is.
+        </p>
+
+        <div class="space-y-4">
+          <a
+            href={`mailto:${email}`}
+            data-magnetic
+            class="group flex items-center justify-between border-t border-iron py-5 hover:border-flare transition will-change-transform"
+            data-cursor="hover"
+          >
+            <span>
+              <span class="block font-mono text-[11px] uppercase tracking-[0.22em] text-smoke mb-1.5">
+                Email
+              </span>
+              <span class="font-display text-2xl sm:text-4xl uppercase tracking-[-0.01em] group-hover:text-flare transition-colors break-all">
+                {email}
+              </span>
+            </span>
+            <svg viewBox="0 0 24 24" class="w-7 h-7 -rotate-45 group-hover:rotate-0 transition-transform flex-shrink-0 ml-4" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M5 12 H19 M13 6 L19 12 L13 18" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+          </a>
+
+          <a
+            href="#"
+            data-magnetic
+            class="group flex items-center justify-between border-t border-b border-iron py-5 hover:border-flare transition will-change-transform"
+            data-cursor="hover"
+          >
+            <span>
+              <span class="block font-mono text-[11px] uppercase tracking-[0.22em] text-smoke mb-1.5">
+                30 min intro call
+              </span>
+              <span class="font-display text-3xl sm:text-4xl uppercase tracking-[-0.01em] group-hover:text-flare transition-colors">
+                Book a slot
+              </span>
+            </span>
+            <svg viewBox="0 0 24 24" class="w-7 h-7 -rotate-45 group-hover:rotate-0 transition-transform flex-shrink-0 ml-4" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M5 12 H19 M13 6 L19 12 L13 18" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+          </a>
+        </div>
+
+        <p class="mt-10 font-mono text-[12px] uppercase tracking-[0.18em] text-smoke leading-relaxed">
+          Currently booking projects starting in 2&ndash;4 weeks.<br />
+          Typical engagement &mdash; $4k&ndash;$25k.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
