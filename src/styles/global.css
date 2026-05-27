@@ -294,33 +294,6 @@ main > section.lift-hatch::after {
   opacity: 0.5;
 }
 
-/* Subtle vertical guide lines at the page edges (cream, very faint) */
-body::after {
-  content: "";
-  position: fixed;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  pointer-events: none;
-  z-index: 90;
-  background-image:
-    linear-gradient(
-      to right,
-      transparent calc(50% - 50vw),
-      rgba(245, 234, 212, 0.04) calc(50% - 50vw + 4%),
-      rgba(245, 234, 212, 0.04) calc(50% - 50vw + 4% + 1px),
-      transparent calc(50% - 50vw + 4% + 1px)
-    ),
-    linear-gradient(
-      to right,
-      transparent calc(50% + 50vw - 4% - 1px),
-      rgba(245, 234, 212, 0.04) calc(50% + 50vw - 4% - 1px),
-      rgba(245, 234, 212, 0.04) calc(50% + 50vw - 4%),
-      transparent calc(50% + 50vw - 4%)
-    );
-}
-
 /* Editorial corner brackets — a single decorative L-shape utility */
 .corner-mark {
   position: absolute;
