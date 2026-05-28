@@ -320,25 +320,26 @@ main > section.lift-hatch::after {
 .hand {
   position: absolute;
   top: 50%;
-  width: clamp(560px, 75vw, 1300px);
+  /* Arm content fills ~46% of each image. Sized so the arm reads
+     huge AND the flat shoulder end sits well off-screen. */
+  width: clamp(900px, 115vw, 1900px);
   height: auto;
   pointer-events: none;
   user-select: none;
-  filter: drop-shadow(0 18px 36px rgba(45, 31, 10, 0.18));
+  filter: drop-shadow(0 20px 40px rgba(45, 31, 10, 0.2));
 }
 
-/* Left hand anchored to left edge — only the shoulder/upper-arm is
-   cropped off-screen; the forearm + hand are visible. */
+/* Left hand: shoulder pushed off-screen left, fingertip starts
+   ~40vw (left of center), needs only ~8vw of travel to touch. */
 .hand-left {
-  left: -18vw;
-  /* p=0 → fingertip on left third of viewport; p=1 → near center */
-  transform: translate(calc(30vw * var(--creation-p)), -50%);
+  left: -12vw;
+  transform: translate(calc(8vw * var(--creation-p)), -50%);
 }
 
 /* Right hand mirrored */
 .hand-right {
-  right: -18vw;
-  transform: translate(calc(-30vw * var(--creation-p)), -50%);
+  right: -12vw;
+  transform: translate(calc(-8vw * var(--creation-p)), -50%);
 }
 
 .touch-light {
