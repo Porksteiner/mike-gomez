@@ -1,62 +1,46 @@
 ---
-// Two projects, both shown well. No "your project here" begging card.
+/*
+  WORK — quieted intro. No mono eyebrow, no big "RECENT WORK. REAL,
+  SHIPPED, PAID." header. One short line of context, then the work
+  speaks for itself.
+*/
 ---
 
-<section id="work" class="relative py-32 sm:py-44 border-t border-iron bg-void">
+<section id="work" class="relative py-32 sm:py-44 bg-void">
   <div class="max-w-[1600px] mx-auto px-6 sm:px-10 lg:px-14">
-    {/* Header */}
-    <div class="grid grid-cols-12 gap-6 mb-16 sm:mb-20">
-      <div class="col-span-12 md:col-span-3 reveal">
-        <p class="text-[11px] uppercase tracking-[0.22em] font-mono text-gold">
-          <span class="inline-block w-6 h-px bg-gold align-middle mr-2"></span>
-          Selected work
-        </p>
-      </div>
-      <div class="col-span-12 md:col-span-9 reveal reveal-delay-1">
-        <div class="flex flex-wrap items-end justify-between gap-6">
-          <h2
-            class="font-display uppercase leading-[0.9] text-[clamp(40px,7vw,96px)] tracking-[-0.01em]"
-          >
-            <span class="block">Recent work.</span>
-            <span class="block text-stroke">Real, shipped, paid.</span>
-          </h2>
-          <a
-            href="#contact"
-            class="text-[12px] uppercase tracking-[0.2em] font-mono text-smoke hover:text-bone link-flare transition"
-          >
-            Work with me &rarr;
-          </a>
-        </div>
-      </div>
+    {/* Minimal intro */}
+    <div class="mb-16 sm:mb-20 max-w-3xl reveal">
+      <h2 class="font-display uppercase leading-[0.9] text-[clamp(40px,6.5vw,88px)] tracking-[-0.01em]">
+        Two things I&rsquo;ve <span class="text-gold">shipped</span>.
+      </h2>
+      <p class="mt-6 text-lg text-paper leading-relaxed max-w-xl">
+        Both still running. Both built solo, from sketch to live.
+      </p>
     </div>
 
-    {/* Grid */}
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-6 auto-rows-[minmax(280px,auto)]">
       {/* ===== BaitIQ — featured ===== */}
       <article
-        class="reveal lg:col-span-12 group relative overflow-hidden border border-iron hover:border-gold/60 transition bg-coal"
+        class="reveal lg:col-span-12 group relative overflow-hidden border border-iron hover:border-gold/60 transition-all duration-500 bg-coal"
       >
-        <div class="absolute inset-0 bg-gradient-to-br from-coal via-honey/25 to-graphite"></div>
+        <div class="absolute inset-0 bg-gradient-to-br from-coal via-honey/20 to-graphite"></div>
         <div
           class="absolute inset-0 opacity-[0.5]"
           style="background-image: linear-gradient(to right, rgba(168,133,74,0.15) 1px, transparent 1px), linear-gradient(to bottom, rgba(168,133,74,0.15) 1px, transparent 1px); background-size: 40px 40px;"
         ></div>
 
         <div class="relative flex flex-col gap-8 sm:gap-10 p-6 sm:p-10">
-          {/* Top meta row */}
           <div class="flex items-start justify-between gap-4">
             <span class="font-mono text-[11px] tracking-[0.22em] text-bone/70 uppercase">
-              01 — 2026
+              I &mdash; 2026
             </span>
             <span class="font-mono text-[10px] uppercase tracking-[0.22em] text-bone/70 text-right">
               iOS · React Native · OpenAI
             </span>
           </div>
 
-          {/* Main split: text on left, laptop mockup on right */}
           <div class="grid grid-cols-1 md:grid-cols-12 gap-8 sm:gap-12 items-center">
             <div class="md:col-span-5 flex flex-col gap-5 order-2 md:order-1">
-              {/* Small icon badge */}
               <div class="relative w-fit">
                 <div class="absolute inset-0 -m-3 bg-gold/15 blur-2xl rounded-full"></div>
                 <img
@@ -70,18 +54,18 @@
               </div>
 
               <h3
-                class="font-display uppercase text-[clamp(48px,6.5vw,96px)] leading-[0.95] tracking-[-0.02em] group-hover:text-gold transition-colors"
+                class="font-display uppercase text-[clamp(48px,6.5vw,96px)] leading-[0.95] tracking-[-0.02em] transition-colors duration-500 group-hover:text-gold"
               >
                 BaitIQ
               </h3>
 
               <p class="text-paper text-lg leading-snug max-w-md">
-                AI fishing intelligence — point your camera, get bait
+                AI fishing intelligence. Point your camera, get bait
                 recommendations tuned for your weather, location, and
-                conditions. <span class="text-bone">Live on the iOS App Store.</span>
+                conditions.
+                <span class="text-bone">Live on the iOS App Store.</span>
               </p>
 
-              {/* Metric pills */}
               <div class="flex flex-wrap items-center gap-3 mt-2">
                 <span class="inline-flex items-center gap-2 px-3 py-1.5 bg-void/80 border border-iron rounded-full text-[11px] uppercase tracking-[0.2em] font-mono text-bone/90">
                   <span class="relative flex w-1.5 h-1.5">
@@ -100,18 +84,16 @@
               </div>
             </div>
 
-            {/* Right column: laptop mockup */}
             <div class="md:col-span-7 order-1 md:order-2">
               <div class="relative">
-                {/* Soft glow behind the laptop */}
-                <div class="absolute inset-0 -m-6 bg-gold/10 blur-3xl rounded-full"></div>
+                <div class="absolute inset-0 -m-6 bg-gold/10 blur-3xl rounded-full transition-all duration-700 group-hover:bg-gold/20"></div>
                 <img
                   src="/projects/baitiq-marketing.png"
-                  alt="BaitIQ marketing site shown on a MacBook — “Throw the right bait. Every time.”"
+                  alt="BaitIQ marketing site shown on a MacBook"
                   width="900"
                   height="900"
                   loading="lazy"
-                  class="relative w-full h-auto max-w-[520px] mx-auto transition-transform duration-700 group-hover:scale-[1.02]"
+                  class="relative w-full h-auto max-w-[520px] mx-auto transition-transform duration-700 group-hover:scale-[1.04] group-hover:-rotate-[0.5deg]"
                 />
               </div>
             </div>
@@ -119,9 +101,9 @@
         </div>
       </article>
 
-      {/* ===== Unlearn Your Credit Habits — full width ===== */}
+      {/* ===== Unlearn ===== */}
       <article
-        class="reveal reveal-delay-1 lg:col-span-12 group relative overflow-hidden border border-iron hover:border-gold/60 transition bg-coal"
+        class="reveal reveal-delay-1 lg:col-span-12 group relative overflow-hidden border border-iron hover:border-gold/60 transition-all duration-500 bg-coal"
       >
         <div class="absolute inset-0 bg-gradient-to-br from-coal via-honey/20 to-graphite"></div>
         <div
@@ -130,21 +112,19 @@
         ></div>
 
         <div class="relative flex flex-col gap-8 sm:gap-10 p-6 sm:p-10">
-          {/* Top meta row */}
           <div class="flex items-start justify-between gap-4">
             <span class="font-mono text-[11px] tracking-[0.22em] text-bone/70 uppercase">
-              02 — 2026
+              II &mdash; 2026
             </span>
             <span class="font-mono text-[10px] uppercase tracking-[0.22em] text-bone/70 text-right">
               Brand · Site · Strategy
             </span>
           </div>
 
-          {/* Main split: text on left, laptop mockup on right */}
           <div class="grid grid-cols-1 md:grid-cols-12 gap-8 sm:gap-12 items-center">
             <div class="md:col-span-5 flex flex-col gap-5 order-2 md:order-1">
               <h3
-                class="font-display uppercase text-[clamp(40px,5.5vw,72px)] leading-[0.95] tracking-[-0.02em] group-hover:text-gold transition-colors"
+                class="font-display uppercase text-[clamp(40px,5.5vw,72px)] leading-[0.95] tracking-[-0.02em] transition-colors duration-500 group-hover:text-gold"
               >
                 Unlearn Your Credit Habits
               </h3>
@@ -156,7 +136,6 @@
                 <span class="text-bone">From sketch to staged in twelve weeks.</span>
               </p>
 
-              {/* Metric pills */}
               <div class="flex flex-wrap items-center gap-3 mt-2">
                 <span class="inline-flex items-center gap-2 px-3 py-1.5 bg-void/80 border border-iron rounded-full text-[11px] uppercase tracking-[0.2em] font-mono text-bone/90">
                   Launching Q3 2026
@@ -170,17 +149,16 @@
               </div>
             </div>
 
-            {/* Right column: laptop mockup */}
             <div class="md:col-span-7 order-1 md:order-2">
               <div class="relative">
-                <div class="absolute inset-0 -m-6 bg-gold/10 blur-3xl rounded-full"></div>
+                <div class="absolute inset-0 -m-6 bg-gold/10 blur-3xl rounded-full transition-all duration-700 group-hover:bg-gold/20"></div>
                 <img
                   src="/projects/unlearn-marketing.png"
-                  alt="Unlearn Your Credit Habits — marketing site shown on a MacBook"
+                  alt="Unlearn Your Credit Habits marketing site shown on a MacBook"
                   width="900"
                   height="900"
                   loading="lazy"
-                  class="relative w-full h-auto max-w-[520px] mx-auto transition-transform duration-700 group-hover:scale-[1.02]"
+                  class="relative w-full h-auto max-w-[520px] mx-auto transition-transform duration-700 group-hover:scale-[1.04] group-hover:rotate-[0.5deg]"
                 />
               </div>
             </div>

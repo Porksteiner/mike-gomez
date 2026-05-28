@@ -23,6 +23,9 @@
   --color-bronze: #7d4719;
   --color-earth: #3d2814;
 
+  /* One deep accent for moments that need gravity (used sparingly) */
+  --color-clay: #9c3528;
+
   /* ========================================================
      TYPOGRAPHY
      ======================================================== */
@@ -30,6 +33,10 @@
   --font-sans:
     "Space Grotesk", "Inter", ui-sans-serif, system-ui, sans-serif;
   --font-mono: "JetBrains Mono", "Menlo", "Monaco", ui-monospace, monospace;
+  /* Inscription — Roman cap-style serif for the sacred moments
+     (Creation touch, contact close, footer verse). Used sparingly. */
+  --font-inscription:
+    "Cinzel", "Trajan Pro", "Times New Roman", serif;
 }
 
 /* ========================================================
@@ -361,6 +368,26 @@ main > section.lift-hatch::after {
     transparent 70%
   );
   filter: blur(14px);
+}
+
+/* Cinzel inscription that fades in at the touch moment.
+   Sits underneath the light, breathes with it. */
+.creation-inscription {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, calc(-50% + 220px));
+  text-align: center;
+  pointer-events: none;
+  font-family: var(--font-inscription);
+  font-weight: 500;
+  letter-spacing: 0.35em;
+  font-size: clamp(11px, 1.05vw, 15px);
+  color: var(--color-earth);
+  text-transform: uppercase;
+  white-space: nowrap;
+  /* same ramp as the light */
+  opacity: calc(max(0, var(--creation-p) - 0.88) * 8.33);
 }
 
 /* Inner pulsing glow — animates continuously, multiplies w/ opacity above */

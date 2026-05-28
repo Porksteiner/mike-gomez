@@ -3,15 +3,9 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 import Header from "../components/Header.astro";
 import Hero from "../components/Hero.astro";
 import CreationOfAdam from "../components/CreationOfAdam.astro";
-import Manifesto from "../components/Manifesto.astro";
 import Work from "../components/Work.astro";
-// import Testimonials from "../components/Testimonials.astro"; // hidden — re-enable once real testimonials are in
-import Numbers from "../components/Numbers.astro";
-import Capabilities from "../components/Capabilities.astro";
-import Now from "../components/Now.astro";
-import Process from "../components/Process.astro";
+import HowIWork from "../components/HowIWork.astro";
 import FAQ from "../components/FAQ.astro";
-import Stack from "../components/Stack.astro";
 import Contact from "../components/Contact.astro";
 import Footer from "../components/Footer.astro";
 ---
@@ -19,37 +13,24 @@ import Footer from "../components/Footer.astro";
 <BaseLayout>
   <Header />
   <main>
-    <Hero />
+    {/*
+      Three acts. Each divider marks a real shift in stance.
+      Act 1 — Vision: Hero + Creation moment
+      Act 2 — Proof: Work
+      Act 3 — Working together: How I work + FAQ + Contact
+    */}
 
+    <Hero />
     <CreationOfAdam />
 
-    <div class="section-divider"><span class="mark">§ Commitments</span></div>
-    <Manifesto />
-
-    <div class="section-divider"><span class="mark">§ Selected work</span></div>
+    <div class="section-divider"><span class="mark">The work</span></div>
     <Work />
 
-    {/* Testimonials hidden until real ones are in — see Testimonials.astro */}
-
-    <div class="section-divider"><span class="mark">§ By the numbers</span></div>
-    <Numbers />
-
-    <div class="section-divider"><span class="mark">§ Capabilities</span></div>
-    <Capabilities />
-
-    <div class="section-divider"><span class="mark">§ Now</span></div>
-    <Now />
-
-    <div class="section-divider"><span class="mark">§ Process</span></div>
-    <Process />
-
-    <div class="section-divider"><span class="mark">§ FAQ</span></div>
+    <div class="section-divider"><span class="mark">Working together</span></div>
+    <HowIWork />
     <FAQ />
 
-    <div class="section-divider"><span class="mark">§ Stack</span></div>
-    <Stack />
-
-    <div class="section-divider"><span class="mark">§ Contact</span></div>
+    <div class="section-divider"><span class="mark">Get in touch</span></div>
     <Contact />
   </main>
   <Footer />

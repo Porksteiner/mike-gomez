@@ -1,11 +1,13 @@
 ---
 const email = "mike@mikegomez.dev";
+const calendly = "https://calendly.com/mike-mikegomez/30min";
 ---
 
 <section
   id="contact"
-  class="relative py-32 sm:py-44 border-t border-iron bg-void overflow-hidden"
+  class="relative py-32 sm:py-44 bg-void overflow-hidden"
 >
+  {/* Big ghost type */}
   <div
     aria-hidden="true"
     class="pointer-events-none absolute inset-x-0 -bottom-12 flex justify-center font-display uppercase text-[clamp(180px,30vw,520px)] leading-[0.85] text-gold/[0.1] select-none whitespace-nowrap"
@@ -14,32 +16,30 @@ const email = "mike@mikegomez.dev";
   </div>
 
   <div class="relative max-w-[1600px] mx-auto px-6 sm:px-10 lg:px-14">
-    <div class="grid grid-cols-12 gap-6 mb-16">
-      <div class="col-span-12 md:col-span-3 reveal">
-        <p class="text-[11px] uppercase tracking-[0.22em] font-mono text-gold">
-          <span class="inline-block w-6 h-px bg-gold align-middle mr-2"></span>
-          Contact
-        </p>
-      </div>
-      <div class="col-span-12 md:col-span-9 reveal reveal-delay-1">
-        <h2
-          class="font-display uppercase leading-[0.85] text-[clamp(56px,12vw,200px)] tracking-[-0.02em]"
-        >
-          <span class="block">Let&rsquo;s build</span>
-          <span class="block">
-            something <span class="text-gold">good</span>
-          </span>
-          <span class="block text-stroke">together.</span>
-        </h2>
-      </div>
-    </div>
+    {/* Cinzel inscription opener */}
+    <p
+      class="text-center mb-10 sm:mb-12 reveal tracking-[0.42em] text-[clamp(10px,0.95vw,13px)] uppercase text-clay"
+      style="font-family: var(--font-inscription);"
+    >
+      &mdash; And so &mdash;
+    </p>
 
-    <div class="grid grid-cols-12 gap-6 mt-20">
-      <div class="col-span-12 md:col-span-5 md:col-start-4 reveal">
-        <p class="text-paper text-lg leading-relaxed mb-10">
-          Tell me what you&rsquo;re building, when it needs to launch, and
-          the rough budget. I answer within one business day. If we&rsquo;re
-          not a fit I&rsquo;ll tell you and point you toward someone who is.
+    <h2
+      class="reveal reveal-delay-1 text-center font-display uppercase leading-[0.85] text-[clamp(64px,14vw,232px)] tracking-[-0.02em]"
+    >
+      <span class="block">Let&rsquo;s build</span>
+      <span class="block">
+        something <span class="text-gold">good</span>
+      </span>
+      <span class="block text-stroke">together.</span>
+    </h2>
+
+    <div class="mt-20 sm:mt-24 grid grid-cols-12 gap-6">
+      <div class="col-span-12 md:col-span-6 md:col-start-4 reveal">
+        <p class="text-paper text-lg leading-relaxed mb-10 text-center md:text-left">
+          Tell me what you&rsquo;re building, when it needs to launch, and the
+          rough budget. I answer within one business day. If we&rsquo;re not a
+          fit I&rsquo;ll tell you and point you toward someone who is.
         </p>
 
         <div class="space-y-4">
@@ -61,7 +61,7 @@ const email = "mike@mikegomez.dev";
           </a>
 
           <a
-            href="https://calendly.com/mike-mikegomez/30min"
+            href={calendly}
             target="_blank"
             rel="noopener noreferrer"
             data-magnetic
@@ -80,7 +80,7 @@ const email = "mike@mikegomez.dev";
           </a>
         </div>
 
-        <p class="mt-10 font-mono text-[12px] uppercase tracking-[0.18em] text-smoke leading-relaxed">
+        <p class="mt-10 font-mono text-[12px] uppercase tracking-[0.18em] text-smoke leading-relaxed text-center md:text-left">
           Currently booking projects starting in 2&ndash;4 weeks.<br />
           Typical engagement &mdash; $4k&ndash;$25k.
         </p>
