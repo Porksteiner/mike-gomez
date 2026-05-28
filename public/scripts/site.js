@@ -114,5 +114,24 @@
     });
   }
 
-  // (Animated counter removed — static stats only, no risk of broken render.)
+  /* ====================================================
+     6. Creation of Adam — scroll progress (0 → 1)
+     ==================================================== */
+  const adamSection = document.getElementById("creation-of-adam");
+  if (adamSection && !reduce) {
+    const update = () => {
+      const rect = adamSection.getBoundingClientRect();
+      const vh = window.innerHeight;
+      const totalScroll = Math.max(1, adamSection.offsetHeight - vh);
+      const scrolled = Math.max(0, -rect.top);
+      const p = Math.max(0, Math.min(1, scrolled / totalScroll));
+      adamSection.style.setProperty("--creation-p", p.toFixed(4));
+    };
+    document.addEventListener("scroll", update, { passive: true });
+    window.addEventListener("resize", update, { passive: true });
+    update();
+  } else if (adamSection && reduce) {
+    // Reduced-motion: hold hands touching, light visible, no animation.
+    adamSection.style.setProperty("--creation-p", "1");
+  }
 })();

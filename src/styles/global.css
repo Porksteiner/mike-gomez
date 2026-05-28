@@ -296,3 +296,94 @@ main > section.lift-hatch::after {
 .corner-mark.tr { top: 18px; right: 18px; border-left: none; border-bottom: none; }
 .corner-mark.bl { bottom: 18px; left: 18px; border-right: none; border-top: none; }
 .corner-mark.br { bottom: 18px; right: 18px; border-left: none; border-top: none; }
+
+/* ========================================================
+   CREATION OF ADAM — scroll-driven hands + light
+   ======================================================== */
+.creation-section {
+  position: relative;
+  min-height: 160vh;
+  /* default value so layout doesn't jump before JS sets it */
+  --creation-p: 0;
+}
+
+/* suppress the global section dot pattern — the visual is the focus */
+.creation-section::before { display: none; }
+
+.creation-sticky {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.hand {
+  position: absolute;
+  top: 50%;
+  width: clamp(200px, 32vw, 480px);
+  height: auto;
+  pointer-events: none;
+  user-select: none;
+  filter: drop-shadow(0 14px 30px rgba(45, 31, 10, 0.18));
+}
+
+.hand-left {
+  left: -3vw;
+  /* p=0 → at left edge; p=1 → translated so fingertip near center */
+  transform: translate(calc(35vw * var(--creation-p)), -50%);
+}
+
+.hand-right {
+  right: -3vw;
+  transform: translate(calc(-35vw * var(--creation-p)), -50%);
+}
+
+.touch-light {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 280px;
+  height: 280px;
+  border-radius: 50%;
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+  /* ramp opacity from 0 at p=0.85 to 1 at p=1.0 */
+  opacity: calc(max(0, var(--creation-p) - 0.85) * 6.67);
+  background: radial-gradient(
+    circle,
+    rgba(255, 248, 224, 1) 0%,
+    rgba(232, 198, 136, 0.7) 20%,
+    rgba(212, 175, 109, 0.35) 45%,
+    transparent 70%
+  );
+  filter: blur(14px);
+}
+
+/* Inner pulsing glow — animates continuously, multiplies w/ opacity above */
+.touch-light::after {
+  content: "";
+  position: absolute;
+  inset: -25%;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(255, 240, 200, 0.55) 0%,
+    transparent 65%
+  );
+  filter: blur(28px);
+  animation: creation-pulse 1.8s ease-in-out infinite;
+}
+
+@keyframes creation-pulse {
+  0%, 100% { transform: scale(0.85); opacity: 0.55; }
+  50%      { transform: scale(1.25); opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hand-left, .hand-right {
+    transition: none;
+  }
+  .touch-light::after {
+    animation: none;
+  }
+}
