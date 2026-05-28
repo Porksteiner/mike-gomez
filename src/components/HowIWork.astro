@@ -1,67 +1,68 @@
 ---
 /*
-  HOW I WORK — merged Manifesto (commitments) + Process (4 stages).
-  Written as an editorial essay, not a card grid. Each stage gets a
-  small kicker, a Cinzel numeral, and prose. The commitments are
-  woven into the prose, italicized when they appear.
+  HOW WE'LL WORK TOGETHER — same 4-stage editorial structure, warmer voice.
+  The voice should sound like Mike on a Zoom call: friendly, curious,
+  unhurried.
 */
 
 const stages = [
   {
     n: "I",
-    kicker: "Intake",
+    kicker: "First chat",
     duration: "Day 0",
     body:
-      "Two calls. We talk about what you're building, by when, and whether I'm the right person for it. No deck, no slides. If we shouldn't work together, I'll say so up front."
+      "We start with a 30-minute call. Tell me about what you're making, what's been tricky about it, and what you'd love to see in three months. No deck, no slides, just a real conversation. If we're not a fit, I'll happily point you to someone who is."
   },
   {
     n: "II",
     kicker: "Brief and estimate",
     duration: "Day 1",
     body:
-      "Within twenty-four hours of the call: a written scope, a timeline, a fixed price. Honest estimates, even when they're not what you'd like to hear."
+      "Within twenty-four hours of our call, you'll have a written scope, a timeline, and a fixed price. If anything looks off, we'll talk through it before we start. Real numbers, no surprises."
   },
   {
     n: "III",
     kicker: "Build",
     duration: "Weeks 1–N",
     body:
-      "Design and dev in parallel. Daily Loom updates if you want them, weekly demos if you don't. You see real working software inside a week. No surprise charges, no missed updates."
+      "Design and dev happen together. You'll see real working software inside the first week. I'll send Loom updates as often as you like, daily or weekly, and I'm easy to reach for anything in between."
   },
   {
     n: "IV",
-    kicker: "Ship and stay",
+    kicker: "Ship + stay close",
     duration: "Final + 30",
     body:
-      "Launch, hand-off, and thirty days of free fixes after. Quality I'd put my name on. Because I do."
+      "Launch, walk you through how everything works, and stick around for thirty days after to handle anything that comes up. I'll still be here when you have questions next year too."
   },
 ];
 ---
 
 <section id="how" class="relative bg-coal py-32 sm:py-44">
   <div class="max-w-[1600px] mx-auto px-6 sm:px-10 lg:px-14">
-    {/* Section opener — no mono eyebrow, no §-divider. Just a heading. */}
+    {/* Section opener */}
     <div class="mb-20 sm:mb-28 max-w-3xl">
       <h2
         class="font-display uppercase leading-[0.9] text-[clamp(48px,8vw,124px)] tracking-[-0.01em]"
       >
-        <span class="block">How I</span>
-        <span class="block"><span class="text-gold">actually</span> work.</span>
+        <span class="block">How we&rsquo;ll</span>
+        <span class="block">work <span class="text-gold">together</span>.</span>
       </h2>
       <p class="mt-8 text-lg sm:text-xl text-paper leading-relaxed max-w-2xl">
-        A practical sequence. No deck, no jargon, no surprises along the way.
-        From the first call to thirty days after launch, it looks like this.
+        Most of my projects start with a friendly call. We figure out what
+        you&rsquo;re trying to make, what&rsquo;s realistic for the timeline,
+        and whether I&rsquo;m the right person for it. If we move forward,
+        here&rsquo;s what working together looks like.
       </p>
     </div>
 
-    {/* Pull quote in Cinzel — the operating principle */}
+    {/* Pull quote in Cinzel — the relational principle */}
     <div class="my-20 sm:my-28 max-w-4xl mx-auto text-center">
       <p
         class="font-[var(--font-inscription)] tracking-[0.06em] text-[clamp(22px,2.4vw,34px)] leading-[1.35] text-ink-900"
         style="font-family: var(--font-inscription);"
       >
-        Quality I&rsquo;d put my name on.
-        <span class="text-gold">Because I do.</span>
+        Care in the work.
+        <span class="text-gold">Care in the conversation.</span>
       </p>
     </div>
 
@@ -70,7 +71,6 @@ const stages = [
       {
         stages.map((s) => (
           <li class="reveal grid grid-cols-12 gap-x-8 gap-y-3 py-12 sm:py-16">
-            {/* Cinzel Roman numeral */}
             <span
               class="col-span-2 md:col-span-1 text-[clamp(28px,3vw,44px)] text-gold leading-none pt-2"
               style="font-family: var(--font-inscription); letter-spacing: 0.05em;"

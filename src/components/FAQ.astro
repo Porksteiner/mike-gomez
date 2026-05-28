@@ -2,39 +2,50 @@
 const faqs = [
   {
     q: "Who owns the code I'm paying you to build?",
-    a: "You do. Once final payment clears, all source code, designs, and assets are yours. 100%. I keep the right to mention the project in my portfolio, that's it.",
+    a: "You do. Once we're squared away, all the source code, designs, and assets are 100% yours. The only thing I keep is the right to mention I worked on it (and only if that's okay with you).",
   },
   {
     q: "Will you sign an NDA?",
-    a: "Yes. Send me yours, or use a one-page mutual NDA. I keep client details confidential by default whether or not we sign anything.",
+    a: "Happy to. Send yours over, or I can share a simple one-page mutual NDA. Either way, what we talk about stays between us.",
   },
   {
     q: "What if we go over budget or scope?",
-    a: "I quote fixed prices on a fixed scope. If you add scope mid-build, I'll quote the addition before any extra work starts. If I underestimate, that's on me. The original price holds.",
+    a: "I quote fixed prices on a fixed scope, so the number we agree on is the number you pay. If you want to add something mid-build, we'll chat about it and I'll give you a clear estimate before any extra work starts. And if I underestimated to begin with, that's on me, the original price still holds.",
   },
   {
     q: "Do you do the design too, or do I bring designs?",
-    a: "Either works. For most projects I design and build together. Faster, more coherent. If you have a designer already, or existing brand guidelines, I'll work to them.",
+    a: "Either works! I usually design and build together since it tends to be faster and more cohesive. If you've already got a designer or brand guidelines, I'll happily work with what you have.",
   },
   {
     q: "What are your payment terms?",
-    a: "50% to start, 50% on launch. For longer projects we split the back half into milestone payments. Invoices via Stripe. Credit card, ACH, or wire all work.",
+    a: "Usually 50% up front, 50% on launch. For longer projects we can split the back half into milestone payments, whatever works for your cash flow. Stripe handles the invoices: card, ACH, or wire.",
   },
   {
-    q: "What if I'm not happy with the work?",
-    a: "Tell me early. I share work weekly so issues surface before they're expensive. If we get to launch and something isn't right, fixes during the 30-day support window are free.",
+    q: "What if I'm not happy with something?",
+    a: "Please tell me as soon as you can! I share work weekly so we can catch anything early, while it's still easy to change. If we get to launch and something still isn't right, fixes during the 30-day support window are on me.",
+  },
+  {
+    q: "What if I don't know exactly what I want yet?",
+    a: "That's totally fine, and pretty normal. Bring me whatever you've got, a rough idea, a sketch, a pile of screenshots. We'll figure out the shape of it together on the first call.",
   },
 ];
 ---
 
 <section id="faq" class="relative py-32 sm:py-44 bg-void">
   <div class="max-w-[1600px] mx-auto px-6 sm:px-10 lg:px-14">
-    {/* Quieter section opener — no mono eyebrow */}
+    {/* Section opener */}
     <div class="mb-16 sm:mb-20 max-w-3xl reveal">
       <h2 class="font-display uppercase leading-[0.9] text-[clamp(40px,6.5vw,88px)] tracking-[-0.01em]">
         <span class="block">Questions you</span>
-        <span class="block"><span class="text-gold">probably</span> have.</span>
+        <span class="block"><span class="text-gold">might</span> have.</span>
       </h2>
+      <p class="mt-6 text-lg text-paper leading-relaxed max-w-xl">
+        If yours isn&rsquo;t here,
+        <a href="#contact" class="text-gold hover:text-bone link-flare transition">
+          send it over
+        </a>
+        and I&rsquo;ll answer the same day.
+      </p>
     </div>
 
     <div class="max-w-4xl mx-auto">
@@ -72,12 +83,5 @@ const faqs = [
         ))
       }
     </div>
-
-    <p class="mt-12 text-center text-[13px] text-smoke">
-      Question not answered?
-      <a href="#contact" class="link-flare text-gold hover:text-bone transition">
-        Ask before booking &rarr;
-      </a>
-    </p>
   </div>
 </section>
