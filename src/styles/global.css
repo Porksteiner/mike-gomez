@@ -320,30 +320,33 @@ main > section.lift-hatch::after {
 .hand {
   position: absolute;
   top: 50%;
-  width: clamp(200px, 32vw, 480px);
+  width: clamp(560px, 75vw, 1300px);
   height: auto;
   pointer-events: none;
   user-select: none;
-  filter: drop-shadow(0 14px 30px rgba(45, 31, 10, 0.18));
+  filter: drop-shadow(0 18px 36px rgba(45, 31, 10, 0.18));
 }
 
+/* Left hand anchored to left edge — only the shoulder/upper-arm is
+   cropped off-screen; the forearm + hand are visible. */
 .hand-left {
-  left: -3vw;
-  /* p=0 → at left edge; p=1 → translated so fingertip near center */
-  transform: translate(calc(35vw * var(--creation-p)), -50%);
+  left: -18vw;
+  /* p=0 → fingertip on left third of viewport; p=1 → near center */
+  transform: translate(calc(30vw * var(--creation-p)), -50%);
 }
 
+/* Right hand mirrored */
 .hand-right {
-  right: -3vw;
-  transform: translate(calc(-35vw * var(--creation-p)), -50%);
+  right: -18vw;
+  transform: translate(calc(-30vw * var(--creation-p)), -50%);
 }
 
 .touch-light {
   position: absolute;
   top: 50%;
   left: 50%;
-  width: 280px;
-  height: 280px;
+  width: 420px;
+  height: 420px;
   border-radius: 50%;
   pointer-events: none;
   transform: translate(-50%, -50%);
