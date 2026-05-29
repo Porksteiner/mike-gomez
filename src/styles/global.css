@@ -674,3 +674,27 @@ main > section.lift-hatch::after {
     transition: none !important;
   }
 }
+
+/* ====================================================================
+   CREATION VIDEO — full-bleed scroll-synced video that replaces the
+   left/right hand PNGs. The existing --creation-p variable still drives
+   the touch-light glow and the inscription fade. JS in site.js maps
+   --creation-p × video.duration → video.currentTime.
+   ==================================================================== */
+.creation-video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  pointer-events: none;
+  user-select: none;
+  background: var(--color-void);
+}
+
+/* When the video is mounted, hide the old hand images so they don't
+   compete with the video underneath (kept in the JSON for backward
+   compat in case the user wants to flip back). */
+.creation-sticky:has(.creation-video) .hand {
+  display: none;
+}

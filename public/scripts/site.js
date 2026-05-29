@@ -116,23 +116,69 @@
 
   /* ====================================================
      6. Creation of Adam — scroll progress (0 → 1)
+     drives both --creation-p (CSS) and the video's currentTime
      ==================================================== */
   const adamSection = document.getElementById("creation-of-adam");
+  const adamVideo  = document.getElementById("creation-video");
   if (adamSection && !reduce) {
-    const update = () => {
+    let videoReady = false;
+    let lastT = -1;
+    if (adamVideo) {
+      const onMeta = () => {
+        videoReady = !isNaN(adamVideo.duration) && adamVideo.duration > 0;
+        update();
+      };
+      if (adamVideo.readyState >= 1) onMeta();
+      adamVideo.addEventListener("loadedmetadata", onMeta);
+      adamVideo.addEventListener("canplaythrough", onMeta);
+      // Force fetch — Chrome sometimes won't preload otherwise
+      adamVideo.load();
+    }
+    let scheduled = false;
+    function update() {
       const rect = adamSection.getBoundingClientRect();
       const vh = window.innerHeight;
       const totalScroll = Math.max(1, adamSection.offsetHeight - vh);
       const scrolled = Math.max(0, -rect.top);
       const p = Math.max(0, Math.min(1, scrolled / totalScroll));
       adamSection.style.setProperty("--creation-p", p.toFixed(4));
+
+      // Seek video — only when sufficiently changed, to avoid jank
+      if (videoReady && adamVideo) {
+        const dur = adamVideo.duration;
+        const target = p * dur;
+        if (Math.abs(target - lastT) > 0.02) {
+          // Use fastSeek when available (smoother) — else assign directly
+          try {
+            if (typeof adamVideo.fastSeek === "function") {
+              adamVideo.fastSeek(target);
+            } else {
+              adamVideo.currentTime = target;
+            }
+            lastT = target;
+          } catch {}
+        }
+      }
+    }
+    const onScroll = () => {
+      if (scheduled) return;
+      scheduled = true;
+      requestAnimationFrame(() => {
+        update();
+        scheduled = false;
+      });
     };
-    document.addEventListener("scroll", update, { passive: true });
-    window.addEventListener("resize", update, { passive: true });
+    document.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll, { passive: true });
     update();
   } else if (adamSection && reduce) {
-    // Reduced-motion: hold hands touching, light visible, no animation.
+    // Reduced-motion: hold the end state — hands touching, light visible.
     adamSection.style.setProperty("--creation-p", "1");
+    if (adamVideo) {
+      adamVideo.addEventListener("loadedmetadata", () => {
+        try { adamVideo.currentTime = adamVideo.duration; } catch {}
+      });
+    }
   }
 })();
 

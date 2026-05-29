@@ -1,22 +1,22 @@
 ---
 import data from "../data/creation.json";
-const { inscription, handLeftImage, handRightImage, ariaLabel } = data;
+const { inscription, video, ariaLabel } = data;
 ---
 
 <section id="creation-of-adam" class="creation-section relative" aria-label={ariaLabel}>
   <div class="creation-sticky">
-    <img
-      src={handLeftImage}
-      alt=""
-      class="hand hand-left"
-      onerror="this.style.display='none'"
-    />
-    <img
-      src={handRightImage}
-      alt=""
-      class="hand hand-right"
-      onerror="this.style.display='none'"
-    />
+    {video ? (
+      <video
+        id="creation-video"
+        class="creation-video"
+        src={video}
+        muted
+        playsinline
+        preload="auto"
+        disablepictureinpicture
+        aria-hidden="true"
+      ></video>
+    ) : null}
     <div class="touch-light" aria-hidden="true"></div>
     <p class="creation-inscription" aria-hidden="true" data-edit="inscription">
       {inscription}
