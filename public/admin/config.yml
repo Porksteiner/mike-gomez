@@ -13,7 +13,7 @@
 
 backend:
   name: github
-  repo: <YOUR_GH_USER>/<YOUR_REPO>
+  repo: Porksteiner/mike-gomez
   branch: main
   commit_messages:
     create: "content: create {{collection}} {{slug}}"
