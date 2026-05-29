@@ -667,3 +667,195 @@ a { color: inherit; }
   font-family: ui-monospace, monospace;
   font-size: 12px;
 }
+
+/* ========================================================
+   PHASE 4 — Image upload field, style section, behavior,
+              search, keyboard shortcuts.
+   ======================================================== */
+
+.image-field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.image-field .image-path {
+  margin-bottom: 0;
+}
+.image-actions {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+.image-drop {
+  border: 1px dashed var(--line-2);
+  border-radius: var(--r-md);
+  background: var(--bg-2);
+  min-height: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px;
+  text-align: center;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  transition: border-color 0.15s, background 0.15s;
+  overflow: hidden;
+  position: relative;
+}
+.image-drop.is-dragover {
+  border-color: var(--gold);
+  background: rgba(212, 175, 109, 0.08);
+  color: var(--gold);
+}
+.image-drop .image-thumb {
+  width: 100%;
+  height: auto;
+  max-height: 180px;
+  object-fit: contain;
+  display: block;
+}
+
+.grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.style-section summary,
+.form-section summary {
+  cursor: pointer;
+  list-style: none;
+  user-select: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 0;
+}
+.form-section summary::after {
+  content: "▾";
+  font-size: 10px;
+  color: var(--text-dim);
+  transition: transform 0.2s;
+}
+.form-section[open] summary::after { transform: rotate(180deg); }
+
+.behavior-actions {
+  display: flex;
+  gap: 6px;
+  margin-top: 10px;
+}
+
+/* Block row enhancements */
+.block-row .ops {
+  display: flex;
+  gap: 2px;
+  opacity: 0;
+  transition: opacity 0.15s;
+}
+.block-row:hover .ops { opacity: 1; }
+.block-row.is-selected .ops { opacity: 1; }
+.block-row.is-hidden {
+  opacity: 0.5;
+}
+.block-row.is-hidden .label::after {
+  content: " · hidden";
+  color: var(--text-dim);
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.block-row .op {
+  font-size: 12px;
+  color: var(--text-dim);
+  padding: 2px 5px;
+  border-radius: 3px;
+  cursor: pointer;
+  background: transparent;
+  border: none;
+  line-height: 1;
+}
+.block-row .op:hover { background: var(--bg-3); color: var(--text); }
+
+/* Sidebar search */
+.sidebar-search {
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--line);
+}
+.sidebar-search input {
+  width: 100%;
+  padding: 6px 10px;
+  background: var(--bg-2);
+  border: 1px solid var(--line);
+  border-radius: var(--r-sm);
+  outline: none;
+  font-size: 12px;
+}
+.sidebar-search input:focus { border-color: var(--gold); }
+
+/* Toggle with adjacent label */
+.toggle > span:not(.track) {
+  font-size: 12px;
+  color: var(--text);
+}
+
+/* Keyboard shortcuts overlay */
+.kbd-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.75);
+  backdrop-filter: blur(8px);
+  z-index: 300;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.kbd-card {
+  background: var(--bg-1);
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  max-width: 540px;
+  width: 92vw;
+  padding: 28px;
+}
+.kbd-card h2 {
+  font-size: 14px;
+  letter-spacing: 0.04em;
+  margin-bottom: 16px;
+  color: var(--gold);
+}
+.kbd-list {
+  display: grid;
+  gap: 10px;
+  list-style: none;
+}
+.kbd-list li {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+  padding: 6px 0;
+  border-bottom: 1px solid var(--line);
+}
+.kbd-list .keys {
+  font-family: ui-monospace, monospace;
+  color: var(--text-mute);
+  font-size: 12px;
+}
+.kbd-list kbd {
+  background: var(--bg-3);
+  padding: 2px 6px;
+  border-radius: 3px;
+  font-size: 11px;
+  margin: 0 1px;
+  border: 1px solid var(--line);
+}
+
+/* Reconnect button hint */
+.btn .pulse-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--green);
+  animation: pulse 2s ease-in-out infinite;
+}

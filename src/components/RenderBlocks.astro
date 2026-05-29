@@ -1,11 +1,14 @@
 ---
 /**
  * RENDERBLOCKS — Takes a block list and dispatches each to its registered
- * component. Wraps each block in a phantom <div data-block-id>...</div>
- * so the Studio editor can identify and select them in the iframe.
+ * component. Wraps each block in a `block-shell` div that:
+ *   - Holds data-block-id / data-block-type for Studio identification
+ *   - Applies style overrides (bg color, bg image, overlay, padding,
+ *     text color, min-height) via CSS variables on the wrapper
+ *   - Layers depth images (parallax) behind the block content
+ *   - Applies scroll-effect classes (fx-*)
  *
- *   display: contents on the wrapper means it has no layout impact —
- *   the section inside still spans full width like normal.
+ * Blocks marked `hidden: true` in the JSON skip rendering entirely.
  */
 import { BLOCKS, type BlockInstance } from "../lib/blocks";
 
@@ -13,10 +16,29 @@ interface Props {
   blocks: BlockInstance[];
 }
 const { blocks } = Astro.props;
+
+function buildStyleString(block: BlockInstance): string | undefined {
+  const s = block.style;
+  if (!s) return undefined;
+  const parts: string[] = [];
+  if (s.bgColor)    parts.push(`--bs-bg-color: ${s.bgColor}`);
+  if (s.bgImage)    parts.push(`--bs-bg-image: url('${s.bgImage}')`);
+  if (s.bgOverlay)  parts.push(`--bs-bg-overlay: ${s.bgOverlay}`);
+  if (s.bgSize)     parts.push(`--bs-bg-size: ${s.bgSize}`);
+  if (s.bgPosition) parts.push(`--bs-bg-pos: ${s.bgPosition}`);
+  if (s.bgFixed)    parts.push(`--bs-bg-attach: fixed`);
+  if (s.padTop)     parts.push(`--bs-pad-top: ${s.padTop}`);
+  if (s.padBottom)  parts.push(`--bs-pad-bottom: ${s.padBottom}`);
+  if (s.textColor)  parts.push(`color: ${s.textColor}`);
+  if (s.minHeight)  parts.push(`min-height: ${s.minHeight}`);
+  if (s.align === "center") parts.push(`text-align: center`);
+  if (s.align === "right")  parts.push(`text-align: right`);
+  return parts.join("; ");
+}
 ---
 
 {
-  blocks.map((block) => {
+  blocks.filter((b) => !b.hidden).map((block) => {
     const meta = BLOCKS[block.type];
     if (!meta) {
       return (
@@ -33,15 +55,42 @@ const { blocks } = Astro.props;
       );
     }
     const Component = meta.component;
-    const effects = block.effects?.length ? block.effects.join(" ") : undefined;
+    const effects = block.effects?.length ? block.effects : [];
+    const fxClasses = effects.map((e) => `fx-${e}`).join(" ");
+    const hasStyle = !!block.style && Object.keys(block.style).length > 0;
+    const hasBg = !!(block.style?.bgColor || block.style?.bgImage);
+    const styleStr = buildStyleString(block);
+    const depth = block.depth?.layers || [];
     return (
       <div
         data-block-id={block.id}
         data-block-type={block.type}
         data-block-kind={meta.kind}
-        data-block-effects={effects}
-        class={`studio-wrapper ${effects ? `fx-host ${block.effects?.map((e) => `fx-${e}`).join(" ")}` : ""}`}
+        data-block-effects={effects.length ? effects.join(" ") : undefined}
+        class={[
+          "studio-wrapper block-shell",
+          fxClasses,
+          hasBg ? "has-bg" : "",
+          hasStyle ? "has-style" : "",
+          depth.length ? "has-depth" : "",
+        ].filter(Boolean).join(" ")}
+        style={styleStr}
       >
+        {hasBg && <div class="block-bg" aria-hidden="true"></div>}
+        {block.style?.bgOverlay && <div class="block-overlay" aria-hidden="true"></div>}
+        {depth.map((layer, i) => (
+          <div
+            class="depth-layer"
+            data-depth-speed={layer.speed}
+            aria-hidden="true"
+            style={[
+              `background-image: url('${layer.image}')`,
+              `z-index: ${-5 + i}`,
+              `opacity: ${layer.opacity ?? 1}`,
+              layer.blendMode ? `mix-blend-mode: ${layer.blendMode}` : "",
+            ].filter(Boolean).join("; ")}
+          />
+        ))}
         <Component data={block.data} blockId={block.id} />
       </div>
     );

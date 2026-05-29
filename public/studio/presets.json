@@ -1,271 +1,125 @@
 {
-  "version": 1,
+  "version": 2,
   "blocks": [
+    { "type": "header", "label": "Site Header", "category": "Structure", "kind": "singleton", "icon": "menu" },
+    { "type": "hero", "label": "Hero (main)", "category": "Hero", "kind": "singleton", "icon": "star" },
+    { "type": "creation", "label": "Creation Moment", "category": "Hero", "kind": "singleton", "icon": "sparkles" },
+    { "type": "work", "label": "Work / Projects", "category": "Content", "kind": "singleton", "icon": "briefcase" },
+    { "type": "how-i-work", "label": "How I Work", "category": "Content", "kind": "singleton", "icon": "list" },
+    { "type": "faq", "label": "FAQ", "category": "Content", "kind": "singleton", "icon": "question" },
+    { "type": "contact", "label": "Contact", "category": "Marketing", "kind": "singleton", "icon": "mail" },
+    { "type": "footer", "label": "Site Footer", "category": "Structure", "kind": "singleton", "icon": "menu" },
+
     {
-      "type": "header",
-      "label": "Site Header",
-      "category": "Structure",
-      "kind": "singleton",
-      "icon": "menu"
-    },
-    {
-      "type": "hero",
-      "label": "Hero (main)",
-      "category": "Hero",
-      "kind": "singleton",
-      "icon": "star"
-    },
-    {
-      "type": "creation",
-      "label": "Creation Moment",
-      "category": "Hero",
-      "kind": "singleton",
-      "icon": "sparkles"
-    },
-    {
-      "type": "work",
-      "label": "Work / Projects",
-      "category": "Content",
-      "kind": "singleton",
-      "icon": "briefcase"
-    },
-    {
-      "type": "how-i-work",
-      "label": "How I Work",
-      "category": "Content",
-      "kind": "singleton",
-      "icon": "list"
-    },
-    {
-      "type": "faq",
-      "label": "FAQ",
-      "category": "Content",
-      "kind": "singleton",
-      "icon": "question"
-    },
-    {
-      "type": "contact",
-      "label": "Contact",
-      "category": "Marketing",
-      "kind": "singleton",
-      "icon": "mail"
-    },
-    {
-      "type": "footer",
-      "label": "Site Footer",
-      "category": "Structure",
-      "kind": "singleton",
-      "icon": "menu"
-    },
-    {
-      "type": "divider",
-      "label": "Section Divider",
-      "category": "Structure",
-      "kind": "preset",
-      "icon": "minus",
+      "type": "divider", "label": "Section Divider", "category": "Structure",
+      "kind": "preset", "icon": "minus",
       "defaults": { "label": "Section break" },
-      "fields": [
-        { "name": "label", "label": "Label", "type": "text", "default": "Section break" }
-      ]
+      "fields": [{ "name": "label", "label": "Label", "type": "text" }]
     },
     {
-      "type": "marquee",
-      "label": "Marquee Strip",
-      "category": "Content",
-      "kind": "preset",
-      "icon": "arrows",
-      "defaults": {
-        "words": ["DESIGN", "DEVELOPMENT", "DEPLOYMENT", "DELIGHT"],
-        "separator": "✦",
-        "speed": 40,
-        "direction": "left",
-        "style": "outline"
-      },
+      "type": "spacer", "label": "Spacer", "category": "Structure",
+      "kind": "preset", "icon": "blank",
+      "defaults": { "height": "120px" },
+      "fields": [{ "name": "height", "label": "Height", "type": "text", "hint": "CSS units — 80px, 12vh, 6rem" }]
+    },
+    {
+      "type": "marquee", "label": "Marquee Strip", "category": "Content",
+      "kind": "preset", "icon": "arrows",
+      "defaults": { "words": ["DESIGN", "DEVELOPMENT", "DEPLOYMENT", "DELIGHT"], "separator": "✦", "speed": 40, "direction": "left", "style": "outline" },
       "fields": [
-        {
-          "name": "words",
-          "label": "Words",
-          "type": "list",
-          "itemFields": [{ "name": "text", "label": "Word", "type": "text" }]
-        },
+        { "name": "words", "label": "Words", "type": "list", "itemFields": [{ "name": "text", "label": "Word", "type": "text" }] },
         { "name": "separator", "label": "Separator glyph", "type": "text" },
         { "name": "speed", "label": "Speed (s)", "type": "number" },
-        {
-          "name": "direction",
-          "label": "Direction",
-          "type": "select",
-          "options": ["left", "right"]
-        },
-        {
-          "name": "style",
-          "label": "Style",
-          "type": "select",
-          "options": ["solid", "outline", "gold", "gold-outline"]
-        }
+        { "name": "direction", "label": "Direction", "type": "select", "options": ["left", "right"] },
+        { "name": "style", "label": "Style", "type": "select", "options": ["solid", "outline", "gold", "gold-outline"] }
       ]
     },
     {
-      "type": "stats",
-      "label": "Stats Row",
-      "category": "Marketing",
-      "kind": "preset",
-      "icon": "chart",
-      "defaults": {
-        "heading": "By the numbers.",
-        "items": [
-          { "value": "12+", "label": "Years shipping" },
-          { "value": "40", "label": "Projects launched" },
-          { "value": "100%", "label": "Hand-coded" },
-          { "value": "0", "label": "Outsourced lines" }
-        ]
-      },
+      "type": "stats", "label": "Stats Row", "category": "Marketing",
+      "kind": "preset", "icon": "chart",
+      "defaults": { "heading": "By the numbers.", "items": [{"value":"12+","label":"Years shipping"},{"value":"40","label":"Projects launched"},{"value":"100%","label":"Hand-coded"},{"value":"0","label":"Outsourced lines"}] },
       "fields": [
         { "name": "heading", "label": "Heading", "type": "text" },
-        {
-          "name": "items",
-          "label": "Stats",
-          "type": "list",
-          "itemFields": [
-            { "name": "value", "label": "Value", "type": "text" },
-            { "name": "label", "label": "Label", "type": "text" }
-          ]
-        }
+        { "name": "items", "label": "Stats", "type": "list", "itemFields": [{ "name": "value", "label": "Value", "type": "text" }, { "name": "label", "label": "Label", "type": "text" }] }
       ]
     },
     {
-      "type": "cta",
-      "label": "Call to Action",
-      "category": "Marketing",
-      "kind": "preset",
-      "icon": "arrow-right",
-      "defaults": {
-        "eyebrow": "Ready to build?",
-        "headline": "Let's start with a 30-min call.",
-        "buttonLabel": "Book a call",
-        "buttonHref": "#contact",
-        "buttonStyle": "primary"
-      },
+      "type": "cta", "label": "Call to Action", "category": "Marketing",
+      "kind": "preset", "icon": "arrow-right",
+      "defaults": { "eyebrow": "Ready to build?", "headline": "Let's start with a 30-min call.", "buttonLabel": "Book a call", "buttonHref": "#contact", "buttonStyle": "primary" },
       "fields": [
         { "name": "eyebrow", "label": "Eyebrow", "type": "text" },
         { "name": "headline", "label": "Headline", "type": "textarea" },
         { "name": "buttonLabel", "label": "Button label", "type": "text" },
         { "name": "buttonHref", "label": "Button URL", "type": "url" },
-        {
-          "name": "buttonStyle",
-          "label": "Button style",
-          "type": "select",
-          "options": ["primary", "ghost", "gold"]
-        }
+        { "name": "buttonStyle", "label": "Button style", "type": "select", "options": ["primary", "ghost", "gold"] }
       ]
     },
     {
-      "type": "logo-cloud",
-      "label": "Logo Cloud",
-      "category": "Social proof",
-      "kind": "preset",
-      "icon": "grid",
-      "defaults": {
-        "heading": "Trusted by",
-        "logos": [
-          { "label": "Acme Co.", "href": "" },
-          { "label": "Stripe", "href": "" },
-          { "label": "Linear", "href": "" },
-          { "label": "Vercel", "href": "" }
-        ]
-      },
+      "type": "logo-cloud", "label": "Logo Cloud", "category": "Social proof",
+      "kind": "preset", "icon": "grid",
+      "defaults": { "heading": "Trusted by", "logos": [{"label":"Acme Co.","href":""},{"label":"Stripe","href":""},{"label":"Linear","href":""},{"label":"Vercel","href":""}] },
       "fields": [
         { "name": "heading", "label": "Heading", "type": "text" },
-        {
-          "name": "logos",
-          "label": "Logos",
-          "type": "list",
-          "itemFields": [
-            { "name": "label", "label": "Brand", "type": "text" },
-            { "name": "href", "label": "Link", "type": "url" }
-          ]
-        }
+        { "name": "logos", "label": "Logos", "type": "list", "itemFields": [{ "name": "label", "label": "Brand", "type": "text" }, { "name": "href", "label": "Link", "type": "url" }] }
       ]
     },
     {
-      "type": "image-text",
-      "label": "Image + Text",
-      "category": "Content",
-      "kind": "preset",
-      "icon": "image",
-      "defaults": {
-        "eyebrow": "Feature",
-        "heading": "A thoughtful headline.",
-        "body": "A short paragraph.",
-        "image": "/projects/baitiq-marketing.png",
-        "side": "right"
-      },
+      "type": "image-text", "label": "Image + Text", "category": "Content",
+      "kind": "preset", "icon": "image",
+      "defaults": { "eyebrow": "Feature", "heading": "A thoughtful headline.", "body": "A short paragraph.", "image": "/projects/baitiq-marketing.png", "side": "right" },
       "fields": [
         { "name": "eyebrow", "label": "Eyebrow", "type": "text" },
         { "name": "heading", "label": "Heading", "type": "textarea" },
         { "name": "body", "label": "Body", "type": "textarea" },
-        { "name": "image", "label": "Image path", "type": "image" },
-        {
-          "name": "side",
-          "label": "Image side",
-          "type": "select",
-          "options": ["left", "right"]
-        }
+        { "name": "image", "label": "Image", "type": "image" },
+        { "name": "side", "label": "Image side", "type": "select", "options": ["left", "right"] }
       ]
     },
     {
-      "type": "pull-quote",
-      "label": "Pull Quote",
-      "category": "Content",
-      "kind": "preset",
-      "icon": "quote",
-      "defaults": {
-        "quote": "Care in the work. Care in the conversation.",
-        "attribution": ""
-      },
+      "type": "pull-quote", "label": "Pull Quote", "category": "Content",
+      "kind": "preset", "icon": "quote",
+      "defaults": { "quote": "Care in the work. Care in the conversation.", "attribution": "" },
       "fields": [
         { "name": "quote", "label": "Quote", "type": "textarea" },
         { "name": "attribution", "label": "Attribution", "type": "text" }
       ]
     },
     {
-      "type": "gallery",
-      "label": "Image Gallery",
-      "category": "Media",
-      "kind": "preset",
-      "icon": "grid",
-      "defaults": {
-        "heading": "Selected work.",
-        "images": [
-          { "src": "/projects/baitiq-marketing.png", "alt": "BaitIQ" },
-          { "src": "/projects/unlearn-marketing.png", "alt": "Unlearn" }
-        ]
-      },
+      "type": "big-quote", "label": "Big Quote", "category": "Social proof",
+      "kind": "preset", "icon": "quote",
+      "defaults": { "quote": "The best work I've seen in years.", "attribution": "Jane Customer", "attributionTitle": "CEO, Acme Co.", "image": "" },
       "fields": [
-        { "name": "heading", "label": "Heading", "type": "text" },
-        {
-          "name": "images",
-          "label": "Images",
-          "type": "list",
-          "itemFields": [
-            { "name": "src", "label": "Image", "type": "image" },
-            { "name": "alt", "label": "Alt text", "type": "text" }
-          ]
-        }
+        { "name": "quote", "label": "Quote", "type": "textarea" },
+        { "name": "attribution", "label": "Person", "type": "text" },
+        { "name": "attributionTitle", "label": "Title / company", "type": "text" },
+        { "name": "image", "label": "Avatar image", "type": "image" }
       ]
     },
     {
-      "type": "rich-hero",
-      "label": "Rich Hero",
-      "category": "Hero",
-      "kind": "preset",
-      "icon": "star",
-      "defaults": {
-        "eyebrow": "Studio",
-        "headline": "A new beginning.",
-        "sub": "Two-line subhead.",
-        "ctaLabel": "Get started",
-        "ctaHref": "#"
-      },
+      "type": "gallery", "label": "Image Gallery", "category": "Media",
+      "kind": "preset", "icon": "grid",
+      "defaults": { "heading": "Selected work.", "images": [{"src":"/projects/baitiq-marketing.png","alt":"BaitIQ"},{"src":"/projects/unlearn-marketing.png","alt":"Unlearn"}] },
+      "fields": [
+        { "name": "heading", "label": "Heading", "type": "text" },
+        { "name": "images", "label": "Images", "type": "list", "itemFields": [{ "name": "src", "label": "Image", "type": "image" }, { "name": "alt", "label": "Alt text", "type": "text" }] }
+      ]
+    },
+    {
+      "type": "video-embed", "label": "Video Embed", "category": "Media",
+      "kind": "preset", "icon": "play",
+      "defaults": { "heading": "", "sub": "", "embedUrl": "", "aspect": "16/9" },
+      "fields": [
+        { "name": "heading", "label": "Heading", "type": "text" },
+        { "name": "sub", "label": "Subhead", "type": "textarea" },
+        { "name": "embedUrl", "label": "YouTube or Vimeo URL", "type": "url" },
+        { "name": "aspect", "label": "Aspect ratio", "type": "select", "options": ["16/9", "4/3", "1/1", "9/16"] }
+      ]
+    },
+    {
+      "type": "rich-hero", "label": "Rich Hero", "category": "Hero",
+      "kind": "preset", "icon": "star",
+      "defaults": { "eyebrow": "Studio", "headline": "A new beginning.", "sub": "Two-line subhead.", "ctaLabel": "Get started", "ctaHref": "#" },
       "fields": [
         { "name": "eyebrow", "label": "Eyebrow", "type": "text" },
         { "name": "headline", "label": "Headline", "type": "textarea" },
@@ -273,14 +127,141 @@
         { "name": "ctaLabel", "label": "CTA label", "type": "text" },
         { "name": "ctaHref", "label": "CTA URL", "type": "url" }
       ]
+    },
+    {
+      "type": "centered-hero", "label": "Centered Hero", "category": "Hero",
+      "kind": "preset", "icon": "target",
+      "defaults": { "eyebrow": "Eyebrow", "headline": "A confident, centered statement.", "sub": "Two-line subhead.", "ctaLabel": "Primary CTA", "ctaHref": "#", "secondaryLabel": "Secondary", "secondaryHref": "#" },
+      "fields": [
+        { "name": "eyebrow", "label": "Eyebrow", "type": "text" },
+        { "name": "headline", "label": "Headline", "type": "textarea" },
+        { "name": "sub", "label": "Subhead", "type": "textarea" },
+        { "name": "ctaLabel", "label": "Primary CTA label", "type": "text" },
+        { "name": "ctaHref", "label": "Primary CTA URL", "type": "url" },
+        { "name": "secondaryLabel", "label": "Secondary CTA label", "type": "text" },
+        { "name": "secondaryHref", "label": "Secondary CTA URL", "type": "url" }
+      ]
+    },
+    {
+      "type": "cinematic-hero", "label": "Cinematic Hero", "category": "Hero",
+      "kind": "preset", "icon": "film",
+      "defaults": { "eyebrow": "", "headline": "A cinematic moment.", "sub": "Background-aware — set a background image in the Style tab.", "ctaLabel": "Get started", "ctaHref": "#", "align": "bottom" },
+      "fields": [
+        { "name": "eyebrow", "label": "Eyebrow", "type": "text" },
+        { "name": "headline", "label": "Headline", "type": "textarea" },
+        { "name": "sub", "label": "Subhead", "type": "textarea" },
+        { "name": "ctaLabel", "label": "CTA label", "type": "text" },
+        { "name": "ctaHref", "label": "CTA URL", "type": "url" },
+        { "name": "align", "label": "Content alignment", "type": "select", "options": ["bottom", "left", "center"] }
+      ]
+    },
+    {
+      "type": "bento", "label": "Bento Grid", "category": "Content",
+      "kind": "preset", "icon": "grid",
+      "defaults": { "heading": "What we do.", "tiles": [{"title":"Design","body":"Brand systems, identity, and editorial design.","span":"2"},{"title":"Build","body":"Custom Astro and React apps.","span":"1"},{"title":"Ship","body":"Production deploys, CI, and monitoring.","span":"1"},{"title":"Care","body":"30 days of post-launch support included.","span":"2"}] },
+      "fields": [
+        { "name": "heading", "label": "Heading", "type": "text" },
+        { "name": "tiles", "label": "Tiles", "type": "list",
+          "itemFields": [
+            { "name": "title", "label": "Title", "type": "text" },
+            { "name": "body", "label": "Body", "type": "textarea" },
+            { "name": "image", "label": "Background image", "type": "image" },
+            { "name": "span", "label": "Column span", "type": "select", "options": ["1", "2", "3"] }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "pricing-table", "label": "Pricing Table", "category": "Marketing",
+      "kind": "preset", "icon": "card",
+      "defaults": { "heading": "Simple pricing.", "tiers": [{"name":"Starter","price":"$3k","period":"project","description":"For small landing pages.","features":["3 pages","Astro + Tailwind","30-day support"],"ctaLabel":"Start small","ctaHref":"#"},{"name":"Studio","price":"$10k","period":"project","description":"Full marketing site builds.","features":["10 pages","Custom design","CMS setup","30-day support"],"ctaLabel":"Book the studio","ctaHref":"#","featured":true},{"name":"Custom","price":"Let's talk","description":"Apps, ecom, complex builds.","features":["Discovery first","Quoted to scope","Long-term partnership"],"ctaLabel":"Book a call","ctaHref":"#"}] },
+      "fields": [
+        { "name": "heading", "label": "Heading", "type": "text" },
+        { "name": "tiers", "label": "Tiers", "type": "list",
+          "itemFields": [
+            { "name": "name", "label": "Tier name", "type": "text" },
+            { "name": "price", "label": "Price", "type": "text" },
+            { "name": "period", "label": "Period", "type": "text" },
+            { "name": "description", "label": "Description", "type": "textarea" },
+            { "name": "features", "label": "Features", "type": "list", "itemFields": [{ "name": "_", "label": "Feature", "type": "text" }] },
+            { "name": "ctaLabel", "label": "Button label", "type": "text" },
+            { "name": "ctaHref", "label": "Button URL", "type": "url" },
+            { "name": "featured", "label": "Highlighted", "type": "boolean" }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "newsletter", "label": "Newsletter Signup", "category": "Marketing",
+      "kind": "preset", "icon": "mail",
+      "defaults": { "eyebrow": "Newsletter", "heading": "Stay in the loop.", "sub": "One short note a month.", "placeholder": "you@yourdomain.com", "buttonLabel": "Subscribe", "formAction": "", "note": "Unsubscribe whenever." },
+      "fields": [
+        { "name": "eyebrow", "label": "Eyebrow", "type": "text" },
+        { "name": "heading", "label": "Heading", "type": "text" },
+        { "name": "sub", "label": "Subhead", "type": "textarea" },
+        { "name": "placeholder", "label": "Input placeholder", "type": "text" },
+        { "name": "buttonLabel", "label": "Button label", "type": "text" },
+        { "name": "formAction", "label": "Form action URL", "type": "url" },
+        { "name": "note", "label": "Footnote", "type": "text" }
+      ]
+    },
+    {
+      "type": "timeline", "label": "Timeline", "category": "Content",
+      "kind": "preset", "icon": "clock",
+      "defaults": { "heading": "Our story.", "items": [{"date":"2024","title":"First commit.","body":"We start with a domain."},{"date":"2025","title":"Public beta.","body":"Real users."},{"date":"2026","title":"v1.0 ships.","body":"A version we're proud of."}] },
+      "fields": [
+        { "name": "heading", "label": "Heading", "type": "text" },
+        { "name": "items", "label": "Events", "type": "list",
+          "itemFields": [
+            { "name": "date", "label": "Date / period", "type": "text" },
+            { "name": "title", "label": "Title", "type": "text" },
+            { "name": "body", "label": "Body", "type": "textarea" }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "numbered-steps", "label": "Numbered Steps", "category": "Content",
+      "kind": "preset", "icon": "hash",
+      "defaults": { "heading": "How it works.", "steps": [{"title":"Tell us about it.","body":"A short call."},{"title":"Get a quote.","body":"Within 24 hours."},{"title":"We build.","body":"Weekly demos."},{"title":"Ship + stay close.","body":"30 days of support."}] },
+      "fields": [
+        { "name": "heading", "label": "Heading", "type": "text" },
+        { "name": "steps", "label": "Steps", "type": "list",
+          "itemFields": [
+            { "name": "title", "label": "Title", "type": "text" },
+            { "name": "body", "label": "Body", "type": "textarea" }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "feature-grid", "label": "Feature Grid", "category": "Content",
+      "kind": "preset", "icon": "grid",
+      "defaults": { "heading": "Built to last.", "intro": "A short paragraph.", "columns": 3, "features": [{"icon":"◆","title":"Solid foundation","body":"Decisions that compound."},{"icon":"✦","title":"Beautiful by default","body":"Editorial typography."},{"icon":"◇","title":"Fast forever","body":"Static-first."},{"icon":"✶","title":"Accessible","body":"Keyboard, screen reader."},{"icon":"◉","title":"Maintainable","body":"Clean code, good docs."},{"icon":"✺","title":"Yours to keep","body":"All source on day one."}] },
+      "fields": [
+        { "name": "heading", "label": "Heading", "type": "text" },
+        { "name": "intro", "label": "Intro", "type": "textarea" },
+        { "name": "columns", "label": "Columns", "type": "select", "options": ["2", "3", "4"] },
+        { "name": "features", "label": "Features", "type": "list",
+          "itemFields": [
+            { "name": "icon", "label": "Icon / glyph", "type": "text" },
+            { "name": "title", "label": "Title", "type": "text" },
+            { "name": "body", "label": "Body", "type": "textarea" }
+          ]
+        }
+      ]
     }
   ],
   "effects": [
-    { "key": "parallax", "label": "Parallax background" },
-    { "key": "pin", "label": "Pin & scrub" },
+    { "key": "fade-up", "label": "Fade up" },
+    { "key": "zoom-in", "label": "Zoom in" },
     { "key": "staircase", "label": "Reveal staircase" },
-    { "key": "fade-up", "label": "Fade up on enter" },
+    { "key": "parallax", "label": "Parallax (content)" },
+    { "key": "bg-parallax", "label": "Parallax (background)" },
+    { "key": "pin", "label": "Pin & scrub" },
     { "key": "mask", "label": "Image mask reveal" },
-    { "key": "counter", "label": "Number counter" }
+    { "key": "counter", "label": "Number counter" },
+    { "key": "tilt", "label": "Mouse tilt" },
+    { "key": "glow", "label": "Soft glow" }
   ]
 }

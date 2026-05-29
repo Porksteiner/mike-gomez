@@ -53,6 +53,9 @@
             <h2>Blocks</h2>
             <button class="btn btn-ghost btn-sm" id="add-block-btn">+ Add</button>
           </div>
+          <div class="sidebar-search">
+            <input type="search" id="block-search" placeholder="Filter blocks…" />
+          </div>
           <ol class="block-list" id="block-list">
             <li class="empty">No project open. Click <strong>Open project</strong>.</li>
           </ol>
@@ -132,6 +135,28 @@
          TOAST
          ========================================================= -->
     <div id="toast" class="toast hidden"></div>
+
+    <!-- =========================================================
+         KEYBOARD SHORTCUTS OVERLAY
+         ========================================================= -->
+    <div class="kbd-overlay hidden" id="kbd-overlay">
+      <div class="kbd-card">
+        <h2>Keyboard shortcuts</h2>
+        <ul class="kbd-list">
+          <li><span>Save</span> <span class="keys"><kbd>⌘</kbd>/<kbd>Ctrl</kbd> <kbd>S</kbd></span></li>
+          <li><span>Undo</span> <span class="keys"><kbd>⌘</kbd>/<kbd>Ctrl</kbd> <kbd>Z</kbd></span></li>
+          <li><span>Add block</span> <span class="keys"><kbd>⌘</kbd>/<kbd>Ctrl</kbd> <kbd>K</kbd></span></li>
+          <li><span>Search blocks</span> <span class="keys"><kbd>/</kbd></span></li>
+          <li><span>Switch tab</span> <span class="keys"><kbd>1</kbd> – <kbd>4</kbd></span></li>
+          <li><span>Toggle viewport</span> <span class="keys"><kbd>V</kbd></span></li>
+          <li><span>Show shortcuts</span> <span class="keys"><kbd>?</kbd></span></li>
+          <li><span>Close any overlay</span> <span class="keys"><kbd>Esc</kbd></span></li>
+        </ul>
+        <div style="margin-top: 20px; text-align: right;">
+          <button class="btn btn-ghost btn-sm" id="kbd-close">Close (Esc)</button>
+        </div>
+      </div>
+    </div>
 
     <script src="./app.js" type="module"></script>
   </body>

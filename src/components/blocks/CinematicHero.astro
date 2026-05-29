@@ -1,0 +1,70 @@
+---
+/**
+ * CINEMATIC HERO — designed to be background-aware.
+ * Comes with no inherent bg color so the BlockShell bg shines through.
+ * Set style.bgImage and style.bgOverlay to make it sing.
+ */
+interface Props {
+  data?: {
+    eyebrow?: string;
+    headline?: string;
+    sub?: string;
+    ctaLabel?: string;
+    ctaHref?: string;
+    align?: "left" | "center" | "bottom";
+  };
+  blockId?: string;
+}
+const { data = {}, blockId } = Astro.props;
+const { eyebrow = "", headline = "", sub = "", ctaLabel = "", ctaHref = "", align = "bottom" } = data;
+
+const alignClass =
+  align === "center" ? "items-center text-center" :
+  align === "left"   ? "items-start text-left" :
+                       "items-end text-left";
+---
+
+<section
+  class={`cinematic-hero-block relative min-h-[88vh] flex ${alignClass} pt-32 pb-16 px-6 sm:px-10 lg:px-14 overflow-hidden`}
+  data-block-id={blockId}
+  data-block-type="cinematic-hero"
+  style="background: transparent;"
+>
+  <div class="max-w-[1600px] mx-auto w-full relative z-10">
+    {eyebrow && (
+      <p
+        class="reveal font-mono text-[11px] uppercase tracking-[0.25em] text-bone/80 mb-6"
+        data-edit="eyebrow"
+      >
+        {eyebrow}
+      </p>
+    )}
+    {headline && (
+      <h1
+        class="reveal reveal-delay-1 font-display uppercase leading-[0.86] text-[clamp(56px,13vw,220px)] tracking-[-0.02em] mb-8 max-w-6xl text-bone"
+        data-edit="headline"
+      >
+        {headline}
+      </h1>
+    )}
+    {sub && (
+      <p
+        class="reveal reveal-delay-2 text-bone/90 text-lg sm:text-xl leading-snug max-w-2xl mb-10"
+        data-edit="sub"
+      >
+        {sub}
+      </p>
+    )}
+    {ctaLabel && (
+      <a
+        href={ctaHref}
+        data-magnetic
+        class="reveal reveal-delay-3 inline-flex items-center gap-3 px-8 py-4 bg-bone text-void font-mono text-[12px] uppercase tracking-[0.22em] font-semibold hover:bg-gold transition-colors"
+        data-edit-attr="ctaHref:href"
+      >
+        <span data-edit="ctaLabel">{ctaLabel}</span>
+        <span aria-hidden="true">→</span>
+      </a>
+    )}
+  </div>
+</section>

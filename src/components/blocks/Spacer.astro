@@ -1,0 +1,15 @@
+---
+interface Props {
+  data?: { height?: string };
+  blockId?: string;
+}
+const { data = {}, blockId } = Astro.props;
+const height = data.height ?? "120px";
+---
+<div
+  class="spacer-block"
+  data-block-id={blockId}
+  data-block-type="spacer"
+  style={`height: ${height}; width: 100%;`}
+  aria-hidden="true"
+></div>

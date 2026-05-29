@@ -131,6 +131,48 @@ const PRESETS_URL = "./presets.json";
  *  FS ACCESS API helpers
  * ================================================================ */
 
+/* ================================================================ *
+ *  INDEXEDDB — persists the FS Access directory handle across reloads
+ * ================================================================ */
+const DB_NAME = "studio-db";
+const DB_STORE = "handles";
+function openDB() {
+  return new Promise((resolve, reject) => {
+    const req = indexedDB.open(DB_NAME, 1);
+    req.onupgradeneeded = () => req.result.createObjectStore(DB_STORE);
+    req.onsuccess = () => resolve(req.result);
+    req.onerror = () => reject(req.error);
+  });
+}
+async function saveHandle(handle) {
+  try {
+    const db = await openDB();
+    await new Promise((resolve, reject) => {
+      const tx = db.transaction(DB_STORE, "readwrite");
+      tx.objectStore(DB_STORE).put(handle, "project");
+      tx.oncomplete = resolve;
+      tx.onerror = () => reject(tx.error);
+    });
+  } catch (e) { console.warn("saveHandle", e); }
+}
+async function loadHandleFromDB() {
+  try {
+    const db = await openDB();
+    return await new Promise((resolve) => {
+      const tx = db.transaction(DB_STORE, "readonly");
+      const req = tx.objectStore(DB_STORE).get("project");
+      req.onsuccess = () => resolve(req.result || null);
+      req.onerror = () => resolve(null);
+    });
+  } catch { return null; }
+}
+async function verifyPerm(handle, requestIfNeeded = false) {
+  const opts = { mode: "readwrite" };
+  if ((await handle.queryPermission(opts)) === "granted") return true;
+  if (!requestIfNeeded) return false;
+  return (await handle.requestPermission(opts)) === "granted";
+}
+
 async function pickProject() {
   if (!("showDirectoryPicker" in window)) {
     toast("Your browser doesn't support the File System Access API. Use Chrome, Edge, or Brave.", "err");
@@ -139,12 +181,34 @@ async function pickProject() {
   try {
     const handle = await window.showDirectoryPicker({ mode: "readwrite", id: "studio-project" });
     STATE.dirHandle = handle;
+    await saveHandle(handle);
     await loadProject();
     setStatus("Connected", "ok");
   } catch (e) {
     if (e?.name === "AbortError") return;
     console.error(e);
     toast("Could not open project: " + (e?.message ?? e), "err");
+  }
+}
+
+/* Try to reconnect to the previously-opened project, but never request perms
+   without a user gesture. If permission is implicit, load. Otherwise leave the
+   handle on STATE waiting for an "Open project" click to upgrade it. */
+async function tryRestoreProject() {
+  const handle = await loadHandleFromDB();
+  if (!handle) return;
+  const granted = await verifyPerm(handle, false);
+  if (granted) {
+    STATE.dirHandle = handle;
+    await loadProject();
+    setStatus("Connected", "ok");
+    toast("Reconnected to project", "ok");
+  } else {
+    STATE.dirHandle = handle; // hold it for re-permission on next click
+    setStatus("Click Open project to reconnect", "dirty");
+    // Rewire the Open project button to request permission rather than re-pick
+    const btn = $("#open-project");
+    btn.querySelector("span:nth-child(2)").textContent = "Reconnect";
   }
 }
 
@@ -253,32 +317,50 @@ function renderBlockList() {
     list.innerHTML = '<li class="empty">No blocks yet. Click <strong>+ Add</strong> to begin.</li>';
     return;
   }
+  const q = ($("#block-search")?.value || "").trim().toLowerCase();
   list.innerHTML = "";
   blocks.forEach((b, i) => {
     const meta = STATE.presetMap.get(b.type);
+    const label = meta?.label ?? b.type;
+    if (q && !label.toLowerCase().includes(q) && !b.type.toLowerCase().includes(q)) return;
     const isSingleton = meta?.kind === "singleton";
+    const isHidden = !!b.hidden;
     const li = document.createElement("li");
     li.className = "block-row" +
       (STATE.selectedBlockId === b.id ? " is-selected" : "") +
-      (isSingleton ? " is-singleton" : "");
+      (isSingleton ? " is-singleton" : "") +
+      (isHidden ? " is-hidden" : "");
     li.draggable = !isSingleton;
     li.dataset.blockId = b.id;
     li.innerHTML = `
       <span class="handle" aria-hidden="true">⋮⋮</span>
-      <span class="label">${meta?.label ?? b.type}</span>
+      <span class="label">${label}</span>
+      <span class="ops">
+        <button class="op" title="Insert below" data-op="insert-below">＋</button>
+        ${!isSingleton ? `<button class="op" title="Duplicate" data-op="duplicate">⎘</button>` : ""}
+        <button class="op" title="${isHidden ? 'Show' : 'Hide'}" data-op="toggle-hidden">${isHidden ? '⊙' : '⊘'}</button>
+        ${!isSingleton ? `<button class="op" title="Delete" data-op="delete" style="color: var(--red);">×</button>` : ""}
+      </span>
       <span class="type">${b.type}</span>
-      <button class="kill" title="Delete">×</button>
     `;
     li.addEventListener("click", (e) => {
-      if (e.target.closest(".kill")) {
-        if (confirm(`Delete this ${meta?.label ?? b.type}?`)) {
-          pushHistory();
-          STATE.currentPage.blocks.splice(i, 1);
-          STATE.selectedBlockId = null;
+      const opBtn = e.target.closest("[data-op]");
+      if (opBtn) {
+        e.stopPropagation();
+        const op = opBtn.dataset.op;
+        if (op === "delete") deleteBlock(b.id);
+        else if (op === "duplicate") duplicateBlock(b.id);
+        else if (op === "toggle-hidden") {
+          if (isHidden) delete b.hidden;
+          else b.hidden = true;
           markDirty();
           renderBlockList();
           renderInspector();
-          reloadIframe();
+          scheduleReload();
+        } else if (op === "insert-below") {
+          STATE.insertAt = i + 1;
+          renderAddBlockGrid("all");
+          openModal("add-block-modal");
         }
         return;
       }
@@ -437,20 +519,95 @@ function renderInspector() {
     html += "</div>";
   }
 
-  // Effects
+  // Style overrides
+  const s = block.style || {};
   html += `
-    <div class="form-section">
-      <div class="form-section-title">Scroll effects</div>
+    <details class="form-section style-section" open>
+      <summary class="form-section-title">Style overrides</summary>
+      <div class="field">
+        <label>Background color</label>
+        <div class="color-row">
+          <input type="color" class="style-color-pick" data-style-key="bgColor" value="${normalizeColor(s.bgColor)}" />
+          <input type="text" class="style-input style-color-text" data-style-key="bgColor" value="${escapeAttr(s.bgColor || '')}" placeholder="#0c0b09 or var(--color-coal)">
+        </div>
+      </div>
+      <div class="field">
+        <label>Background image</label>
+        ${imageFieldHTML(`bg-${block.id}`, '__style__.bgImage', s.bgImage || '', 'data-style-key="bgImage"')}
+      </div>
+      <div class="field">
+        <label>Overlay (color over image)</label>
+        <div class="color-row">
+          <input type="color" class="style-color-pick" data-style-key="bgOverlay" value="${normalizeColor((s.bgOverlay || '').replace(/rgba?\\(.*\\)/, '#000000'))}" />
+          <input type="text" class="style-input style-color-text" data-style-key="bgOverlay" value="${escapeAttr(s.bgOverlay || '')}" placeholder="rgba(0,0,0,0.4) or transparent">
+        </div>
+      </div>
+      <div class="grid-2">
+        <div class="field">
+          <label>Padding top</label>
+          <input type="text" class="style-input" data-style-key="padTop" value="${escapeAttr(s.padTop || '')}" placeholder="e.g. 8rem">
+        </div>
+        <div class="field">
+          <label>Padding bottom</label>
+          <input type="text" class="style-input" data-style-key="padBottom" value="${escapeAttr(s.padBottom || '')}" placeholder="e.g. 8rem">
+        </div>
+      </div>
+      <div class="grid-2">
+        <div class="field">
+          <label>Text color</label>
+          <input type="text" class="style-input" data-style-key="textColor" value="${escapeAttr(s.textColor || '')}" placeholder="#ebebf2 or inherit">
+        </div>
+        <div class="field">
+          <label>Min height</label>
+          <input type="text" class="style-input" data-style-key="minHeight" value="${escapeAttr(s.minHeight || '')}" placeholder="e.g. 80vh">
+        </div>
+      </div>
+      <div class="field">
+        <label>Background fixed (parallax)</label>
+        <label class="toggle">
+          <input type="checkbox" class="style-input" data-style-key="bgFixed" ${s.bgFixed ? 'checked' : ''}>
+          <span class="track"></span>
+        </label>
+      </div>
+    </details>
+  `;
+
+  // Scroll effects
+  html += `
+    <details class="form-section" open>
+      <summary class="form-section-title">Scroll effects</summary>
       <div class="effects-row" id="effects-row">
         ${(STATE.presets?.effects || []).map((e) => {
           const active = (block.effects || []).includes(e.key);
           return `<button class="effect-chip ${active ? "is-active" : ""}" data-effect-key="${e.key}">${e.label}</button>`;
         }).join("")}
       </div>
-    </div>
+    </details>
+  `;
+
+  // Behavior
+  const hidden = !!block.hidden;
+  html += `
+    <details class="form-section">
+      <summary class="form-section-title">Behavior</summary>
+      <div class="field">
+        <label class="toggle">
+          <input type="checkbox" id="hide-${block.id}" data-toggle-hidden ${hidden ? 'checked' : ''}>
+          <span class="track"></span>
+          <span>Hidden from live site</span>
+        </label>
+      </div>
+      <div class="behavior-actions">
+        <button class="btn btn-ghost btn-sm" data-duplicate-block>Duplicate block</button>
+        <button class="btn btn-ghost btn-sm btn-danger" data-delete-block>Delete block</button>
+      </div>
+    </details>
   `;
 
   body.innerHTML = html;
+  wireImageFields(body);
+  wireStyleInputs(body, block);
+  wireBehaviorControls(body, block);
 
   // Wire field listeners
   $$(".field-input", body).forEach((input) => {
@@ -590,8 +747,7 @@ function renderField(field, dataRoot, path) {
       </label>`;
       break;
     case "image":
-      inner = `<input type="text" id="${id}" class="field-input" data-path="${pathInData(path)}" value="${escapeAttr(value)}" placeholder="/projects/your-image.png">
-        <span class="hint">Path relative to /public, e.g. <code>/projects/myimage.png</code></span>`;
+      inner = imageFieldHTML(id, pathInData(path), value);
       break;
     case "list": {
       const arr = Array.isArray(value) ? value : [];
@@ -623,6 +779,24 @@ function renderField(field, dataRoot, path) {
   </div>`;
 }
 
+function imageFieldHTML(id, path, value, extraDs) {
+  const ds = extraDs || `data-path="${path}"`;
+  return `
+    <div class="image-field">
+      <input type="text" id="${id}" class="field-input image-path" ${ds} value="${escapeAttr(value)}" placeholder="/uploads/..." />
+      <div class="image-actions">
+        <input type="file" accept="image/*" class="image-file-input" id="${id}-file" hidden />
+        <label for="${id}-file" class="btn btn-ghost btn-sm">Upload</label>
+        ${value ? `<a href="${escapeAttr(value)}" target="_blank" class="btn btn-ghost btn-sm">Open</a>` : ""}
+        ${value ? `<button class="btn btn-ghost btn-sm" data-clear-image>Clear</button>` : ""}
+      </div>
+      <div class="image-drop" data-image-drop>
+        ${value ? `<img src="${escapeAttr(value)}" class="image-thumb" alt="">` : `<span class="muted">Drag image here, click Upload, or paste a URL above</span>`}
+      </div>
+    </div>
+  `;
+}
+
 function pathInData(p) {
   // path like 'data.foo[2].bar' → 'foo[2].bar' (strip leading 'data.')
   return p.replace(/^data\./, "");
@@ -648,8 +822,7 @@ function renderSingletonField(field, dataRoot, path) {
       inner = `<textarea id="${id}" class="field-input" ${ds}>${escapeHtml(value)}</textarea>`;
       break;
     case "image":
-      inner = `<input type="text" id="${id}" class="field-input" ${ds} value="${escapeAttr(value)}" placeholder="/projects/your-image.png">
-        <span class="hint">Path relative to /public</span>`;
+      inner = imageFieldHTML(id, path, value, ds);
       break;
     case "object": {
       inner = `<div class="field-list" style="background: transparent;">`;
@@ -868,6 +1041,195 @@ async function handleTextEdit({ blockId, blockType, path, value }) {
   }
 }
 
+/* ================================================================ *
+ *  IMAGE UPLOAD — writes files to /public/uploads via FS Access
+ * ================================================================ */
+async function uploadImageFile(file) {
+  if (!STATE.dirHandle) {
+    toast("Open a project first", "err");
+    return null;
+  }
+  if (!file || !file.type?.startsWith("image/")) {
+    toast("Not an image file", "err");
+    return null;
+  }
+  const safeName = (file.name || "upload.png").replace(/[^a-z0-9._-]/gi, "-").toLowerCase();
+  const fname = `${Date.now()}-${safeName}`;
+  try {
+    const publicDir = await STATE.dirHandle.getDirectoryHandle("public", { create: true });
+    const uploadsDir = await publicDir.getDirectoryHandle("uploads", { create: true });
+    const fh = await uploadsDir.getFileHandle(fname, { create: true });
+    const w = await fh.createWritable();
+    await w.write(file);
+    await w.close();
+    toast(`Uploaded ${fname}`, "ok");
+    return `/uploads/${fname}`;
+  } catch (e) {
+    console.error(e);
+    toast("Upload failed: " + (e?.message ?? e), "err");
+    return null;
+  }
+}
+
+/* Wire up an image field's upload + drag-drop UI. Call this after
+   rendering inspector content for any .image-field elements. */
+function wireImageFields(root) {
+  $$(".image-field", root).forEach((field) => {
+    const fileInput = field.querySelector(".image-file-input");
+    const dropZone = field.querySelector("[data-image-drop]");
+    const pathInput = field.querySelector(".image-path");
+
+    const apply = async (file) => {
+      const url = await uploadImageFile(file);
+      if (!url) return;
+      pathInput.value = url;
+      pathInput.dispatchEvent(new Event("input", { bubbles: true }));
+      // Update preview thumbnail
+      if (dropZone) {
+        dropZone.innerHTML = `<img src="${url}" class="image-thumb">`;
+      }
+    };
+
+    if (fileInput) {
+      fileInput.addEventListener("change", () => {
+        const f = fileInput.files?.[0];
+        if (f) apply(f);
+      });
+    }
+    if (dropZone) {
+      dropZone.addEventListener("dragover", (e) => {
+        e.preventDefault();
+        dropZone.classList.add("is-dragover");
+      });
+      dropZone.addEventListener("dragleave", () => dropZone.classList.remove("is-dragover"));
+      dropZone.addEventListener("drop", (e) => {
+        e.preventDefault();
+        dropZone.classList.remove("is-dragover");
+        const f = e.dataTransfer?.files?.[0];
+        if (f) apply(f);
+      });
+    }
+  });
+}
+
+/* ================================================================ *
+ *  STYLE + BEHAVIOR wiring (inspector)
+ * ================================================================ */
+function wireStyleInputs(root, block) {
+  $$(".style-input, .style-color-pick, .style-color-text", root).forEach((input) => {
+    const key = input.dataset.styleKey;
+    if (!key) return;
+    input.addEventListener("input", () => {
+      block.style = block.style || {};
+      let v;
+      if (input.type === "checkbox") v = input.checked;
+      else v = input.value;
+      // Sync color picker ↔ text pair
+      if (input.classList.contains("style-color-pick")) {
+        const txt = root.querySelector(`.style-color-text[data-style-key="${key}"]`);
+        if (txt) txt.value = input.value;
+        v = input.value;
+      } else if (input.classList.contains("style-color-text")) {
+        const pick = root.querySelector(`.style-color-pick[data-style-key="${key}"]`);
+        if (pick && /^#[0-9a-f]{6}$/i.test(input.value)) pick.value = input.value;
+      }
+      // Clear empty values to avoid cluttering the JSON
+      if (v === "" || v === false || v == null) {
+        delete block.style[key];
+      } else {
+        block.style[key] = v;
+      }
+      markDirty();
+      scheduleReload();
+    });
+  });
+
+  // The bgImage uses an .image-path wrapper inside .style-input markup
+  $$(".image-field .image-path", root).forEach((input) => {
+    if (input.dataset.styleKey !== "bgImage") return;
+    input.addEventListener("input", () => {
+      block.style = block.style || {};
+      if (input.value) block.style.bgImage = input.value;
+      else delete block.style.bgImage;
+      markDirty();
+      scheduleReload();
+    });
+  });
+
+  // Clear-image buttons
+  $$("[data-clear-image]", root).forEach((btn) => {
+    btn.addEventListener("click", (e) => {
+      e.preventDefault();
+      const wrap = btn.closest(".image-field");
+      const path = wrap?.querySelector(".image-path");
+      if (path) {
+        path.value = "";
+        path.dispatchEvent(new Event("input", { bubbles: true }));
+      }
+      const drop = wrap?.querySelector("[data-image-drop]");
+      if (drop) drop.innerHTML = `<span class="muted">Drag image here, click Upload, or paste a URL above</span>`;
+    });
+  });
+}
+
+function wireBehaviorControls(root, block) {
+  const hide = root.querySelector("[data-toggle-hidden]");
+  if (hide) {
+    hide.addEventListener("change", () => {
+      if (hide.checked) block.hidden = true;
+      else delete block.hidden;
+      markDirty();
+      renderBlockList();
+      scheduleReload();
+    });
+  }
+  const dup = root.querySelector("[data-duplicate-block]");
+  if (dup) dup.addEventListener("click", () => duplicateBlock(block.id));
+  const del = root.querySelector("[data-delete-block]");
+  if (del) del.addEventListener("click", () => deleteBlock(block.id));
+}
+
+function duplicateBlock(id) {
+  const blocks = STATE.currentPage?.blocks;
+  if (!blocks) return;
+  const idx = blocks.findIndex((b) => b.id === id);
+  if (idx < 0) return;
+  const meta = STATE.presetMap.get(blocks[idx].type);
+  if (meta?.kind === "singleton") {
+    toast("Singleton blocks can't be duplicated", "err");
+    return;
+  }
+  pushHistory();
+  const clone = JSON.parse(JSON.stringify(blocks[idx]));
+  clone.id = `${clone.type}-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
+  blocks.splice(idx + 1, 0, clone);
+  STATE.selectedBlockId = clone.id;
+  markDirty();
+  renderBlockList();
+  renderInspector();
+  reloadIframe();
+}
+
+function deleteBlock(id) {
+  const blocks = STATE.currentPage?.blocks;
+  if (!blocks) return;
+  const idx = blocks.findIndex((b) => b.id === id);
+  if (idx < 0) return;
+  const meta = STATE.presetMap.get(blocks[idx].type);
+  if (meta?.kind === "singleton") {
+    toast("Singleton blocks can't be deleted (set Hidden instead)", "err");
+    return;
+  }
+  if (!confirm(`Delete this ${meta?.label ?? blocks[idx].type}?`)) return;
+  pushHistory();
+  blocks.splice(idx, 1);
+  STATE.selectedBlockId = null;
+  markDirty();
+  renderBlockList();
+  renderInspector();
+  reloadIframe();
+}
+
 /* writeNestedPath — like writePath but works on a plain object, not on block.data */
 function writeNestedPath(obj, path, value) {
   const parts = path.match(/[^.[\]]+/g) || [];
@@ -902,7 +1264,10 @@ async function addBlock(type, atIndex) {
   };
   pushHistory();
   const blocks = STATE.currentPage.blocks;
-  if (atIndex == null) atIndex = blocks.length;
+  if (atIndex == null) {
+    atIndex = STATE.insertAt != null ? STATE.insertAt : blocks.length;
+    STATE.insertAt = null;
+  }
   blocks.splice(atIndex, 0, block);
   STATE.selectedBlockId = block.id;
   markDirty();
@@ -1110,7 +1475,19 @@ async function boot() {
   // Wire UI
   $$(".tab").forEach((t) => t.addEventListener("click", () => switchTab(t.dataset.tab)));
   $$(".vp").forEach((b) => b.addEventListener("click", () => switchViewport(b.dataset.vp)));
-  $("#open-project").addEventListener("click", pickProject);
+  $("#open-project").addEventListener("click", async () => {
+    // If we already have a cached handle but no permission, try to upgrade first
+    if (STATE.dirHandle && !STATE.currentPage) {
+      const ok = await verifyPerm(STATE.dirHandle, true);
+      if (ok) {
+        await loadProject();
+        setStatus("Connected", "ok");
+        $("#open-project").querySelector("span:nth-child(2)").textContent = "Open project";
+        return;
+      }
+    }
+    pickProject();
+  });
   $("#save-btn").addEventListener("click", saveAll);
   $("#add-block-btn").addEventListener("click", () => {
     renderAddBlockGrid("all");
@@ -1123,20 +1500,61 @@ async function boot() {
   $$('[data-close]').forEach((el) => el.addEventListener("click", () => closeModal("add-block-modal")));
   $("#lib-search").addEventListener("input", renderLibrary);
 
-  // Keyboard
+  // Sidebar search
+  $("#block-search")?.addEventListener("input", renderBlockList);
+
+  // Keyboard shortcuts
+  const kbdOverlay = $("#kbd-overlay");
+  $("#kbd-close")?.addEventListener("click", () => kbdOverlay.classList.add("hidden"));
+  kbdOverlay?.addEventListener("click", (e) => {
+    if (e.target === kbdOverlay) kbdOverlay.classList.add("hidden");
+  });
+
   window.addEventListener("keydown", (e) => {
+    const inField = /^(INPUT|TEXTAREA|SELECT)$/.test(e.target.tagName);
     if ((e.metaKey || e.ctrlKey) && e.key === "s") {
       e.preventDefault();
       saveAll();
+      return;
     }
     if ((e.metaKey || e.ctrlKey) && e.key === "z" && !e.shiftKey) {
       e.preventDefault();
       undo();
+      return;
+    }
+    if ((e.metaKey || e.ctrlKey) && e.key === "k") {
+      e.preventDefault();
+      renderAddBlockGrid("all");
+      openModal("add-block-modal");
+      return;
+    }
+    if (e.key === "Escape") {
+      $$(".modal").forEach((m) => m.classList.add("hidden"));
+      kbdOverlay?.classList.add("hidden");
+      return;
+    }
+    if (inField) return;
+    if (e.key === "/") {
+      e.preventDefault();
+      $("#block-search")?.focus();
+    } else if (e.key === "?") {
+      e.preventDefault();
+      kbdOverlay?.classList.remove("hidden");
+    } else if (e.key === "v" || e.key === "V") {
+      const order = ["mobile", "desktop", "fluid"];
+      const idx = order.indexOf(STATE.viewport);
+      switchViewport(order[(idx + 1) % order.length]);
+    } else if (["1","2","3","4"].includes(e.key)) {
+      const map = { "1": "page", "2": "library", "3": "theme", "4": "pages" };
+      switchTab(map[e.key]);
     }
   });
 
   // Initial render
   renderAll();
+
+  // Try to restore previously opened project (no permission prompt yet)
+  await tryRestoreProject();
 }
 
 boot();

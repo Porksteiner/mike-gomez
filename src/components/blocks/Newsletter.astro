@@ -1,0 +1,72 @@
+---
+interface Props {
+  data?: {
+    eyebrow?: string;
+    heading?: string;
+    sub?: string;
+    placeholder?: string;
+    buttonLabel?: string;
+    formAction?: string;
+    note?: string;
+  };
+  blockId?: string;
+}
+const { data = {}, blockId } = Astro.props;
+const eyebrow = data.eyebrow ?? "";
+const heading = data.heading ?? "Stay in the loop.";
+const sub = data.sub ?? "One short note a month. No spam, no nonsense.";
+const placeholder = data.placeholder ?? "you@yourdomain.com";
+const buttonLabel = data.buttonLabel ?? "Subscribe";
+const formAction = data.formAction ?? "";
+const note = data.note ?? "Unsubscribe whenever.";
+---
+
+<section
+  class="newsletter-block relative py-24 sm:py-36 bg-void border-y border-iron"
+  data-block-id={blockId}
+  data-block-type="newsletter"
+>
+  <div class="max-w-3xl mx-auto px-6 sm:px-10 lg:px-14 text-center">
+    {eyebrow && (
+      <p class="reveal font-mono text-[11px] uppercase tracking-[0.25em] text-gold mb-5" data-edit="eyebrow">
+        {eyebrow}
+      </p>
+    )}
+    <h2
+      class="reveal reveal-delay-1 font-display uppercase leading-[0.95] text-[clamp(36px,6vw,80px)] tracking-[-0.01em] mb-6"
+      data-edit="heading"
+    >
+      {heading}
+    </h2>
+    {sub && (
+      <p class="reveal reveal-delay-2 text-paper text-lg leading-relaxed mb-10 max-w-lg mx-auto" data-edit="sub">
+        {sub}
+      </p>
+    )}
+    <form
+      action={formAction}
+      method="POST"
+      class="reveal reveal-delay-3 flex flex-col sm:flex-row gap-3 max-w-lg mx-auto"
+    >
+      <input
+        type="email"
+        required
+        name="email"
+        placeholder={placeholder}
+        class="flex-1 px-5 py-4 bg-coal border border-iron text-bone placeholder:text-smoke focus:border-gold outline-none font-mono text-[14px]"
+        data-edit-attr="placeholder:placeholder"
+      />
+      <button
+        type="submit"
+        class="px-7 py-4 bg-bone text-void font-mono text-[12px] uppercase tracking-[0.22em] font-semibold hover:bg-gold transition-colors whitespace-nowrap"
+      >
+        <span data-edit="buttonLabel">{buttonLabel}</span>
+      </button>
+    </form>
+    {note && (
+      <p class="reveal reveal-delay-4 mt-6 font-mono text-[11px] uppercase tracking-[0.18em] text-smoke" data-edit="note">
+        {note}
+      </p>
+    )}
+  </div>
+</section>

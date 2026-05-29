@@ -1,0 +1,61 @@
+---
+interface Props {
+  data?: {
+    heading?: string;
+    tiles?: { title: string; body?: string; image?: string; span?: "1" | "2" | "3" }[];
+  };
+  blockId?: string;
+}
+const { data = {}, blockId } = Astro.props;
+const heading = data.heading ?? "";
+const tiles = data.tiles ?? [];
+
+const spanClass = (s: string | undefined) =>
+  s === "3" ? "md:col-span-3" :
+  s === "2" ? "md:col-span-2" :
+              "md:col-span-1";
+---
+
+<section
+  class="bento-block relative py-24 sm:py-32 bg-void"
+  data-block-id={blockId}
+  data-block-type="bento"
+>
+  <div class="max-w-[1600px] mx-auto px-6 sm:px-10 lg:px-14">
+    {heading && (
+      <h2
+        class="reveal font-display uppercase leading-[0.9] text-[clamp(40px,6vw,88px)] tracking-[-0.01em] mb-12 max-w-3xl"
+        data-edit="heading"
+      >
+        {heading}
+      </h2>
+    )}
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 sm:gap-4">
+      {tiles.map((t, i) => (
+        <article class={`reveal reveal-delay-${(i % 4) + 1} ${spanClass(t.span)} group relative border border-iron bg-coal min-h-[280px] p-6 sm:p-8 overflow-hidden hover:border-gold/60 transition-all`}>
+          {t.image && (
+            <img
+              src={t.image}
+              alt=""
+              class="absolute inset-0 w-full h-full object-cover opacity-30 group-hover:opacity-40 transition-opacity"
+              data-edit-attr={`tiles[${i}].image:src`}
+            />
+          )}
+          <div class="relative z-10 flex flex-col h-full">
+            <h3
+              class="font-display uppercase text-[clamp(22px,2.5vw,36px)] leading-[1.05] tracking-[-0.01em] mb-3"
+              data-edit={`tiles[${i}].title`}
+            >
+              {t.title}
+            </h3>
+            {t.body && (
+              <p class="text-paper text-[15px] leading-relaxed mt-auto" data-edit={`tiles[${i}].body`}>
+                {t.body}
+              </p>
+            )}
+          </div>
+        </article>
+      ))}
+    </div>
+  </div>
+</section>

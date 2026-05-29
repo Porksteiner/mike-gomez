@@ -575,3 +575,102 @@ main > section.lift-hatch::after {
 
 /* Studio wrapper marker — invisible but groups block contents for selection */
 .studio-wrapper { display: block; }
+
+/* ====================================================================
+   BLOCK SHELL — per-block style overrides (bg color, image, overlay,
+   padding, text color, etc.) plus depth layers behind the content.
+
+   When a block has its own bg via .has-bg, the child <section>'s
+   own background is suppressed so the shell bg shows through.
+   ==================================================================== */
+.block-shell {
+  position: relative;
+  --bs-bg-color: transparent;
+  --bs-bg-image: none;
+  --bs-bg-overlay: transparent;
+  --bs-bg-size: cover;
+  --bs-bg-pos: center;
+  --bs-bg-attach: scroll;
+  --bs-pad-top: 0;
+  --bs-pad-bottom: 0;
+}
+.block-shell.has-bg {
+  padding-top: var(--bs-pad-top);
+  padding-bottom: var(--bs-pad-bottom);
+  isolation: isolate;
+}
+.block-shell.has-style {
+  padding-top: var(--bs-pad-top);
+  padding-bottom: var(--bs-pad-bottom);
+}
+.block-shell .block-bg {
+  position: absolute;
+  inset: 0;
+  background-color: var(--bs-bg-color);
+  background-image: var(--bs-bg-image);
+  background-size: var(--bs-bg-size);
+  background-position: var(--bs-bg-pos);
+  background-attachment: var(--bs-bg-attach);
+  background-repeat: no-repeat;
+  z-index: -2;
+  pointer-events: none;
+}
+.block-shell .block-overlay {
+  position: absolute;
+  inset: 0;
+  background: var(--bs-bg-overlay);
+  z-index: -1;
+  pointer-events: none;
+}
+
+/* When the shell has a bg, suppress the child section's own bg so we
+   actually see it through. We also keep the child positioned so its
+   internal absolute children still behave. */
+.block-shell.has-bg > section {
+  background: transparent !important;
+}
+
+/* Depth layers — parallax-style images behind block content */
+.block-shell.has-depth {
+  isolation: isolate;
+  overflow: hidden;
+}
+.block-shell .depth-layer {
+  position: absolute;
+  inset: -120px;
+  background-size: cover;
+  background-position: center;
+  pointer-events: none;
+  will-change: transform;
+  transform: translate3d(0, calc(var(--depth-y, 0) * 1px), 0);
+}
+
+/* Additional FX */
+.fx-zoom-in > * {
+  opacity: 0;
+  transform: scale(0.95);
+  transition: opacity 0.9s cubic-bezier(0.22, 1, 0.36, 1), transform 0.95s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.fx-zoom-in.is-in > * { opacity: 1; transform: none; }
+
+.fx-tilt { will-change: transform; transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1); transform-style: preserve-3d; }
+.fx-tilt:hover { transition-duration: 0.15s; }
+
+.fx-glow {
+  transition: box-shadow 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.fx-glow:hover {
+  box-shadow: 0 0 80px -10px rgba(212, 175, 109, 0.4);
+}
+
+.fx-bg-parallax .block-bg {
+  background-attachment: fixed !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fx-zoom-in > *, .fx-tilt {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+}

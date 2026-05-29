@@ -1,0 +1,86 @@
+---
+interface Props {
+  data?: {
+    heading?: string;
+    tiers?: {
+      name: string;
+      price: string;
+      period?: string;
+      description?: string;
+      features?: string[];
+      ctaLabel?: string;
+      ctaHref?: string;
+      featured?: boolean;
+    }[];
+  };
+  blockId?: string;
+}
+const { data = {}, blockId } = Astro.props;
+const heading = data.heading ?? "Simple pricing.";
+const tiers = data.tiers ?? [];
+---
+
+<section
+  class="pricing-block relative py-24 sm:py-32 bg-coal border-y border-iron"
+  data-block-id={blockId}
+  data-block-type="pricing-table"
+>
+  <div class="max-w-[1400px] mx-auto px-6 sm:px-10 lg:px-14">
+    <h2
+      class="reveal font-display uppercase leading-[0.9] text-[clamp(40px,7vw,100px)] tracking-[-0.01em] text-center mb-16 max-w-3xl mx-auto"
+      data-edit="heading"
+    >
+      {heading}
+    </h2>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6">
+      {tiers.map((t, i) => (
+        <article class={`reveal reveal-delay-${(i % 4) + 1} relative border bg-void p-8 sm:p-10 flex flex-col gap-5 ${t.featured ? "border-gold shadow-[0_0_60px_-20px_rgba(212,175,109,0.5)]" : "border-iron"}`}>
+          {t.featured && (
+            <span class="absolute top-0 right-6 -translate-y-1/2 px-3 py-1 bg-gold text-void text-[10px] font-mono uppercase tracking-[0.2em] font-semibold">
+              Most popular
+            </span>
+          )}
+          <header>
+            <h3 class="font-display uppercase text-[28px] sm:text-[32px] leading-none tracking-[-0.01em] mb-3" data-edit={`tiers[${i}].name`}>
+              {t.name}
+            </h3>
+            {t.description && (
+              <p class="text-paper text-[14px] leading-relaxed" data-edit={`tiers[${i}].description`}>
+                {t.description}
+              </p>
+            )}
+          </header>
+          <div class="flex items-baseline gap-2 py-4 border-y border-iron">
+            <span class="font-display text-[clamp(40px,5vw,68px)] leading-none text-bone" data-edit={`tiers[${i}].price`}>
+              {t.price}
+            </span>
+            {t.period && (
+              <span class="font-mono text-[12px] uppercase tracking-[0.2em] text-smoke" data-edit={`tiers[${i}].period`}>
+                / {t.period}
+              </span>
+            )}
+          </div>
+          {t.features && t.features.length > 0 && (
+            <ul class="flex flex-col gap-3 flex-1">
+              {t.features.map((f, j) => (
+                <li class="flex items-start gap-3 text-[14px] text-paper leading-snug">
+                  <span class="text-gold mt-0.5">✓</span>
+                  <span data-edit={`tiers[${i}].features[${j}]`}>{f}</span>
+                </li>
+              ))}
+            </ul>
+          )}
+          {t.ctaLabel && (
+            <a
+              href={t.ctaHref}
+              class={`block text-center px-6 py-3 mt-auto font-mono text-[11px] uppercase tracking-[0.22em] font-semibold transition-colors ${t.featured ? "bg-gold text-void hover:bg-honey" : "bg-bone text-void hover:bg-gold"}`}
+              data-edit-attr={`tiers[${i}].ctaHref:href`}
+            >
+              <span data-edit={`tiers[${i}].ctaLabel`}>{t.ctaLabel}</span>
+            </a>
+          )}
+        </article>
+      ))}
+    </div>
+  </div>
+</section>

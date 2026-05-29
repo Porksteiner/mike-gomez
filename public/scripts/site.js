@@ -333,3 +333,38 @@
     });
   }
 })();
+
+/* ====================================================================
+   PHASE 4 — Depth layers parallax engine.
+   Each .depth-layer has data-depth-speed (0..2). The container
+   (.block-shell.has-depth) gets --depth-y per layer via JS that maps
+   the layer's viewport offset times speed.
+   ==================================================================== */
+(() => {
+  const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if (reduce) return;
+  const layers = [...document.querySelectorAll(".depth-layer")];
+  if (!layers.length) return;
+  let ticking = false;
+  const tick = () => {
+    const vh = window.innerHeight;
+    layers.forEach((el) => {
+      const host = el.parentElement;
+      if (!host) return;
+      const r = host.getBoundingClientRect();
+      if (r.bottom < -300 || r.top > vh + 300) return;
+      const speed = parseFloat(el.dataset.depthSpeed) || 0.5;
+      const p = (r.top + r.height / 2 - vh / 2) / vh;
+      el.style.setProperty("--depth-y", String(-p * 60 * speed));
+    });
+    ticking = false;
+  };
+  document.addEventListener("scroll", () => {
+    if (!ticking) {
+      requestAnimationFrame(tick);
+      ticking = true;
+    }
+  }, { passive: true });
+  window.addEventListener("resize", tick, { passive: true });
+  tick();
+})();
