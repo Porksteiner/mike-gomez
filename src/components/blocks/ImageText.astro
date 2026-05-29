@@ -1,0 +1,61 @@
+---
+interface Props {
+  data?: {
+    eyebrow?: string;
+    heading?: string;
+    body?: string;
+    image?: string;
+    side?: "left" | "right";
+  };
+  blockId?: string;
+}
+const { data = {}, blockId } = Astro.props;
+const { eyebrow = "", heading = "", body = "", image = "", side = "right" } = data;
+
+const imageFirst = side === "left";
+---
+
+<section
+  class="image-text-block relative py-24 sm:py-32 bg-void"
+  data-block-id={blockId}
+  data-block-type="image-text"
+>
+  <div class="max-w-[1600px] mx-auto px-6 sm:px-10 lg:px-14">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 sm:gap-16 items-center">
+      <div class={`reveal ${imageFirst ? "lg:col-span-7 lg:order-1" : "lg:col-span-7 lg:order-2"}`}>
+        {image && (
+          <img
+            src={image}
+            alt=""
+            class="w-full h-auto"
+            data-parallax="20"
+            data-edit-attr="image:src"
+          />
+        )}
+      </div>
+      <div class={`reveal reveal-delay-1 ${imageFirst ? "lg:col-span-5 lg:order-2" : "lg:col-span-5 lg:order-1"}`}>
+        {eyebrow && (
+          <p
+            class="font-mono text-[11px] uppercase tracking-[0.25em] text-gold mb-5"
+            data-edit="eyebrow"
+          >
+            {eyebrow}
+          </p>
+        )}
+        {heading && (
+          <h2
+            class="font-display uppercase leading-[0.95] text-[clamp(32px,5vw,72px)] tracking-[-0.01em] mb-6"
+            data-edit="heading"
+          >
+            {heading}
+          </h2>
+        )}
+        {body && (
+          <p class="text-paper text-lg leading-relaxed max-w-md" data-edit="body">
+            {body}
+          </p>
+        )}
+      </div>
+    </div>
+  </div>
+</section>

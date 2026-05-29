@@ -1,0 +1,49 @@
+---
+/**
+ * RENDERBLOCKS — Takes a block list and dispatches each to its registered
+ * component. Wraps each block in a phantom <div data-block-id>...</div>
+ * so the Studio editor can identify and select them in the iframe.
+ *
+ *   display: contents on the wrapper means it has no layout impact —
+ *   the section inside still spans full width like normal.
+ */
+import { BLOCKS, type BlockInstance } from "../lib/blocks";
+
+interface Props {
+  blocks: BlockInstance[];
+}
+const { blocks } = Astro.props;
+---
+
+{
+  blocks.map((block) => {
+    const meta = BLOCKS[block.type];
+    if (!meta) {
+      return (
+        <div
+          data-block-id={block.id}
+          data-block-type={block.type}
+          data-block-missing
+          class="studio-wrapper"
+        >
+          <div class="bg-clay/20 border border-clay text-clay text-center p-6 font-mono text-sm">
+            Unknown block type: <code>{block.type}</code>
+          </div>
+        </div>
+      );
+    }
+    const Component = meta.component;
+    const effects = block.effects?.length ? block.effects.join(" ") : undefined;
+    return (
+      <div
+        data-block-id={block.id}
+        data-block-type={block.type}
+        data-block-kind={meta.kind}
+        data-block-effects={effects}
+        class={`studio-wrapper ${effects ? `fx-host ${block.effects?.map((e) => `fx-${e}`).join(" ")}` : ""}`}
+      >
+        <Component data={block.data} blockId={block.id} />
+      </div>
+    );
+  })
+}

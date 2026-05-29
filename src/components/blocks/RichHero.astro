@@ -1,0 +1,58 @@
+---
+interface Props {
+  data?: {
+    eyebrow?: string;
+    headline?: string;
+    sub?: string;
+    ctaLabel?: string;
+    ctaHref?: string;
+  };
+  blockId?: string;
+}
+const { data = {}, blockId } = Astro.props;
+const { eyebrow = "", headline = "", sub = "", ctaLabel = "", ctaHref = "" } = data;
+---
+
+<section
+  class="rich-hero-block relative min-h-[80vh] flex items-center bg-void py-24"
+  data-block-id={blockId}
+  data-block-type="rich-hero"
+>
+  <div class="max-w-[1600px] mx-auto px-6 sm:px-10 lg:px-14 w-full">
+    {eyebrow && (
+      <p
+        class="reveal font-mono text-[11px] uppercase tracking-[0.25em] text-gold mb-8"
+        data-edit="eyebrow"
+      >
+        {eyebrow}
+      </p>
+    )}
+    {headline && (
+      <h1
+        class="reveal reveal-delay-1 font-display uppercase leading-[0.88] text-[clamp(56px,12vw,180px)] tracking-[-0.02em] mb-10 max-w-5xl"
+        data-edit="headline"
+      >
+        {headline}
+      </h1>
+    )}
+    {sub && (
+      <p
+        class="reveal reveal-delay-2 text-paper text-lg sm:text-xl leading-snug max-w-xl mb-10"
+        data-edit="sub"
+      >
+        {sub}
+      </p>
+    )}
+    {ctaLabel && (
+      <a
+        href={ctaHref}
+        data-magnetic
+        class="reveal reveal-delay-3 inline-flex items-center gap-3 px-7 py-3.5 bg-bone text-void font-mono text-[12px] uppercase tracking-[0.22em] font-semibold hover:bg-gold transition-colors"
+        data-edit-attr="ctaHref:href"
+      >
+        <span data-edit="ctaLabel">{ctaLabel}</span>
+        <span aria-hidden="true">→</span>
+      </a>
+    )}
+  </div>
+</section>

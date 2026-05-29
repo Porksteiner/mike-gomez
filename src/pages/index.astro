@@ -1,40 +1,15 @@
 ---
+/**
+ * Home page — composed from src/data/pages/home.json via the block registry.
+ * Edit blocks visually in /studio, or directly in home.json.
+ */
 import BaseLayout from "../layouts/BaseLayout.astro";
-import Header from "../components/Header.astro";
-import Hero from "../components/Hero.astro";
-import CreationOfAdam from "../components/CreationOfAdam.astro";
-import Work from "../components/Work.astro";
-import HowIWork from "../components/HowIWork.astro";
-import FAQ from "../components/FAQ.astro";
-import Contact from "../components/Contact.astro";
-import Footer from "../components/Footer.astro";
-import creation from "../data/creation.json";
-
-const { dividers } = creation;
+import RenderBlocks from "../components/RenderBlocks.astro";
+import page from "../data/pages/home.json";
 ---
 
-<BaseLayout>
-  <Header />
+<BaseLayout title={page.title}>
   <main>
-    {/*
-      Three acts. Each divider marks a real shift in stance.
-      Act 1 — Vision: Hero + Creation moment
-      Act 2 — Proof: Work
-      Act 3 — Working together: How I work + FAQ + Contact
-    */}
-
-    <Hero />
-    <CreationOfAdam />
-
-    <div class="section-divider"><span class="mark">{dividers.work}</span></div>
-    <Work />
-
-    <div class="section-divider"><span class="mark">{dividers.workingTogether}</span></div>
-    <HowIWork />
-    <FAQ />
-
-    <div class="section-divider"><span class="mark">{dividers.getInTouch}</span></div>
-    <Contact />
+    <RenderBlocks blocks={page.blocks} />
   </main>
-  <Footer />
 </BaseLayout>

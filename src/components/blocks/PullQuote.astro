@@ -1,0 +1,32 @@
+---
+interface Props {
+  data?: { quote?: string; attribution?: string };
+  blockId?: string;
+}
+const { data = {}, blockId } = Astro.props;
+const quote = data.quote ?? "";
+const attribution = data.attribution ?? "";
+---
+
+<section
+  class="pull-quote-block relative py-24 sm:py-36 bg-coal border-y border-iron"
+  data-block-id={blockId}
+  data-block-type="pull-quote"
+>
+  <div class="max-w-5xl mx-auto px-6 sm:px-10 lg:px-14 text-center">
+    <p
+      class="reveal font-display uppercase leading-[1.05] text-[clamp(32px,5vw,72px)] tracking-[-0.01em] text-bone"
+      data-edit="quote"
+    >
+      &ldquo;<span class="text-gold">{quote}</span>&rdquo;
+    </p>
+    {attribution && (
+      <p
+        class="reveal reveal-delay-1 mt-10 font-mono text-[11px] uppercase tracking-[0.25em] text-smoke"
+        data-edit="attribution"
+      >
+        — {attribution}
+      </p>
+    )}
+  </div>
+</section>

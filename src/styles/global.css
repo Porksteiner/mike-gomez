@@ -494,3 +494,84 @@ main > section.lift-hatch::after {
     opacity: 1 !important;
   }
 }
+
+/* ====================================================================
+   SCROLL EFFECTS — wrappers applied to any block via the page JSON
+                    `effects` array. The CSS is gentle so the same
+                    effect can apply to any preset without surprises.
+   ==================================================================== */
+
+.fx-host {
+  position: relative;
+}
+
+/* ---- fx-fade-up — translate + fade on viewport enter ---- */
+.fx-fade-up > * {
+  opacity: 0;
+  transform: translateY(28px);
+  transition:
+    opacity 0.9s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.95s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.fx-fade-up.is-in > * {
+  opacity: 1;
+  transform: none;
+}
+
+/* ---- fx-pin — sticky during scroll-through ---- */
+.fx-pin {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+/* ---- fx-staircase — stagger reveal of immediate children ---- */
+.fx-staircase > * > * {
+  opacity: 0;
+  transform: translateY(18px);
+  transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+              transform 0.85s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.fx-staircase.is-in > * > *:nth-child(1) { transition-delay: 0.05s; }
+.fx-staircase.is-in > * > *:nth-child(2) { transition-delay: 0.12s; }
+.fx-staircase.is-in > * > *:nth-child(3) { transition-delay: 0.19s; }
+.fx-staircase.is-in > * > *:nth-child(4) { transition-delay: 0.26s; }
+.fx-staircase.is-in > * > *:nth-child(5) { transition-delay: 0.33s; }
+.fx-staircase.is-in > * > *:nth-child(6) { transition-delay: 0.40s; }
+.fx-staircase.is-in > * > * { opacity: 1; transform: none; }
+
+/* ---- fx-parallax — slower scroll on bg-host (JS sets --fxy) ---- */
+.fx-parallax {
+  overflow: hidden;
+}
+.fx-parallax > * {
+  will-change: transform;
+  transform: translate3d(0, calc(var(--fxy, 0) * 1px), 0);
+}
+
+/* ---- fx-mask — clip-path opens on enter ---- */
+.fx-mask > * {
+  clip-path: inset(0 50% 0 50%);
+  transition: clip-path 1.2s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.fx-mask.is-in > * { clip-path: inset(0 0 0 0); }
+
+/* ---- fx-counter — JS animates numbers; CSS just smooths ---- */
+.fx-counter [data-stat-value] {
+  font-variant-numeric: tabular-nums lining-nums;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fx-fade-up > *,
+  .fx-staircase > * > *,
+  .fx-parallax > *,
+  .fx-mask > * {
+    opacity: 1 !important;
+    transform: none !important;
+    clip-path: none !important;
+    transition: none !important;
+  }
+}
+
+/* Studio wrapper marker — invisible but groups block contents for selection */
+.studio-wrapper { display: block; }

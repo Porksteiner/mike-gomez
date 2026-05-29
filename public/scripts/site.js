@@ -258,3 +258,76 @@
     dividers.forEach((d) => obs.observe(d));
   }
 })();
+
+/* ====================================================================
+   PHASE 3 — Block-level scroll effects (fx-fade-up, fx-staircase,
+             fx-mask, fx-parallax, fx-counter).
+   Driven by IntersectionObserver + scroll handler.
+   ==================================================================== */
+(() => {
+  const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if (reduce) {
+    document.querySelectorAll(".fx-host").forEach((el) => el.classList.add("is-in"));
+    return;
+  }
+
+  /* In-view triggers */
+  const inviewSel = ".fx-fade-up, .fx-staircase, .fx-mask, .fx-counter";
+  const ioInview = new IntersectionObserver((entries) => {
+    entries.forEach((ent) => {
+      if (ent.isIntersecting) {
+        ent.target.classList.add("is-in");
+        if (ent.target.classList.contains("fx-counter")) runCounter(ent.target);
+        ioInview.unobserve(ent.target);
+      }
+    });
+  }, { threshold: 0.12, rootMargin: "0px 0px -8% 0px" });
+  document.querySelectorAll(inviewSel).forEach((el) => ioInview.observe(el));
+
+  /* Parallax (host translates content) */
+  const parallaxHosts = [...document.querySelectorAll(".fx-parallax")];
+  if (parallaxHosts.length) {
+    let ticking = false;
+    const tick = () => {
+      const vh = window.innerHeight;
+      parallaxHosts.forEach((el) => {
+        const r = el.getBoundingClientRect();
+        if (r.bottom < -200 || r.top > vh + 200) return;
+        const p = (r.top + r.height / 2 - vh / 2) / vh;
+        el.style.setProperty("--fxy", String(-p * 30));
+      });
+      ticking = false;
+    };
+    document.addEventListener("scroll", () => {
+      if (!ticking) {
+        requestAnimationFrame(tick);
+        ticking = true;
+      }
+    }, { passive: true });
+    tick();
+  }
+
+  /* Counter — animate numeric values from 0 to current text */
+  function runCounter(host) {
+    host.querySelectorAll("[data-stat-value]").forEach((el) => {
+      const text = el.textContent.trim();
+      const m = text.match(/^(-?[\d,.]+)(\D*)$/);
+      if (!m) return;
+      const end = parseFloat(m[1].replace(/,/g, ""));
+      const suffix = m[2] || "";
+      if (Number.isNaN(end)) return;
+      const start = 0;
+      const dur = 1400;
+      const t0 = performance.now();
+      const step = (now) => {
+        const p = Math.min(1, (now - t0) / dur);
+        const eased = 1 - Math.pow(1 - p, 3);
+        const v = Math.round(start + (end - start) * eased);
+        el.textContent = `${v.toLocaleString()}${suffix}`;
+        if (p < 1) requestAnimationFrame(step);
+        else el.textContent = `${m[1]}${suffix}`;
+      };
+      requestAnimationFrame(step);
+    });
+  }
+})();

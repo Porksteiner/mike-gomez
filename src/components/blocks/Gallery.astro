@@ -1,0 +1,47 @@
+---
+interface Props {
+  data?: {
+    heading?: string;
+    images?: { src: string; alt?: string }[];
+  };
+  blockId?: string;
+}
+const { data = {}, blockId } = Astro.props;
+const heading = data.heading ?? "";
+const images = data.images ?? [];
+---
+
+<section
+  class="gallery-block relative py-24 sm:py-32 bg-void"
+  data-block-id={blockId}
+  data-block-type="gallery"
+>
+  <div class="max-w-[1600px] mx-auto px-6 sm:px-10 lg:px-14">
+    {heading && (
+      <h2
+        class="reveal font-display uppercase leading-[0.9] text-[clamp(40px,6vw,88px)] tracking-[-0.01em] mb-12 max-w-3xl"
+        data-edit="heading"
+      >
+        {heading}
+      </h2>
+    )}
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+      {images.map((img, i) => (
+        <figure class={`reveal reveal-delay-${(i % 4) + 1} aspect-[4/5] overflow-hidden border border-iron bg-coal`}>
+          {img.src ? (
+            <img
+              src={img.src}
+              alt={img.alt ?? ""}
+              class="w-full h-full object-cover transition-transform duration-700 hover:scale-[1.04]"
+              data-edit-attr={`images[${i}].src:src`}
+            />
+          ) : (
+            <div class="w-full h-full flex items-center justify-center text-smoke font-mono text-[11px] uppercase tracking-[0.2em]">
+              Image
+            </div>
+          )}
+        </figure>
+      ))}
+    </div>
+  </div>
+</section>

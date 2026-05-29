@@ -1,0 +1,16 @@
+---
+interface Props {
+  data?: { label?: string };
+  blockId?: string;
+}
+const { data = {}, blockId } = Astro.props;
+const label = data.label ?? "Section";
+---
+
+<div
+  class="section-divider"
+  data-block-id={blockId}
+  data-block-type="divider"
+>
+  <span class="mark" data-edit="label">{label}</span>
+</div>

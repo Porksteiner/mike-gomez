@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Studio · Visual Editor</title>
+    <meta name="robots" content="noindex" />
+    <link rel="icon" href="data:," />
+    <link rel="stylesheet" href="./studio.css" />
+  </head>
+  <body class="studio">
+    <!-- =========================================================
+         TOP BAR
+         ========================================================= -->
+    <header class="topbar">
+      <div class="topbar-left">
+        <div class="brand">
+          <span class="dot"></span>
+          <strong>Studio</strong>
+          <span class="muted">Visual Editor</span>
+        </div>
+        <nav class="tabs" role="tablist">
+          <button class="tab is-active" data-tab="page" role="tab">Page</button>
+          <button class="tab" data-tab="library" role="tab">Library</button>
+          <button class="tab" data-tab="theme" role="tab">Theme</button>
+          <button class="tab" data-tab="pages" role="tab">Pages</button>
+        </nav>
+      </div>
+      <div class="topbar-right">
+        <span id="status-pill" class="status-pill">Disconnected</span>
+        <button id="open-project" class="btn btn-ghost" title="Pick the project folder">
+          <span class="i">📁</span>
+          <span>Open project</span>
+        </button>
+        <div class="viewport-group" role="group" aria-label="Viewport">
+          <button class="vp" data-vp="mobile" title="Mobile">📱</button>
+          <button class="vp is-active" data-vp="desktop" title="Desktop">🖥</button>
+          <button class="vp" data-vp="fluid" title="Full width">⤢</button>
+        </div>
+        <button id="save-btn" class="btn btn-primary" disabled>
+          <span class="i">💾</span><span>Save</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- =========================================================
+         MAIN — sidebar + stage + inspector
+         ========================================================= -->
+    <main class="stage">
+      <aside class="sidebar" id="sidebar">
+        <div class="panel" data-panel="page">
+          <div class="panel-head">
+            <h2>Blocks</h2>
+            <button class="btn btn-ghost btn-sm" id="add-block-btn">+ Add</button>
+          </div>
+          <ol class="block-list" id="block-list">
+            <li class="empty">No project open. Click <strong>Open project</strong>.</li>
+          </ol>
+        </div>
+
+        <div class="panel hidden" data-panel="library">
+          <div class="panel-head"><h2>Block Library</h2></div>
+          <div class="lib-search">
+            <input type="search" id="lib-search" placeholder="Search blocks…" />
+          </div>
+          <div class="lib-grid" id="lib-grid"></div>
+        </div>
+
+        <div class="panel hidden" data-panel="theme">
+          <div class="panel-head"><h2>Theme</h2></div>
+          <div id="theme-form" class="form"></div>
+        </div>
+
+        <div class="panel hidden" data-panel="pages">
+          <div class="panel-head">
+            <h2>Pages</h2>
+            <button class="btn btn-ghost btn-sm" id="add-page-btn">+ New</button>
+          </div>
+          <ul class="page-list" id="page-list">
+            <li class="empty">No project open.</li>
+          </ul>
+        </div>
+      </aside>
+
+      <section class="viewport-host" id="viewport-host">
+        <div class="viewport" id="viewport">
+          <iframe id="preview"
+                  src="about:blank"
+                  title="Site preview"
+                  allow="clipboard-write"></iframe>
+        </div>
+        <div class="viewport-info" id="viewport-info">Open project to load preview</div>
+      </section>
+
+      <aside class="inspector" id="inspector">
+        <div class="inspector-head">
+          <h2 id="inspector-title">Inspector</h2>
+          <span id="inspector-sub" class="muted">Select a block to edit</span>
+        </div>
+        <div id="inspector-body" class="inspector-body">
+          <div class="empty">
+            <p>Click any block in the preview, or pick from the sidebar.</p>
+          </div>
+        </div>
+      </aside>
+    </main>
+
+    <!-- =========================================================
+         MODAL — Add block library
+         ========================================================= -->
+    <div class="modal hidden" id="add-block-modal" role="dialog">
+      <div class="modal-backdrop" data-close></div>
+      <div class="modal-card">
+        <header class="modal-head">
+          <h2>Add a block</h2>
+          <button class="btn btn-ghost btn-sm" data-close>Close</button>
+        </header>
+        <div class="modal-tabs">
+          <button class="cat-tab is-active" data-cat="all">All</button>
+          <button class="cat-tab" data-cat="Hero">Hero</button>
+          <button class="cat-tab" data-cat="Content">Content</button>
+          <button class="cat-tab" data-cat="Marketing">Marketing</button>
+          <button class="cat-tab" data-cat="Media">Media</button>
+          <button class="cat-tab" data-cat="Social proof">Social proof</button>
+          <button class="cat-tab" data-cat="Structure">Structure</button>
+        </div>
+        <div class="modal-grid" id="add-block-grid"></div>
+      </div>
+    </div>
+
+    <!-- =========================================================
+         TOAST
+         ========================================================= -->
+    <div id="toast" class="toast hidden"></div>
+
+    <script src="./app.js" type="module"></script>
+  </body>
+</html>

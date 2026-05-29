@@ -1,0 +1,16 @@
+{
+  "title": "Mike Gomez — Freelance web & mobile developer",
+  "blocks": [
+    { "id": "header-1", "type": "header" },
+    { "id": "hero-1", "type": "hero" },
+    { "id": "creation-1", "type": "creation" },
+    { "id": "div-work", "type": "divider", "data": { "label": "The work" } },
+    { "id": "work-1", "type": "work" },
+    { "id": "div-together", "type": "divider", "data": { "label": "Working together" } },
+    { "id": "how-1", "type": "how-i-work" },
+    { "id": "faq-1", "type": "faq" },
+    { "id": "div-touch", "type": "divider", "data": { "label": "Get in touch" } },
+    { "id": "contact-1", "type": "contact" },
+    { "id": "footer-1", "type": "footer" }
+  ]
+}
