@@ -8,6 +8,9 @@ import HowIWork from "../components/HowIWork.astro";
 import FAQ from "../components/FAQ.astro";
 import Contact from "../components/Contact.astro";
 import Footer from "../components/Footer.astro";
+import creation from "../data/creation.json";
+
+const { dividers } = creation;
 ---
 
 <BaseLayout>
@@ -23,14 +26,14 @@ import Footer from "../components/Footer.astro";
     <Hero />
     <CreationOfAdam />
 
-    <div class="section-divider"><span class="mark">The work</span></div>
+    <div class="section-divider"><span class="mark">{dividers.work}</span></div>
     <Work />
 
-    <div class="section-divider"><span class="mark">Working together</span></div>
+    <div class="section-divider"><span class="mark">{dividers.workingTogether}</span></div>
     <HowIWork />
     <FAQ />
 
-    <div class="section-divider"><span class="mark">Get in touch</span></div>
+    <div class="section-divider"><span class="mark">{dividers.getInTouch}</span></div>
     <Contact />
   </main>
   <Footer />

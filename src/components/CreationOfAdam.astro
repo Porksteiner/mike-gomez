@@ -1,45 +1,25 @@
 ---
-/*
-  Creation of Adam — scroll-driven moment.
-
-  How it works:
-  - Section is 160vh tall. Sticky child (100vh) keeps the scene
-    visually centered while the user scrolls through ~60vh of
-    "animation runway."
-  - JS in site.js writes a 0→1 scroll-progress value into the
-    section as --creation-p.
-  - Hands use translateX bound to that progress: at p=0 they're
-    at the edges, at p=1 they're touching at center.
-  - The touch-light's opacity ramps from 0 → 1 across p=0.85 → 1.0,
-    so the light only "ignites" right before the hands scroll out.
-  - The light has a continuous pulse animation once visible.
-  - Scrolling back up reverses the progress automatically.
-
-  Required assets:
-    /projects/hand-left.png   — Adam's hand (reaching from left)
-    /projects/hand-right.png  — God's hand (reaching from right)
-    Both PNGs should have transparent backgrounds. Aim for the
-    fingertip near the edge of the canvas pointing INWARD.
-*/
+import data from "../data/creation.json";
+const { inscription, handLeftImage, handRightImage, ariaLabel } = data;
 ---
 
-<section id="creation-of-adam" class="creation-section relative" aria-label="Where vision meets execution">
+<section id="creation-of-adam" class="creation-section relative" aria-label={ariaLabel}>
   <div class="creation-sticky">
     <img
-      src="/projects/hand-left.png"
+      src={handLeftImage}
       alt=""
       class="hand hand-left"
       onerror="this.style.display='none'"
     />
     <img
-      src="/projects/hand-right.png"
+      src={handRightImage}
       alt=""
       class="hand hand-right"
       onerror="this.style.display='none'"
     />
     <div class="touch-light" aria-hidden="true"></div>
     <p class="creation-inscription" aria-hidden="true">
-      Built with Purpose
+      {inscription}
     </p>
   </div>
 </section>

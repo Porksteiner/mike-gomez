@@ -418,3 +418,79 @@ main > section.lift-hatch::after {
     animation: none;
   }
 }
+
+/* ====================================================================
+   COOL EFFECTS — phase 2 additions.
+   All reduced-motion safe (graceful no-op when prefers-reduced-motion).
+   ==================================================================== */
+
+/* --- Card hover spotlight (mouse-tracked radial gold wash) --- */
+.spotlight-host { isolation: isolate; }
+.spotlight-host::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0;
+  transition: opacity 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+  background: radial-gradient(
+    420px circle at var(--mx, 50%) var(--my, 50%),
+    rgba(212, 168, 107, 0.16),
+    transparent 65%
+  );
+  mix-blend-mode: screen;
+}
+.spotlight-host:hover::after,
+.spotlight-host:focus-within::after { opacity: 1; }
+
+/* --- Headline character split — JS wraps chars with .char --- */
+[data-split] .word {
+  display: inline-block;
+  white-space: nowrap;
+}
+[data-split] .char {
+  display: inline-block;
+  opacity: 0;
+  transform: translateY(0.55em);
+  filter: blur(8px);
+  transition:
+    opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.95s cubic-bezier(0.22, 1, 0.36, 1),
+    filter 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+}
+[data-split].in .char {
+  opacity: 1;
+  transform: none;
+  filter: blur(0);
+}
+
+/* --- Image parallax — JS writes --py per element --- */
+[data-parallax] {
+  will-change: transform;
+  transform: translate3d(0, calc(var(--py, 0) * 1px), 0);
+}
+
+/* --- Section divider draw-in — animate the flanking gold lines --- */
+.section-divider .mark::before,
+.section-divider .mark::after {
+  transform: scaleX(0);
+  transition: transform 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.15s;
+}
+.section-divider .mark::before { transform-origin: right; }
+.section-divider .mark::after  { transform-origin: left; }
+.section-divider.in .mark::before,
+.section-divider.in .mark::after { transform: scaleX(1); }
+
+/* --- Reduce-motion guard --- */
+@media (prefers-reduced-motion: reduce) {
+  [data-split] .char,
+  [data-parallax],
+  .section-divider .mark::before,
+  .section-divider .mark::after {
+    transition: none !important;
+    transform: none !important;
+    filter: none !important;
+    opacity: 1 !important;
+  }
+}

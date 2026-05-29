@@ -1,0 +1,35 @@
+{
+  "headingLine1": "How we'll",
+  "headingLine2Pre": "work ",
+  "headingLine2Accent": "together",
+  "headingLine2Post": ".",
+  "lede": "Most of my projects start with a friendly call. We figure out what you're trying to make, what's realistic for the timeline, and whether I'm the right person for it. If we move forward, here's what working together looks like.",
+  "inscription": "Care in the work.",
+  "inscriptionAccent": "Care in the conversation.",
+  "stages": [
+    {
+      "n": "I",
+      "kicker": "First chat",
+      "duration": "Day 0",
+      "body": "We start with a 30-minute call. Tell me about what you're making, what's been tricky about it, and what you'd love to see in three months. No deck, no slides, just a real conversation. If we're not a fit, I'll happily point you to someone who is."
+    },
+    {
+      "n": "II",
+      "kicker": "Brief and estimate",
+      "duration": "Day 1",
+      "body": "Within twenty-four hours of our call, you'll have a written scope, a timeline, and a fixed price. If anything looks off, we'll talk through it before we start. Real numbers, no surprises."
+    },
+    {
+      "n": "III",
+      "kicker": "Build",
+      "duration": "Weeks 1–N",
+      "body": "Design and dev happen together. You'll see real working software inside the first week. I'll send Loom updates as often as you like, daily or weekly, and I'm easy to reach for anything in between."
+    },
+    {
+      "n": "IV",
+      "kicker": "Ship + stay close",
+      "duration": "Final + 30",
+      "body": "Launch, walk you through how everything works, and stick around for thirty days after to handle anything that comes up. I'll still be here when you have questions next year too."
+    }
+  ]
+}

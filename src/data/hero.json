@@ -1,0 +1,14 @@
+{
+  "line1": "Honest work.",
+  "line2": "Real software.",
+  "line3Accent": "Built",
+  "line3Rest": " with care.",
+  "line4": "Shipped on time.",
+  "bio": "I'm Mike. I build websites and mobile apps for founders and small business owners. Whether you've got it all figured out or you're still piecing it together, I'd love to hear what you're working on.",
+  "currentlyBuildingLabel": "Currently building",
+  "currentlyBuildingLines": [
+    "BaitIQ v2 — iOS, App Store",
+    "Unlearn Your Credit Habits — launch"
+  ],
+  "scrollCtaLabel": "See work"
+}

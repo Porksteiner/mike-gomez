@@ -135,3 +135,126 @@
     adamSection.style.setProperty("--creation-p", "1");
   }
 })();
+
+/* ====================================================================
+   PHASE 2 — Card spotlight, headline split, image parallax, divider IO.
+   Same IIFE-style top-level, additive only.
+   ==================================================================== */
+(() => {
+  const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const fineHover = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+
+  /* ----- 7. Card spotlight ----- */
+  if (fineHover && !reduce) {
+    document.querySelectorAll(".spotlight-host").forEach((el) => {
+      el.addEventListener("mousemove", (e) => {
+        const r = el.getBoundingClientRect();
+        el.style.setProperty("--mx", `${e.clientX - r.left}px`);
+        el.style.setProperty("--my", `${e.clientY - r.top}px`);
+      }, { passive: true });
+    });
+  }
+
+  /* ----- 8. Headline character split + stagger reveal ----- */
+  {
+    const splitNode = (root) => {
+      const wrapText = (text) => {
+        const frag = document.createDocumentFragment();
+        text.split(/(\s+)/).forEach((tok) => {
+          if (!tok) return;
+          if (/^\s+$/.test(tok)) {
+            frag.appendChild(document.createTextNode(tok));
+          } else {
+            const word = document.createElement("span");
+            word.className = "word";
+            [...tok].forEach((ch, i) => {
+              const c = document.createElement("span");
+              c.className = "char";
+              c.textContent = ch;
+              c.style.transitionDelay = `${0.025 * i + 0.04}s`;
+              word.appendChild(c);
+            });
+            frag.appendChild(word);
+          }
+        });
+        return frag;
+      };
+      const walk = (node) => {
+        [...node.childNodes].forEach((child) => {
+          if (child.nodeType === Node.TEXT_NODE) {
+            const wrapped = wrapText(child.textContent);
+            if (wrapped.childNodes.length) child.replaceWith(wrapped);
+          } else if (child.nodeType === Node.ELEMENT_NODE
+                     && !child.classList.contains("char")
+                     && !child.classList.contains("word")) {
+            walk(child);
+          }
+        });
+      };
+      walk(root);
+    };
+
+    document.querySelectorAll("[data-split]").forEach((el) => {
+      splitNode(el);
+      if (reduce) {
+        el.classList.add("in");
+        return;
+      }
+      const obs = new IntersectionObserver((entries) => {
+        entries.forEach((ent) => {
+          if (ent.isIntersecting) {
+            el.classList.add("in");
+            obs.disconnect();
+          }
+        });
+      }, { threshold: 0.1 });
+      obs.observe(el);
+    });
+  }
+
+  /* ----- 9. Image parallax ----- */
+  if (!reduce) {
+    const parallaxEls = [...document.querySelectorAll("[data-parallax]")];
+    if (parallaxEls.length) {
+      let ticking = false;
+      const update = () => {
+        const vh = window.innerHeight;
+        parallaxEls.forEach((el) => {
+          const r = el.getBoundingClientRect();
+          if (r.bottom < -100 || r.top > vh + 100) return;
+          const p = (r.top + r.height / 2 - vh / 2) / vh;
+          const amount = parseFloat(el.dataset.parallax) || 16;
+          el.style.setProperty("--py", String(-p * amount));
+        });
+        ticking = false;
+      };
+      document.addEventListener("scroll", () => {
+        if (!ticking) {
+          requestAnimationFrame(update);
+          ticking = true;
+        }
+      }, { passive: true });
+      window.addEventListener("resize", update, { passive: true });
+      update();
+    }
+  }
+
+  /* ----- 10. Section divider reveal ----- */
+  {
+    const dividers = document.querySelectorAll(".section-divider");
+    if (!dividers.length) return;
+    if (reduce) {
+      dividers.forEach((d) => d.classList.add("in"));
+      return;
+    }
+    const obs = new IntersectionObserver((entries) => {
+      entries.forEach((ent) => {
+        if (ent.isIntersecting) {
+          ent.target.classList.add("in");
+          obs.unobserve(ent.target);
+        }
+      });
+    }, { threshold: 0.5 });
+    dividers.forEach((d) => obs.observe(d));
+  }
+})();

@@ -1,4 +1,10 @@
 ---
+import footerData from "../data/footer.json";
+import settings from "../data/settings.json";
+const {
+  verse, verseReference, tagline, taglineAccent,
+  siteLinks, socialLinks, wordmark, fineprint,
+} = footerData;
 const year = new Date().getFullYear();
 ---
 
@@ -10,11 +16,10 @@ const year = new Date().getFullYear();
         class="text-[clamp(14px,1.4vw,18px)] leading-[1.7] text-ink-900 italic"
         style="font-family: var(--font-inscription); font-style: italic;"
       >
-        Whatever you do, work at it with all your heart, as working for the
-        Lord, not for human masters.
+        {verse}
       </p>
       <p class="mt-3 text-[11px] uppercase tracking-[0.28em] font-mono text-smoke">
-        Colossians 3:23
+        {verseReference}
       </p>
     </div>
 
@@ -30,45 +35,43 @@ const year = new Date().getFullYear();
                   fill="#d4af6d" letter-spacing="-0.5">MG</text>
           </svg>
           <span class="font-display text-2xl tracking-[0.14em] uppercase leading-none">
-            Mike Gomez
+            {settings.name}
           </span>
         </div>
         <p
           class="font-display uppercase text-[clamp(28px,4vw,52px)] leading-[0.95] tracking-[-0.01em] max-w-2xl"
         >
-          Built with <span class="text-gold">care.</span><br />
-          Shipped on time.
+          {tagline.replace(/\.$/, "")} <span class="text-gold">care.</span><br />
+          {taglineAccent}
         </p>
       </div>
 
       <div class="col-span-6 md:col-span-2 md:col-start-9">
         <p class="text-[11px] uppercase tracking-[0.22em] font-mono text-smoke mb-4">Site</p>
         <ul class="space-y-2 text-[14px]">
-          <li><a href="#work" class="link-flare hover:text-gold transition">Work</a></li>
-          <li><a href="#how" class="link-flare hover:text-gold transition">How I work</a></li>
-          <li><a href="#faq" class="link-flare hover:text-gold transition">FAQ</a></li>
-          <li><a href="#contact" class="link-flare hover:text-gold transition">Contact</a></li>
+          {siteLinks.map((l) => (
+            <li><a href={l.href} class="link-flare hover:text-gold transition">{l.label}</a></li>
+          ))}
         </ul>
       </div>
 
       <div class="col-span-6 md:col-span-2">
         <p class="text-[11px] uppercase tracking-[0.22em] font-mono text-smoke mb-4">Elsewhere</p>
         <ul class="space-y-2 text-[14px]">
-          <li><a href="#" class="link-flare hover:text-gold transition">GitHub</a></li>
-          <li><a href="#" class="link-flare hover:text-gold transition">Twitter / X</a></li>
-          <li><a href="#" class="link-flare hover:text-gold transition">App Store</a></li>
-          <li><a href="#" class="link-flare hover:text-gold transition">LinkedIn</a></li>
+          {socialLinks.map((l) => (
+            <li><a href={l.href} class="link-flare hover:text-gold transition" target={l.href.startsWith('http') ? '_blank' : undefined} rel={l.href.startsWith('http') ? 'noopener' : undefined}>{l.label}</a></li>
+          ))}
         </ul>
       </div>
     </div>
 
-    {/* Giant wordmark — GOMEZ. */}
+    {/* Giant wordmark */}
     <div class="border-t border-iron pt-12 mb-12 overflow-hidden">
       <p
         class="font-display uppercase text-[clamp(140px,26vw,460px)] leading-[0.85] tracking-[-0.03em] text-gold/90 whitespace-nowrap"
         aria-hidden="true"
       >
-        GOMEZ<span class="text-bone">.</span>
+        {wordmark}<span class="text-bone">.</span>
       </p>
     </div>
 
@@ -76,10 +79,10 @@ const year = new Date().getFullYear();
     <div
       class="flex flex-col sm:flex-row gap-3 justify-between items-start sm:items-center text-[11px] uppercase tracking-[0.2em] font-mono text-smoke"
     >
-      <p>&copy; {year} Mike Gomez &mdash; Built solo in Astro + Tailwind</p>
+      <p>&copy; {year} {settings.name} &mdash; {fineprint}</p>
       <p>
-        <span class="text-gold">●</span> Open for new work
-        &nbsp;/&nbsp; <a href="mailto:mike@mikegomez.dev" class="link-flare hover:text-gold transition">mike@mikegomez.dev</a>
+        <span class="text-gold">●</span> {settings.availability}
+        &nbsp;/&nbsp; <a href={`mailto:${settings.email}`} class="link-flare hover:text-gold transition">{settings.email}</a>
       </p>
     </div>
   </div>

@@ -94,6 +94,115 @@ collections:
       - { name: body, label: "Notes (not rendered)", widget: markdown, required: false }
 
   # ---------------------------------------------------------------
+  #  HERO — top-of-page headline, bio, and bottom row.
+  # ---------------------------------------------------------------
+  - name: hero
+    label: Hero
+    description: "Top-of-page headline + bio + currently-building snippet."
+    files:
+      - name: hero
+        label: Hero copy
+        file: src/data/hero.json
+        fields:
+          - { name: line1, label: "Headline line 1", widget: string }
+          - { name: line2, label: "Headline line 2 (outlined)", widget: string }
+          - { name: line3Accent, label: "Line 3 — italic gold word", widget: string, hint: "Shown italic gold sans (e.g. 'Built')." }
+          - { name: line3Rest, label: "Line 3 — rest of line", widget: string, hint: "Shown in default style. Include leading space." }
+          - { name: line4, label: "Headline line 4 (gold outlined)", widget: string }
+          - { name: bio, label: "Bio paragraph", widget: text }
+          - { name: currentlyBuildingLabel, label: "Building label", widget: string, default: "Currently building" }
+          - name: currentlyBuildingLines
+            label: "Currently-building lines"
+            widget: list
+            summary: "{{fields.line}}"
+            field: { name: line, label: Line, widget: string }
+          - { name: scrollCtaLabel, label: "Scroll CTA label", widget: string, default: "See work" }
+
+  # ---------------------------------------------------------------
+  #  HOW I WORK — section heading, lede, inscription, 4 stages.
+  # ---------------------------------------------------------------
+  - name: howiwork
+    label: How I Work
+    description: "Working-together section. Heading, principle quote, and the four stages."
+    files:
+      - name: howiwork
+        label: Process content
+        file: src/data/howiwork.json
+        fields:
+          - { name: headingLine1, label: "Heading line 1", widget: string, default: "How we'll" }
+          - { name: headingLine2Pre, label: "Heading line 2 — pre-accent", widget: string, default: "work " }
+          - { name: headingLine2Accent, label: "Heading line 2 — gold accent word", widget: string, default: "together" }
+          - { name: headingLine2Post, label: "Heading line 2 — post-accent", widget: string, default: "." }
+          - { name: lede, label: "Lede paragraph", widget: text }
+          - { name: inscription, label: "Inscription (Cinzel, default text)", widget: string }
+          - { name: inscriptionAccent, label: "Inscription (gold half)", widget: string }
+          - name: stages
+            label: Stages
+            widget: list
+            summary: "{{fields.n}} — {{fields.kicker}}"
+            fields:
+              - { name: n, label: "Numeral", widget: string, hint: "I, II, III, IV" }
+              - { name: kicker, label: "Stage name", widget: string }
+              - { name: duration, label: "Duration", widget: string }
+              - { name: body, label: "Body", widget: text }
+
+  # ---------------------------------------------------------------
+  #  FOOTER — verse, tagline, site links, social links.
+  # ---------------------------------------------------------------
+  - name: footer
+    label: Footer
+    description: "Bottom of every page — verse, tagline, navigation, social."
+    files:
+      - name: footer
+        label: Footer content
+        file: src/data/footer.json
+        fields:
+          - { name: verse, label: "Verse / opening line", widget: text }
+          - { name: verseReference, label: "Reference / source", widget: string }
+          - { name: tagline, label: "Big tagline line 1", widget: string, hint: "Italic gold appears on 'care.'" }
+          - { name: taglineAccent, label: "Big tagline line 2", widget: string }
+          - name: siteLinks
+            label: "Site nav"
+            widget: list
+            summary: "{{fields.label}}"
+            fields:
+              - { name: label, label: Label, widget: string }
+              - { name: href, label: "Href (e.g. #work)", widget: string }
+          - name: socialLinks
+            label: "Elsewhere / social links"
+            widget: list
+            summary: "{{fields.label}}"
+            fields:
+              - { name: label, label: Label, widget: string }
+              - { name: href, label: "URL", widget: string }
+          - { name: wordmark, label: "Giant wordmark", widget: string, default: "GOMEZ" }
+          - { name: fineprint, label: "Bottom-row fineprint", widget: string }
+
+  # ---------------------------------------------------------------
+  #  CREATION + DIVIDERS — the scroll-driven moment between Hero
+  #  and Work, plus the three section divider labels.
+  # ---------------------------------------------------------------
+  - name: creation
+    label: Creation Moment + Dividers
+    description: "The Creation-of-Adam scroll inscription, hand images, and the three section divider labels."
+    files:
+      - name: creation
+        label: Settings
+        file: src/data/creation.json
+        fields:
+          - { name: inscription, label: "Inscription (centered text)", widget: string }
+          - { name: handLeftImage, label: "Left hand image", widget: image, choose_url: false }
+          - { name: handRightImage, label: "Right hand image", widget: image, choose_url: false }
+          - { name: ariaLabel, label: "Accessibility label (screen readers)", widget: string }
+          - name: dividers
+            label: "Section dividers"
+            widget: object
+            fields:
+              - { name: work, label: "Before the Work section", widget: string }
+              - { name: workingTogether, label: "Before How-I-Work", widget: string }
+              - { name: getInTouch, label: "Before Contact", widget: string }
+
+  # ---------------------------------------------------------------
   #  NOW — single JSON file with a list of in-flight items.
   # ---------------------------------------------------------------
   - name: now

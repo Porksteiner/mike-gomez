@@ -1,8 +1,15 @@
 ---
 /*
-  HERO — quieted. Removed the top eyebrow row entirely. The headline
-  is the page's first move; nothing precedes it but breathing room.
+  HERO — content-driven. All copy lives in src/data/hero.json.
+  Per-line styling (stroke, gold accent, etc.) stays in the component
+  because it's tightly art-directed — the data layer just controls
+  the words.
 */
+import hero from "../data/hero.json";
+const {
+  line1, line2, line3Accent, line3Rest, line4,
+  bio, currentlyBuildingLabel, currentlyBuildingLines, scrollCtaLabel,
+} = hero;
 ---
 
 <section
@@ -26,20 +33,21 @@
     </svg>
   </div>
 
-  {/* Headline */}
+  {/* Headline — per-line styling preserved; text from JSON. */}
   <h1
+    data-split
     class="relative max-w-[1600px] w-full mx-auto px-6 sm:px-10 lg:px-14 font-display uppercase tracking-[-0.02em] leading-[0.88] text-[clamp(64px,12vw,212px)]"
   >
-    <span class="block reveal">Honest work.</span>
+    <span class="block reveal">{line1}</span>
     <span class="block reveal reveal-delay-1">
-      <span class="text-stroke">Real software.</span>
+      <span class="text-stroke">{line2}</span>
     </span>
     <span class="block reveal reveal-delay-2">
-      <span class="italic font-sans font-light normal-case tracking-[-0.03em] text-gold">Built</span>
-      <span class="text-bone">&nbsp;with&nbsp;care.</span>
+      <span class="italic font-sans font-light normal-case tracking-[-0.03em] text-gold">{line3Accent}</span>
+      <span class="text-bone">{line3Rest}</span>
     </span>
     <span class="block reveal reveal-delay-3 -mt-1 sm:-mt-3">
-      <span class="text-stroke-gold">Shipped on time.</span>
+      <span class="text-stroke-gold">{line4}</span>
     </span>
   </h1>
 
@@ -49,20 +57,21 @@
   >
     <div class="col-span-12 md:col-span-6 reveal reveal-delay-3">
       <p class="text-lg sm:text-xl text-paper max-w-md leading-snug">
-        I&rsquo;m Mike. I build websites and mobile apps for founders and
-        small business owners. Whether you&rsquo;ve got it all figured out or
-        you&rsquo;re still piecing it together, I&rsquo;d love to hear what
-        you&rsquo;re working on.
+        {bio}
       </p>
     </div>
 
     <div class="col-span-12 md:col-span-3 md:col-start-8 reveal reveal-delay-4">
       <p class="text-[11px] uppercase tracking-[0.2em] font-mono text-smoke mb-2">
-        Currently building
+        {currentlyBuildingLabel}
       </p>
       <p class="text-paper text-[15px] leading-snug">
-        BaitIQ v2 &mdash; iOS, App Store<br />
-        Unlearn Your Credit Habits &mdash; launch
+        {currentlyBuildingLines.map((line, i) => (
+          <>
+            {line}
+            {i < currentlyBuildingLines.length - 1 && <br />}
+          </>
+        ))}
       </p>
     </div>
 
@@ -71,7 +80,7 @@
         href="#work"
         class="flex flex-col items-end gap-2 text-[11px] uppercase tracking-[0.2em] font-mono text-smoke hover:text-bone transition"
       >
-        See work
+        {scrollCtaLabel}
         <svg viewBox="0 0 24 24" class="w-4 h-6" fill="none" stroke="currentColor" stroke-width="1.5">
           <path d="M12 4 V20 M5 13 L12 20 L19 13" stroke-linecap="round" stroke-linejoin="round" />
         </svg>

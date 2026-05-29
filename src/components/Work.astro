@@ -39,7 +39,7 @@ const titleSizeClass: Record<string, string> = {
         const delayClass = idx > 0 ? `reveal-delay-${Math.min(idx, 4)}` : "";
         const hClass = titleSizeClass[titleSize] ?? titleSizeClass.lg;
         return (
-          <article class={`reveal ${delayClass} lg:col-span-12 group relative overflow-hidden border border-iron hover:border-gold/60 transition-all duration-500 bg-coal`}>
+          <article class={`reveal ${delayClass} spotlight-host lg:col-span-12 group relative overflow-hidden border border-iron hover:border-gold/60 transition-all duration-500 bg-coal`}>
             <div class="absolute inset-0 bg-gradient-to-br from-coal via-honey/20 to-graphite"></div>
 
             {pattern === "grid" && (
@@ -128,6 +128,7 @@ const titleSizeClass: Record<string, string> = {
                       width="900"
                       height="900"
                       loading="lazy"
+                      data-parallax="16"
                       class={`relative w-full h-auto max-w-[520px] mx-auto transition-transform duration-700 group-hover:scale-[1.04] ${rotationClass}`}
                     />
                   </div>
