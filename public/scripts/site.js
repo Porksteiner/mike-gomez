@@ -194,9 +194,11 @@
       walk(root);
     };
 
+    // In Studio mode, skip splitting — it shatters text into chars and breaks inline editing
+    const inStudio = location.search.includes("studio=1");
     document.querySelectorAll("[data-split]").forEach((el) => {
-      splitNode(el);
-      if (reduce) {
+      if (!inStudio) splitNode(el);
+      if (reduce || inStudio) {
         el.classList.add("in");
         return;
       }

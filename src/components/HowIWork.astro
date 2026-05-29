@@ -13,10 +13,12 @@ const {
       <h2
         class="font-display uppercase leading-[0.9] text-[clamp(48px,8vw,124px)] tracking-[-0.01em]"
       >
-        <span class="block">{headingLine1}</span>
-        <span class="block">{headingLine2Pre}<span class="text-gold">{headingLine2Accent}</span>{headingLine2Post}</span>
+        <span class="block" data-edit="headingLine1">{headingLine1}</span>
+        <span class="block">
+          <span data-edit="headingLine2Pre">{headingLine2Pre}</span><span class="text-gold" data-edit="headingLine2Accent">{headingLine2Accent}</span><span data-edit="headingLine2Post">{headingLine2Post}</span>
+        </span>
       </h2>
-      <p class="mt-8 text-lg sm:text-xl text-paper leading-relaxed max-w-2xl">
+      <p class="mt-8 text-lg sm:text-xl text-paper leading-relaxed max-w-2xl" data-edit="lede">
         {lede}
       </p>
     </div>
@@ -27,33 +29,41 @@ const {
         class="font-[var(--font-inscription)] tracking-[0.06em] text-[clamp(22px,2.4vw,34px)] leading-[1.35] text-ink-900"
         style="font-family: var(--font-inscription);"
       >
-        {inscription}
-        <span class="text-gold">{inscriptionAccent}</span>
+        <span data-edit="inscription">{inscription}</span>
+        <span class="text-gold" data-edit="inscriptionAccent">{inscriptionAccent}</span>
       </p>
     </div>
 
     {/* The four stages, as editorial paragraphs */}
     <ol class="divide-y divide-iron max-w-5xl mx-auto">
       {
-        stages.map((s) => (
+        stages.map((s, i) => (
           <li class="reveal grid grid-cols-12 gap-x-8 gap-y-3 py-12 sm:py-16">
             <span
               class="col-span-2 md:col-span-1 text-[clamp(28px,3vw,44px)] text-gold leading-none pt-2"
               style="font-family: var(--font-inscription); letter-spacing: 0.05em;"
+              data-edit={`stages[${i}].n`}
             >
               {s.n}
             </span>
             <div class="col-span-10 md:col-span-3">
               <p
                 class="font-mono text-[11px] uppercase tracking-[0.22em] text-smoke mb-2"
+                data-edit={`stages[${i}].duration`}
               >
                 {s.duration}
               </p>
-              <h3 class="font-display uppercase text-[clamp(22px,2.4vw,32px)] leading-[1.05] tracking-[-0.01em] text-bone">
+              <h3
+                class="font-display uppercase text-[clamp(22px,2.4vw,32px)] leading-[1.05] tracking-[-0.01em] text-bone"
+                data-edit={`stages[${i}].kicker`}
+              >
                 {s.kicker}
               </h3>
             </div>
-            <p class="col-span-12 md:col-span-8 text-lg leading-relaxed text-paper max-w-2xl">
+            <p
+              class="col-span-12 md:col-span-8 text-lg leading-relaxed text-paper max-w-2xl"
+              data-edit={`stages[${i}].body`}
+            >
               {s.body}
             </p>
           </li>

@@ -38,16 +38,16 @@ const {
     data-split
     class="relative max-w-[1600px] w-full mx-auto px-6 sm:px-10 lg:px-14 font-display uppercase tracking-[-0.02em] leading-[0.88] text-[clamp(64px,12vw,212px)]"
   >
-    <span class="block reveal">{line1}</span>
+    <span class="block reveal" data-edit="line1">{line1}</span>
     <span class="block reveal reveal-delay-1">
-      <span class="text-stroke">{line2}</span>
+      <span class="text-stroke" data-edit="line2">{line2}</span>
     </span>
     <span class="block reveal reveal-delay-2">
-      <span class="italic font-sans font-light normal-case tracking-[-0.03em] text-gold">{line3Accent}</span>
-      <span class="text-bone">{line3Rest}</span>
+      <span class="italic font-sans font-light normal-case tracking-[-0.03em] text-gold" data-edit="line3Accent">{line3Accent}</span>
+      <span class="text-bone" data-edit="line3Rest">{line3Rest}</span>
     </span>
     <span class="block reveal reveal-delay-3 -mt-1 sm:-mt-3">
-      <span class="text-stroke-gold">{line4}</span>
+      <span class="text-stroke-gold" data-edit="line4">{line4}</span>
     </span>
   </h1>
 
@@ -56,19 +56,19 @@ const {
     class="relative max-w-[1600px] w-full mx-auto px-6 sm:px-10 lg:px-14 mt-16 sm:mt-24 grid grid-cols-12 gap-6"
   >
     <div class="col-span-12 md:col-span-6 reveal reveal-delay-3">
-      <p class="text-lg sm:text-xl text-paper max-w-md leading-snug">
+      <p class="text-lg sm:text-xl text-paper max-w-md leading-snug" data-edit="bio">
         {bio}
       </p>
     </div>
 
     <div class="col-span-12 md:col-span-3 md:col-start-8 reveal reveal-delay-4">
-      <p class="text-[11px] uppercase tracking-[0.2em] font-mono text-smoke mb-2">
+      <p class="text-[11px] uppercase tracking-[0.2em] font-mono text-smoke mb-2" data-edit="currentlyBuildingLabel">
         {currentlyBuildingLabel}
       </p>
       <p class="text-paper text-[15px] leading-snug">
         {currentlyBuildingLines.map((line, i) => (
           <>
-            {line}
+            <span data-edit={`currentlyBuildingLines[${i}]`}>{line}</span>
             {i < currentlyBuildingLines.length - 1 && <br />}
           </>
         ))}
@@ -80,7 +80,7 @@ const {
         href="#work"
         class="flex flex-col items-end gap-2 text-[11px] uppercase tracking-[0.2em] font-mono text-smoke hover:text-bone transition"
       >
-        {scrollCtaLabel}
+        <span data-edit="scrollCtaLabel">{scrollCtaLabel}</span>
         <svg viewBox="0 0 24 24" class="w-4 h-6" fill="none" stroke="currentColor" stroke-width="1.5">
           <path d="M12 4 V20 M5 13 L12 20 L19 13" stroke-linecap="round" stroke-linejoin="round" />
         </svg>

@@ -28,7 +28,10 @@ const faqs = faqData.items;
             open={i === 0}
           >
             <summary class="flex items-start gap-6 py-6 sm:py-7 cursor-pointer list-none text-bone hover:text-gold transition">
-              <span class="flex-1 font-display uppercase text-[clamp(18px,2vw,28px)] leading-snug tracking-[-0.01em] pr-4">
+              <span
+                class="flex-1 font-display uppercase text-[clamp(18px,2vw,28px)] leading-snug tracking-[-0.01em] pr-4"
+                data-edit={`items[${i}].q`}
+              >
                 {f.q}
               </span>
               <span
@@ -49,7 +52,7 @@ const faqs = faqData.items;
               </span>
             </summary>
             <div class="pb-7 pr-12 -mt-2 text-paper text-[16px] sm:text-[17px] leading-relaxed">
-              <p>{f.a}</p>
+              <p data-edit={`items[${i}].a`}>{f.a}</p>
             </div>
           </details>
         ))

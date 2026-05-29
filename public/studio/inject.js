@@ -10,18 +10,48 @@
   if (window.parent === window) return; // only run in iframes
   const PARENT = window.parent;
 
-  /* ---------- 1. Outline overlay ---------- */
+  /* ---------- Inject style for editable hints ---------- */
+  const style = document.createElement("style");
+  style.id = "__studio_styles__";
+  style.textContent = `
+    [data-edit] {
+      cursor: text !important;
+      outline: 1px dashed transparent;
+      outline-offset: 3px;
+      transition: outline-color 0.15s, background 0.15s;
+    }
+    [data-edit]:hover {
+      outline-color: rgba(212, 175, 109, 0.6);
+      background: rgba(212, 175, 109, 0.06);
+    }
+    [data-edit].__studio_editing__ {
+      outline: 2px solid #d4af6d !important;
+      background: rgba(212, 175, 109, 0.08) !important;
+      cursor: text !important;
+    }
+    [data-block-id] {
+      cursor: pointer;
+    }
+    body.__studio_editing__ [data-edit]:not(.__studio_editing__):hover {
+      outline-color: transparent !important;
+      background: transparent !important;
+    }
+  `;
+  document.head.appendChild(style);
+
+  /* ---------- Overlay (selection / hover highlight) ---------- */
   const overlay = document.createElement("div");
   overlay.style.cssText = `
-    position: fixed; inset: 0; pointer-events: none; z-index: 2147483647;
-    box-shadow: none; transition: outline 0.15s, background 0.15s;
+    position: fixed; pointer-events: none; z-index: 2147483647;
+    transition: outline 0.15s, background 0.15s;
+    box-sizing: border-box;
   `;
   overlay.id = "__studio_overlay__";
   const label = document.createElement("div");
   label.style.cssText = `
     position: absolute; padding: 3px 9px; font: 600 11px/1 ui-monospace, monospace;
-    background: #d4af6d; color: #1a1308; border-radius: 0 0 4px 0;
-    transform: translateY(-100%); letter-spacing: 0.08em; text-transform: uppercase;
+    background: #d4af6d; color: #1a1308; border-radius: 0 4px 0 0;
+    bottom: 100%; left: 0; letter-spacing: 0.08em; text-transform: uppercase;
     pointer-events: none; white-space: nowrap;
   `;
   overlay.appendChild(label);
@@ -56,16 +86,21 @@
       ? "rgba(212, 175, 109, 0.06)"
       : "transparent";
     label.textContent = `${target.dataset.blockType || ""}`;
-    label.style.left = "0";
-    label.style.top = "0";
   }
 
   function reposition() {
     paintOverlay(selectedEl || hoverEl, selectedEl ? "selected" : "hover");
   }
 
+  /* ---------- Hover ---------- */
   document.addEventListener("mousemove", (e) => {
     if (document.body.classList.contains("__studio_editing__")) return;
+    // Don't paint hover overlay if user is over a [data-edit] (its own hover is the cue)
+    if (e.target.closest("[data-edit]")) {
+      hoverEl = null;
+      reposition();
+      return;
+    }
     const target = findBlockAncestor(e.target);
     if (target !== hoverEl) {
       hoverEl = target;
@@ -77,82 +112,86 @@
     reposition();
   });
 
-  /* ---------- 2. Click to select ---------- */
+  /* ---------- Click — selects block, optionally enters edit mode ---------- */
   document.addEventListener("click", (e) => {
-    if (e.target.closest("[data-edit]")) return; // inline editing handles its own
+    if (document.body.classList.contains("__studio_editing__")) return;
+
+    const editEl = e.target.closest("[data-edit]");
     const block = findBlockAncestor(e.target);
+
     if (block) {
-      e.preventDefault();
-      e.stopPropagation();
+      // Prevent native link navigation while editing
+      const link = e.target.closest("a[href]");
+      if (link) {
+        e.preventDefault();
+      }
       selectedEl = block;
       reposition();
-      PARENT.postMessage({ type: "studio:block-click", id: block.dataset.blockId }, "*");
+      PARENT.postMessage({
+        type: "studio:block-click",
+        id: block.dataset.blockId,
+        blockType: block.dataset.blockType,
+      }, "*");
+    }
+
+    if (editEl) {
+      e.preventDefault();
+      e.stopPropagation();
+      startEdit(editEl, block);
     }
   }, true);
 
-  /* ---------- 3. Inline text editing ---------- */
-  function setupInlineEditing() {
-    document.querySelectorAll("[data-edit]").forEach((el) => {
-      if (el.__studioWired) return;
-      el.__studioWired = true;
-      el.style.cursor = "text";
-      el.title = "Click to edit";
-      el.addEventListener("dblclick", (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        startEdit(el);
-      });
-    });
-  }
-
-  function startEdit(el) {
+  /* ---------- Inline text editing ---------- */
+  function startEdit(el, blockEl) {
+    if (el.contentEditable === "true") return;
     document.body.classList.add("__studio_editing__");
     el.contentEditable = "true";
     el.classList.add("__studio_editing__");
-    el.style.outline = "2px solid #d4af6d";
-    el.style.outlineOffset = "2px";
     el.focus();
-    // Select all content
-    const sel = window.getSelection();
-    const range = document.createRange();
-    range.selectNodeContents(el);
-    sel.removeAllRanges();
-    sel.addRange(range);
 
-    const finish = () => {
+    // Select all content
+    requestAnimationFrame(() => {
+      const sel = window.getSelection();
+      const range = document.createRange();
+      range.selectNodeContents(el);
+      sel.removeAllRanges();
+      sel.addRange(range);
+    });
+
+    const finish = (commit = true) => {
       el.contentEditable = "false";
       el.classList.remove("__studio_editing__");
-      el.style.outline = "";
-      el.style.outlineOffset = "";
       document.body.classList.remove("__studio_editing__");
-      // Post update
-      const block = findBlockAncestor(el);
+      el.removeEventListener("blur", onBlur);
+      el.removeEventListener("keydown", onKey);
+      if (!commit) return;
+      const block = blockEl || findBlockAncestor(el);
       if (!block) return;
       const field = el.dataset.edit;
-      const value = el.textContent.trim();
+      const value = el.textContent;
       PARENT.postMessage({
         type: "studio:text-edit",
         blockId: block.dataset.blockId,
+        blockType: block.dataset.blockType,
         path: field,
         value,
       }, "*");
-      el.removeEventListener("blur", finish);
-      el.removeEventListener("keydown", onKey);
     };
+    const onBlur = () => finish(true);
     const onKey = (e) => {
       if (e.key === "Enter" && !e.shiftKey) {
         e.preventDefault();
         el.blur();
       } else if (e.key === "Escape") {
         e.preventDefault();
-        el.blur();
+        finish(false);
       }
     };
-    el.addEventListener("blur", finish);
+    el.addEventListener("blur", onBlur);
     el.addEventListener("keydown", onKey);
   }
 
-  /* ---------- 4. Receive highlights from parent ---------- */
+  /* ---------- Receive highlights from parent ---------- */
   window.addEventListener("message", (e) => {
     const msg = e.data;
     if (!msg || msg.type !== "studio:highlight") return;
@@ -164,23 +203,18 @@
     }
   });
 
-  /* ---------- 5. Re-position on scroll / resize ---------- */
+  /* ---------- Re-position on scroll / resize ---------- */
   window.addEventListener("scroll", reposition, { passive: true });
   window.addEventListener("resize", reposition, { passive: true });
 
-  /* ---------- 6. Studio ready ---------- */
+  /* ---------- Studio ready ---------- */
   function ready() {
-    setupInlineEditing();
-    PARENT.postMessage({ type: "studio:ready" }, "*");
     overlay.style.display = "none";
+    PARENT.postMessage({ type: "studio:ready" }, "*");
   }
   if (document.readyState === "loading") {
     document.addEventListener("DOMContentLoaded", ready);
   } else {
     ready();
   }
-
-  // Re-wire when content changes (e.g. after iframe content updates)
-  const mo = new MutationObserver(() => setupInlineEditing());
-  mo.observe(document.body, { childList: true, subtree: true });
 })();

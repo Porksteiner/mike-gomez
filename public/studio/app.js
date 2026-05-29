@@ -14,12 +14,112 @@ const STATE = {
   currentPageSlug: "home",
   currentPage: null,     // { title, blocks: [...] }
   selectedBlockId: null,
+  selectedBlockType: null,
   dirty: false,
   settings: null,        // src/data/settings.json
   theme: null,           // src/data/theme.json (optional)
+  singletonCache: {},    // { fileBase: object } cache of singleton data
   tab: "page",           // page | library | theme | pages
   viewport: "desktop",
   history: [],           // undo
+};
+
+/* Map each singleton block type to its data file (under src/data/) */
+const SINGLETON_FILES = {
+  hero: "hero",
+  "how-i-work": "howiwork",
+  faq: "faq",
+  footer: "footer",
+  creation: "creation",
+  header: "settings",
+  contact: "settings",
+  // work uses content collections (markdown), inline-editing not yet supported
+};
+
+/* Inspector schemas for singletons — same shape as preset fields */
+const SINGLETON_SCHEMAS = {
+  hero: [
+    { name: "line1", label: "Headline line 1", type: "text" },
+    { name: "line2", label: "Headline line 2 (outlined)", type: "text" },
+    { name: "line3Accent", label: "Line 3 — gold italic word", type: "text" },
+    { name: "line3Rest", label: "Line 3 — rest of line", type: "text" },
+    { name: "line4", label: "Headline line 4 (gold outlined)", type: "text" },
+    { name: "bio", label: "Bio paragraph", type: "textarea" },
+    { name: "currentlyBuildingLabel", label: "Currently-building label", type: "text" },
+    { name: "scrollCtaLabel", label: "Scroll CTA label", type: "text" },
+  ],
+  "how-i-work": [
+    { name: "headingLine1", label: "Heading line 1", type: "text" },
+    { name: "headingLine2Pre", label: "Heading line 2 — pre", type: "text" },
+    { name: "headingLine2Accent", label: "Heading line 2 — gold word", type: "text" },
+    { name: "headingLine2Post", label: "Heading line 2 — post", type: "text" },
+    { name: "lede", label: "Lede paragraph", type: "textarea" },
+    { name: "inscription", label: "Inscription (default)", type: "text" },
+    { name: "inscriptionAccent", label: "Inscription (gold)", type: "text" },
+    {
+      name: "stages", label: "Stages", type: "list",
+      itemFields: [
+        { name: "n", label: "Numeral", type: "text" },
+        { name: "kicker", label: "Stage name", type: "text" },
+        { name: "duration", label: "Duration", type: "text" },
+        { name: "body", label: "Body", type: "textarea" },
+      ],
+    },
+  ],
+  faq: [
+    {
+      name: "items", label: "FAQ entries", type: "list",
+      itemFields: [
+        { name: "q", label: "Question", type: "text" },
+        { name: "a", label: "Answer", type: "textarea" },
+      ],
+    },
+  ],
+  footer: [
+    { name: "verse", label: "Verse / opener", type: "textarea" },
+    { name: "verseReference", label: "Reference", type: "text" },
+    { name: "tagline", label: "Tagline line 1", type: "text" },
+    { name: "taglineAccent", label: "Tagline line 2", type: "text" },
+    { name: "wordmark", label: "Giant wordmark", type: "text" },
+    { name: "fineprint", label: "Fineprint", type: "text" },
+    {
+      name: "siteLinks", label: "Site nav", type: "list",
+      itemFields: [
+        { name: "label", label: "Label", type: "text" },
+        { name: "href", label: "Href", type: "url" },
+      ],
+    },
+    {
+      name: "socialLinks", label: "Social links", type: "list",
+      itemFields: [
+        { name: "label", label: "Label", type: "text" },
+        { name: "href", label: "URL", type: "url" },
+      ],
+    },
+  ],
+  creation: [
+    { name: "inscription", label: "Inscription text", type: "text" },
+    { name: "handLeftImage", label: "Left hand image", type: "image" },
+    { name: "handRightImage", label: "Right hand image", type: "image" },
+    {
+      name: "dividers", label: "Section divider labels", type: "object",
+      objectFields: [
+        { name: "work", label: "Before Work", type: "text" },
+        { name: "workingTogether", label: "Before How-I-Work", type: "text" },
+        { name: "getInTouch", label: "Before Contact", type: "text" },
+      ],
+    },
+  ],
+  header: [
+    { name: "name", label: "Your name", type: "text" },
+    { name: "availability", label: "Availability label", type: "text" },
+    { name: "calendly", label: "Calendly URL", type: "url" },
+  ],
+  contact: [
+    { name: "email", label: "Contact email", type: "text" },
+    { name: "calendly", label: "Calendly URL", type: "url" },
+    { name: "availabilityNote", label: "Bottom note", type: "textarea" },
+  ],
 };
 
 const $ = (sel, root = document) => root.querySelector(sel);
@@ -296,10 +396,38 @@ function renderInspector() {
 
   let html = "";
   if (meta?.kind === "singleton") {
-    html += `<div class="empty">
-      <p>This is a <strong>singleton</strong> block — content lives in <code>src/data/${block.type === "how-i-work" ? "howiwork" : block.type}.json</code>.</p>
-      <p style="margin-top: 10px;">Edit those fields in the Sveltia <a href="/admin/index.html" target="_blank" style="color: var(--gold)">/admin</a> panel, or directly in the file.</p>
-    </div>`;
+    const fileBase = SINGLETON_FILES[block.type];
+    const schema = SINGLETON_SCHEMAS[block.type];
+    if (!schema) {
+      html += `<div class="empty">
+        <p>This block (<code>${block.type}</code>) doesn't have an inspector schema yet.</p>
+        <p style="margin-top: 8px;">Edit its data file directly, or open <a href="/admin/index.html" target="_blank" style="color: var(--gold)">/admin</a>.</p>
+      </div>`;
+    } else {
+      // Ensure data loaded into cache
+      const cached = STATE.singletonCache[fileBase];
+      if (!cached && fileBase) {
+        // Trigger load (async), inspector re-renders when ready
+        readJson(`src/data/${fileBase}.json`).then((d) => {
+          if (d) {
+            STATE.singletonCache[fileBase] = d;
+            renderInspector();
+          }
+        });
+        html += `<div class="empty"><p>Loading ${fileBase}.json…</p></div>`;
+      } else if (cached) {
+        html += `<div class="form-section" style="background: rgba(212, 175, 109, 0.06); padding: 10px 12px; border-radius: 4px; margin-bottom: 14px; border: 1px solid rgba(212, 175, 109, 0.3);">
+          <p style="font-size: 12px; color: var(--gold-hi); line-height: 1.5;">
+            💡 <strong>Tip:</strong> Click any text in the live preview to edit it inline.
+          </p>
+        </div>`;
+        html += '<div class="form">';
+        schema.forEach((field) => {
+          html += renderSingletonField(field, cached, field.name);
+        });
+        html += "</div>";
+      }
+    }
   } else if (meta?.fields) {
     block.data = block.data || { ...(meta.defaults || {}) };
     html += '<div class="form">';
@@ -327,13 +455,30 @@ function renderInspector() {
   // Wire field listeners
   $$(".field-input", body).forEach((input) => {
     const path = input.dataset.path;
-    input.addEventListener("input", () => {
-      writePath(block, path, valueOf(input));
-      markDirty();
-      scheduleReload();
+    const singletonKey = input.dataset.singleton;
+    input.addEventListener("input", async () => {
+      if (singletonKey) {
+        const cache = STATE.singletonCache[singletonKey];
+        if (cache) {
+          writeNestedPath(cache, path, valueOf(input));
+          try {
+            await writeJson(`src/data/${singletonKey}.json`, cache);
+            setStatus("Saved", "ok");
+            scheduleReload();
+          } catch (e) {
+            console.error(e);
+            toast("Save failed", "err");
+          }
+        }
+      } else {
+        writePath(block, path, valueOf(input));
+        markDirty();
+        scheduleReload();
+      }
     });
   });
   $$(".field-list-add", body).forEach((btn) => {
+    if (btn.dataset.singletonListAdd) return; // handled by singleton block
     btn.addEventListener("click", () => {
       const path = btn.dataset.path;
       const itemFieldsRaw = btn.dataset.itemFields;
@@ -349,15 +494,57 @@ function renderInspector() {
     });
   });
   $$(".field-list-item-remove", body).forEach((btn) => {
-    btn.addEventListener("click", () => {
-      const path = btn.dataset.path;
-      const list = readPath(block, path);
-      const idx = parseInt(btn.dataset.idx, 10);
-      if (Array.isArray(list)) {
-        list.splice(idx, 1);
-        markDirty();
+    btn.addEventListener("click", async () => {
+      const singletonKey = btn.dataset.singletonList;
+      if (singletonKey) {
+        const cache = STATE.singletonCache[singletonKey];
+        const listPath = btn.dataset.listPath;
+        const list = readNestedPath(cache, listPath);
+        const idx = parseInt(btn.dataset.idx, 10);
+        if (Array.isArray(list)) {
+          list.splice(idx, 1);
+          try {
+            await writeJson(`src/data/${singletonKey}.json`, cache);
+            renderInspector();
+            scheduleReload();
+          } catch (e) {
+            toast("Save failed", "err");
+          }
+        }
+      } else {
+        const path = btn.dataset.path;
+        const list = readPath(block, path);
+        const idx = parseInt(btn.dataset.idx, 10);
+        if (Array.isArray(list)) {
+          list.splice(idx, 1);
+          markDirty();
+          renderInspector();
+          reloadIframe();
+        }
+      }
+    });
+  });
+  $$(".field-list-add", body).forEach((btn) => {
+    const singletonAddKey = btn.dataset.singletonListAdd;
+    if (!singletonAddKey) return; // already wired above for presets
+    btn.addEventListener("click", async () => {
+      const cache = STATE.singletonCache[singletonAddKey];
+      const listPath = btn.dataset.listPath;
+      const itemFields = JSON.parse(btn.dataset.itemFields);
+      const newItem = {};
+      itemFields.forEach((f) => (newItem[f.name] = f.default ?? ""));
+      let list = readNestedPath(cache, listPath);
+      if (!Array.isArray(list)) {
+        list = [];
+        writeNestedPath(cache, listPath, list);
+      }
+      list.push(newItem);
+      try {
+        await writeJson(`src/data/${singletonAddKey}.json`, cache);
         renderInspector();
-        reloadIframe();
+        scheduleReload();
+      } catch (e) {
+        toast("Save failed", "err");
       }
     });
   });
@@ -439,6 +626,67 @@ function renderField(field, dataRoot, path) {
 function pathInData(p) {
   // path like 'data.foo[2].bar' → 'foo[2].bar' (strip leading 'data.')
   return p.replace(/^data\./, "");
+}
+
+/**
+ * Render an inspector field bound to a singleton data file.
+ * `dataRoot` is the singleton's cached object; `path` is dotted-bracket path.
+ */
+function renderSingletonField(field, dataRoot, path) {
+  const fileBase = SINGLETON_FILES[STATE.selectedBlockType];
+  const value = readNestedPath(dataRoot, path) ?? field.default ?? "";
+  const id = `sf-${path.replace(/[^a-z0-9]/gi, "-")}`;
+  const ds = `data-singleton="${fileBase}" data-path="${path}"`;
+  let inner = "";
+  switch (field.type) {
+    case "text":
+    case "url":
+    case "number":
+      inner = `<input type="${field.type}" id="${id}" class="field-input" ${ds} value="${escapeAttr(value)}">`;
+      break;
+    case "textarea":
+      inner = `<textarea id="${id}" class="field-input" ${ds}>${escapeHtml(value)}</textarea>`;
+      break;
+    case "image":
+      inner = `<input type="text" id="${id}" class="field-input" ${ds} value="${escapeAttr(value)}" placeholder="/projects/your-image.png">
+        <span class="hint">Path relative to /public</span>`;
+      break;
+    case "object": {
+      inner = `<div class="field-list" style="background: transparent;">`;
+      (field.objectFields || []).forEach((sub) => {
+        inner += renderSingletonField(sub, dataRoot, `${path}.${sub.name}`);
+      });
+      inner += "</div>";
+      break;
+    }
+    case "list": {
+      const arr = Array.isArray(value) ? value : [];
+      const itemFieldsJSON = JSON.stringify(field.itemFields || []);
+      inner = `<div class="field-list">
+        ${arr.map((it, i) => `
+          <div class="field-list-item">
+            <div class="field-list-item-head">
+              <span class="idx">Item ${i + 1}</span>
+              <button class="field-list-item-remove" data-singleton-list="${fileBase}" data-list-path="${path}" data-idx="${i}">remove</button>
+            </div>
+            ${(field.itemFields || []).map((sub) => {
+              const subPath = `${path}[${i}].${sub.name}`;
+              return renderSingletonField(sub, dataRoot, subPath);
+            }).join("")}
+          </div>
+        `).join("")}
+        <button class="field-list-add" data-singleton-list-add="${fileBase}" data-list-path="${path}" data-item-fields='${escapeAttr(itemFieldsJSON)}'>+ Add item</button>
+      </div>`;
+      break;
+    }
+    default:
+      inner = `<input type="text" id="${id}" class="field-input" ${ds} value="${escapeAttr(value)}">`;
+  }
+  return `<div class="field">
+    <label for="${id}">${field.label}</label>
+    ${inner}
+    ${field.hint ? `<span class="hint">${field.hint}</span>` : ""}
+  </div>`;
 }
 
 function valueOf(input) {
@@ -567,11 +815,81 @@ function normalizeColor(c) {
 
 function selectBlock(id) {
   STATE.selectedBlockId = id;
+  const b = STATE.currentPage?.blocks.find((x) => x.id === id);
+  STATE.selectedBlockType = b?.type ?? null;
+  // Switch the sidebar tab to Page so user sees block selected
+  if (STATE.tab !== "page") switchTab("page");
   renderBlockList();
   renderInspector();
   // Tell iframe to highlight
   const f = $("#preview");
   f?.contentWindow?.postMessage({ type: "studio:highlight", id }, "*");
+}
+
+/* Handle a text-edit message from the iframe inline editor. */
+async function handleTextEdit({ blockId, blockType, path, value }) {
+  const meta = STATE.presetMap.get(blockType);
+  if (meta?.kind === "singleton") {
+    const fileBase = SINGLETON_FILES[blockType];
+    if (!fileBase) {
+      toast(`No data file mapped for ${blockType}`, "err");
+      return;
+    }
+    const filePath = `src/data/${fileBase}.json`;
+    let data = STATE.singletonCache[fileBase];
+    if (!data) {
+      data = await readJson(filePath);
+      if (!data) {
+        toast(`Couldn't read ${filePath}`, "err");
+        return;
+      }
+      STATE.singletonCache[fileBase] = data;
+    }
+    writeNestedPath(data, path, value);
+    try {
+      await writeJson(filePath, data);
+      toast("Saved ✓", "ok");
+      setStatus("Saved", "ok");
+      renderInspector();
+      scheduleReload();
+    } catch (e) {
+      console.error(e);
+      toast("Save failed: " + (e?.message ?? e), "err");
+    }
+  } else {
+    // Preset block — update block.data on the page composition
+    const block = STATE.currentPage?.blocks.find((b) => b.id === blockId);
+    if (block) {
+      writePath(block, path, value);
+      markDirty();
+      renderInspector();
+      scheduleReload();
+    }
+  }
+}
+
+/* writeNestedPath — like writePath but works on a plain object, not on block.data */
+function writeNestedPath(obj, path, value) {
+  const parts = path.match(/[^.[\]]+/g) || [];
+  let cur = obj;
+  for (let i = 0; i < parts.length - 1; i++) {
+    const p = parts[i];
+    const nextIsIndex = /^\d+$/.test(parts[i + 1]);
+    if (cur[p] == null) cur[p] = nextIsIndex ? [] : {};
+    cur = cur[p];
+  }
+  cur[parts[parts.length - 1]] = value;
+}
+
+function readNestedPath(obj, path) {
+  if (!path) return undefined;
+  const parts = path.match(/[^.[\]]+/g) || [];
+  let cur = obj;
+  for (const p of parts) {
+    if (cur == null) return undefined;
+    cur = cur[p];
+  }
+  return cur;
 }
 
 async function addBlock(type, atIndex) {
@@ -759,13 +1077,7 @@ window.addEventListener("message", (e) => {
       selectBlock(msg.id);
       break;
     case "studio:text-edit": {
-      // msg.blockId, msg.path, msg.value
-      const block = STATE.currentPage?.blocks.find((b) => b.id === msg.blockId);
-      if (block) {
-        writePath(block, msg.path, msg.value);
-        markDirty();
-        renderInspector();
-      }
+      handleTextEdit(msg);
       break;
     }
   }
