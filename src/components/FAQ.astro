@@ -1,34 +1,6 @@
 ---
-const faqs = [
-  {
-    q: "Who owns the code I'm paying you to build?",
-    a: "You do. Once we're squared away, all the source code, designs, and assets are 100% yours. The only thing I keep is the right to mention I worked on it (and only if that's okay with you).",
-  },
-  {
-    q: "Will you sign an NDA?",
-    a: "Happy to. Send yours over, or I can share a simple one-page mutual NDA. Either way, what we talk about stays between us.",
-  },
-  {
-    q: "What if we go over budget or scope?",
-    a: "I quote fixed prices on a fixed scope, so the number we agree on is the number you pay. If you want to add something mid-build, we'll chat about it and I'll give you a clear estimate before any extra work starts. And if I underestimated to begin with, that's on me, the original price still holds.",
-  },
-  {
-    q: "Do you do the design too, or do I bring designs?",
-    a: "Either works! I usually design and build together since it tends to be faster and more cohesive. If you've already got a designer or brand guidelines, I'll happily work with what you have.",
-  },
-  {
-    q: "What are your payment terms?",
-    a: "Usually 50% up front, 50% on launch. For longer projects we can split the back half into milestone payments, whatever works for your cash flow. Stripe handles the invoices: card, ACH, or wire.",
-  },
-  {
-    q: "What if I'm not happy with something?",
-    a: "Please tell me as soon as you can! I share work weekly so we can catch anything early, while it's still easy to change. If we get to launch and something still isn't right, fixes during the 30-day support window are on me.",
-  },
-  {
-    q: "What if I don't know exactly what I want yet?",
-    a: "That's totally fine, and pretty normal. Bring me whatever you've got, a rough idea, a sketch, a pile of screenshots. We'll figure out the shape of it together on the first call.",
-  },
-];
+import faqData from "../data/faq.json";
+const faqs = faqData.items;
 ---
 
 <section id="faq" class="relative py-32 sm:py-44 bg-void">

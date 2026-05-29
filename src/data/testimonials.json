@@ -1,0 +1,25 @@
+{
+  "items": [
+    {
+      "quote": "[REPLACE — short, concrete quote about what Mike shipped and what changed because of it.]",
+      "name": "[Client name]",
+      "title": "[Title]",
+      "company": "[Company]",
+      "draft": true
+    },
+    {
+      "quote": "[REPLACE — another testimonial. Mention a specific outcome, not adjectives.]",
+      "name": "[Client name]",
+      "title": "[Title]",
+      "company": "[Company]",
+      "draft": true
+    },
+    {
+      "quote": "[REPLACE — one more. Even one sentence is enough.]",
+      "name": "[Client name]",
+      "title": "[Title]",
+      "company": "[Company]",
+      "draft": true
+    }
+  ]
+}

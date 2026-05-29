@@ -1,0 +1,173 @@
+# =================================================================
+#  Sveltia CMS configuration for mikegomez.dev
+#
+#  Mike — before this works in production you need to:
+#    1. Replace `<YOUR_GH_USER>/<YOUR_REPO>` below with your actual
+#       GitHub username and repository name.
+#    2. Set `branch` to whichever branch Vercel deploys from
+#       (usually `main`).
+#
+#  When you visit /admin, Sveltia will prompt you to log in with
+#  GitHub. It uses PKCE auth — no OAuth proxy server required.
+# =================================================================
+
+backend:
+  name: github
+  repo: <YOUR_GH_USER>/<YOUR_REPO>
+  branch: main
+  commit_messages:
+    create: "content: create {{collection}} {{slug}}"
+    update: "content: update {{collection}} {{slug}}"
+    delete: "content: delete {{collection}} {{slug}}"
+    uploadMedia: "content: upload {{path}}"
+    deleteMedia: "content: delete {{path}}"
+
+# Where uploaded images go in the repo, and how to reference them on
+# the live site (since public/ is served at the site root).
+media_folder: "public/projects"
+public_folder: "/projects"
+
+# UI niceties
+publish_mode: simple
+site_url: https://mikegomez.dev
+display_url: https://mikegomez.dev
+logo_url: /favicon.svg
+
+collections:
+  # ---------------------------------------------------------------
+  #  PROJECTS — folder collection, one markdown file per project.
+  # ---------------------------------------------------------------
+  - name: projects
+    label: Projects
+    label_singular: Project
+    description: "Add or edit project case studies that appear in the Work section."
+    folder: src/content/projects
+    create: true
+    delete: true
+    extension: md
+    format: yaml-frontmatter
+    slug: "{{slug}}"
+    summary: "{{order}}. {{title}}"
+    sortable_fields: [order, title, year]
+    view_groups:
+      - { label: Drafts, field: draft }
+    fields:
+      - { name: title, label: Title, widget: string }
+      - { name: order, label: Display order (lower = first), widget: number, value_type: int, min: 1, default: 1 }
+      - { name: roman, label: Roman numeral, widget: string, hint: "Shown above the title — I, II, III…", default: "I" }
+      - { name: year, label: Year, widget: string, default: "2026" }
+      - { name: tech, label: Tech / role chips, widget: string, hint: "Shown top-right — e.g. iOS · React Native · OpenAI" }
+      - name: titleSize
+        label: Headline size
+        widget: select
+        options: [xl, lg, md]
+        default: lg
+        hint: "xl = short brand titles like BAITIQ. md = longer titles."
+      - { name: description, label: Description, widget: text }
+      - { name: tail, label: "Description tail (bone-colored)", widget: string, required: false, hint: "Optional bolded sentence at the end of the description." }
+      - { name: icon, label: "Icon (optional, small square)", widget: image, required: false, choose_url: false }
+      - { name: image, label: "Main image / screenshot", widget: image, choose_url: false }
+      - name: imageRotation
+        label: Image hover tilt
+        widget: select
+        options: [left, right, none]
+        default: none
+      - name: pattern
+        label: Card background pattern
+        widget: select
+        options: [grid, dots, none]
+        default: grid
+      - name: badges
+        label: Badges
+        widget: list
+        required: false
+        summary: "{{fields.text}} ({{fields.kind}})"
+        fields:
+          - { name: text, label: Label, widget: string }
+          - name: kind
+            label: Style
+            widget: select
+            options: [live, stars, note]
+            default: note
+            hint: "live = pulsing green dot · stars = ★★★★★ · note = plain"
+      - { name: draft, label: "Draft (hide from live site)", widget: boolean, default: false }
+      - { name: body, label: "Notes (not rendered)", widget: markdown, required: false }
+
+  # ---------------------------------------------------------------
+  #  NOW — single JSON file with a list of in-flight items.
+  # ---------------------------------------------------------------
+  - name: now
+    label: Now
+    description: "What you're currently building. Update weekly."
+    files:
+      - name: now
+        label: Currently building
+        file: src/data/now.json
+        fields:
+          - name: items
+            label: Items
+            widget: list
+            summary: "{{fields.name}} — {{fields.status}}"
+            fields:
+              - { name: name, label: Name, widget: string }
+              - { name: status, label: Status, widget: string, hint: "Active · Pre-launch · Available · etc." }
+              - { name: detail, label: Detail line, widget: string }
+              - { name: update, label: Latest update, widget: text }
+
+  # ---------------------------------------------------------------
+  #  TESTIMONIALS — single JSON file. Drafts are hidden from site.
+  # ---------------------------------------------------------------
+  - name: testimonials
+    label: Testimonials
+    description: "Client quotes. Mark an entry as Draft to hide it from the live site."
+    files:
+      - name: testimonials
+        label: Quote wall
+        file: src/data/testimonials.json
+        fields:
+          - name: items
+            label: Quotes
+            widget: list
+            summary: "{{fields.name}} — {{fields.company}}"
+            fields:
+              - { name: quote, label: Quote, widget: text }
+              - { name: name, label: Client name, widget: string }
+              - { name: title, label: Title, widget: string }
+              - { name: company, label: Company, widget: string }
+              - { name: draft, label: "Draft (hidden from live)", widget: boolean, default: false }
+
+  # ---------------------------------------------------------------
+  #  FAQ — single JSON file.
+  # ---------------------------------------------------------------
+  - name: faq
+    label: FAQ
+    description: "Frequently asked questions."
+    files:
+      - name: faq
+        label: FAQ entries
+        file: src/data/faq.json
+        fields:
+          - name: items
+            label: Questions
+            widget: list
+            summary: "{{fields.q}}"
+            fields:
+              - { name: q, label: Question, widget: string }
+              - { name: a, label: Answer, widget: text }
+
+  # ---------------------------------------------------------------
+  #  SITE SETTINGS — global identity & contact details.
+  # ---------------------------------------------------------------
+  - name: settings
+    label: Site Settings
+    description: "Identity, contact, and availability shown across the site."
+    files:
+      - name: site
+        label: Site
+        file: src/data/settings.json
+        fields:
+          - { name: name, label: Your name, widget: string }
+          - { name: email, label: Contact email, widget: string, pattern: ['^\S+@\S+\.\S+$', 'must be a valid email'] }
+          - { name: calendly, label: Calendly URL, widget: string }
+          - { name: availability, label: Availability label, widget: string, hint: '"Open for new work" / "Booked through Q3" / etc.' }
+          - { name: availabilityNote, label: Contact section note, widget: text, hint: "Shown beneath the contact form. Line breaks become <br>." }

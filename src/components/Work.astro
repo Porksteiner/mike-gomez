@@ -1,9 +1,19 @@
 ---
 /*
-  WORK — quieted intro. No mono eyebrow, no big "RECENT WORK. REAL,
-  SHIPPED, PAID." header. One short line of context, then the work
-  speaks for itself.
+  WORK — collection-driven. Content lives in src/content/projects/*.md.
+  Add a new project: drop a new markdown file in that folder (or via the
+  /admin Sveltia panel). It renders in `order` ascending.
 */
+import { getCollection } from "astro:content";
+
+const all = await getCollection("projects", ({ data }) => !data.draft);
+const projects = all.sort((a, b) => a.data.order - b.data.order);
+
+const titleSizeClass: Record<string, string> = {
+  xl: "text-[clamp(48px,6.5vw,96px)]",
+  lg: "text-[clamp(44px,5.8vw,88px)]",
+  md: "text-[clamp(40px,5.5vw,72px)]",
+};
 ---
 
 <section id="work" class="relative py-32 sm:py-44 bg-void">
@@ -20,152 +30,113 @@
     </div>
 
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-6 auto-rows-[minmax(280px,auto)]">
-      {/* ===== BaitIQ — featured ===== */}
-      <article
-        class="reveal lg:col-span-12 group relative overflow-hidden border border-iron hover:border-gold/60 transition-all duration-500 bg-coal"
-      >
-        <div class="absolute inset-0 bg-gradient-to-br from-coal via-honey/20 to-graphite"></div>
-        <div
-          class="absolute inset-0 opacity-[0.5]"
-          style="background-image: linear-gradient(to right, rgba(168,133,74,0.15) 1px, transparent 1px), linear-gradient(to bottom, rgba(168,133,74,0.15) 1px, transparent 1px); background-size: 40px 40px;"
-        ></div>
+      {projects.map((project, idx) => {
+        const { title, roman, year, tech, titleSize, description, tail, icon, image, imageRotation, pattern, badges } = project.data;
+        const rotationClass =
+          imageRotation === "left" ? "group-hover:-rotate-[0.5deg]"
+          : imageRotation === "right" ? "group-hover:rotate-[0.5deg]"
+          : "";
+        const delayClass = idx > 0 ? `reveal-delay-${Math.min(idx, 4)}` : "";
+        const hClass = titleSizeClass[titleSize] ?? titleSizeClass.lg;
+        return (
+          <article class={`reveal ${delayClass} lg:col-span-12 group relative overflow-hidden border border-iron hover:border-gold/60 transition-all duration-500 bg-coal`}>
+            <div class="absolute inset-0 bg-gradient-to-br from-coal via-honey/20 to-graphite"></div>
 
-        <div class="relative flex flex-col gap-8 sm:gap-10 p-6 sm:p-10">
-          <div class="flex items-start justify-between gap-4">
-            <span class="font-mono text-[11px] tracking-[0.22em] text-bone/70 uppercase">
-              I &mdash; 2026
-            </span>
-            <span class="font-mono text-[10px] uppercase tracking-[0.22em] text-bone/70 text-right">
-              iOS · React Native · OpenAI
-            </span>
-          </div>
+            {pattern === "grid" && (
+              <div
+                class="absolute inset-0 opacity-[0.5]"
+                style="background-image: linear-gradient(to right, rgba(168,133,74,0.15) 1px, transparent 1px), linear-gradient(to bottom, rgba(168,133,74,0.15) 1px, transparent 1px); background-size: 40px 40px;"
+              ></div>
+            )}
+            {pattern === "dots" && (
+              <div
+                class="absolute inset-0 opacity-50"
+                style="background-image: radial-gradient(rgba(45,31,10,0.12) 1px, transparent 1px); background-size: 8px 8px;"
+              ></div>
+            )}
 
-          <div class="grid grid-cols-1 md:grid-cols-12 gap-8 sm:gap-12 items-center">
-            <div class="md:col-span-5 flex flex-col gap-5 order-2 md:order-1">
-              <div class="relative w-fit">
-                <div class="absolute inset-0 -m-3 bg-gold/15 blur-2xl rounded-full"></div>
-                <img
-                  src="/projects/baitiq-icon.png"
-                  alt="BaitIQ app icon"
-                  width="120"
-                  height="120"
-                  loading="lazy"
-                  class="relative w-16 sm:w-20 h-auto rounded-[24%] shadow-[0_15px_30px_-10px_rgba(0,0,0,0.4)] ring-1 ring-iron"
-                />
-              </div>
-
-              <h3
-                class="font-display uppercase text-[clamp(48px,6.5vw,96px)] leading-[0.95] tracking-[-0.02em] transition-colors duration-500 group-hover:text-gold"
-              >
-                BaitIQ
-              </h3>
-
-              <p class="text-paper text-lg leading-snug max-w-md">
-                AI fishing intelligence. Point your camera, get bait
-                recommendations tuned for your weather, location, and
-                conditions.
-                <span class="text-bone">Live on the iOS App Store.</span>
-              </p>
-
-              <div class="flex flex-wrap items-center gap-3 mt-2">
-                <span class="inline-flex items-center gap-2 px-3 py-1.5 bg-void/80 border border-iron rounded-full text-[11px] uppercase tracking-[0.2em] font-mono text-bone/90">
-                  <span class="relative flex w-1.5 h-1.5">
-                    <span class="absolute inline-flex w-full h-full rounded-full bg-[#22c55e] opacity-75 animate-ping"></span>
-                    <span class="relative inline-flex w-1.5 h-1.5 rounded-full bg-[#22c55e]"></span>
-                  </span>
-                  Live on the App Store
+            <div class="relative flex flex-col gap-8 sm:gap-10 p-6 sm:p-10">
+              <div class="flex items-start justify-between gap-4">
+                <span class="font-mono text-[11px] tracking-[0.22em] text-bone/70 uppercase">
+                  {roman} &mdash; {year}
                 </span>
-                <span class="inline-flex items-center gap-2 px-3 py-1.5 bg-void/80 border border-iron rounded-full text-[11px] uppercase tracking-[0.2em] font-mono text-bone/90">
-                  <span class="text-gold tracking-normal text-[13px] leading-none">★★★★★</span>
-                  <span>App Store</span>
-                </span>
-                <span class="inline-flex items-center gap-2 px-3 py-1.5 bg-void/80 border border-iron rounded-full text-[11px] uppercase tracking-[0.2em] font-mono text-smoke">
-                  v2 shipping this week
+                <span class="font-mono text-[10px] uppercase tracking-[0.22em] text-bone/70 text-right">
+                  {tech}
                 </span>
               </div>
-            </div>
 
-            <div class="md:col-span-7 order-1 md:order-2">
-              <div class="relative">
-                <div class="absolute inset-0 -m-6 bg-gold/10 blur-3xl rounded-full transition-all duration-700 group-hover:bg-gold/20"></div>
-                <img
-                  src="/projects/baitiq-marketing.png"
-                  alt="BaitIQ marketing site shown on a MacBook"
-                  width="900"
-                  height="900"
-                  loading="lazy"
-                  class="relative w-full h-auto max-w-[520px] mx-auto transition-transform duration-700 group-hover:scale-[1.04] group-hover:-rotate-[0.5deg]"
-                />
-              </div>
-            </div>
-          </div>
-        </div>
-      </article>
+              <div class="grid grid-cols-1 md:grid-cols-12 gap-8 sm:gap-12 items-center">
+                <div class="md:col-span-5 flex flex-col gap-5 order-2 md:order-1">
+                  {icon && (
+                    <div class="relative w-fit">
+                      <div class="absolute inset-0 -m-3 bg-gold/15 blur-2xl rounded-full"></div>
+                      <img
+                        src={icon}
+                        alt={`${title} app icon`}
+                        width="120"
+                        height="120"
+                        loading="lazy"
+                        class="relative w-16 sm:w-20 h-auto rounded-[24%] shadow-[0_15px_30px_-10px_rgba(0,0,0,0.4)] ring-1 ring-iron"
+                      />
+                    </div>
+                  )}
 
-      {/* ===== Unlearn ===== */}
-      <article
-        class="reveal reveal-delay-1 lg:col-span-12 group relative overflow-hidden border border-iron hover:border-gold/60 transition-all duration-500 bg-coal"
-      >
-        <div class="absolute inset-0 bg-gradient-to-br from-coal via-honey/20 to-graphite"></div>
-        <div
-          class="absolute inset-0 opacity-50"
-          style="background-image: radial-gradient(rgba(45,31,10,0.12) 1px, transparent 1px); background-size: 8px 8px;"
-        ></div>
+                  <h3
+                    class={`font-display uppercase ${hClass} leading-[0.95] tracking-[-0.02em] transition-colors duration-500 group-hover:text-gold`}
+                  >
+                    {title}
+                  </h3>
 
-        <div class="relative flex flex-col gap-8 sm:gap-10 p-6 sm:p-10">
-          <div class="flex items-start justify-between gap-4">
-            <span class="font-mono text-[11px] tracking-[0.22em] text-bone/70 uppercase">
-              II &mdash; 2026
-            </span>
-            <span class="font-mono text-[10px] uppercase tracking-[0.22em] text-bone/70 text-right">
-              Brand · Site · Strategy
-            </span>
-          </div>
+                  <p class="text-paper text-lg leading-snug max-w-md">
+                    {description}
+                    {tail && (
+                      <>
+                        {" "}
+                        <span class="text-bone">{tail}</span>
+                      </>
+                    )}
+                  </p>
 
-          <div class="grid grid-cols-1 md:grid-cols-12 gap-8 sm:gap-12 items-center">
-            <div class="md:col-span-5 flex flex-col gap-5 order-2 md:order-1">
-              <h3
-                class="font-display uppercase text-[clamp(40px,5.5vw,72px)] leading-[0.95] tracking-[-0.02em] transition-colors duration-500 group-hover:text-gold"
-              >
-                Unlearn Your Credit Habits
-              </h3>
+                  {badges.length > 0 && (
+                    <div class="flex flex-wrap items-center gap-3 mt-2">
+                      {badges.map((badge) => (
+                        <span
+                          class={`inline-flex items-center gap-2 px-3 py-1.5 bg-void/80 border border-iron rounded-full text-[11px] uppercase tracking-[0.2em] font-mono ${badge.kind === "note" ? "text-smoke" : "text-bone/90"}`}
+                        >
+                          {badge.kind === "live" && (
+                            <span class="relative flex w-1.5 h-1.5">
+                              <span class="absolute inline-flex w-full h-full rounded-full bg-[#22c55e] opacity-75 animate-ping"></span>
+                              <span class="relative inline-flex w-1.5 h-1.5 rounded-full bg-[#22c55e]"></span>
+                            </span>
+                          )}
+                          {badge.kind === "stars" && (
+                            <span class="text-gold tracking-normal text-[13px] leading-none">★★★★★</span>
+                          )}
+                          <span>{badge.text}</span>
+                        </span>
+                      ))}
+                    </div>
+                  )}
+                </div>
 
-              <p class="text-paper text-lg leading-snug max-w-md">
-                Brand identity and conversion-focused landing site for a
-                credit education business. Custom-designed in Astro, with
-                payment and booking integrations.
-                <span class="text-bone">From sketch to staged in twelve weeks.</span>
-              </p>
-
-              <div class="flex flex-wrap items-center gap-3 mt-2">
-                <span class="inline-flex items-center gap-2 px-3 py-1.5 bg-void/80 border border-iron rounded-full text-[11px] uppercase tracking-[0.2em] font-mono text-bone/90">
-                  Launching Q3 2026
-                </span>
-                <span class="inline-flex items-center gap-2 px-3 py-1.5 bg-void/80 border border-iron rounded-full text-[11px] uppercase tracking-[0.2em] font-mono text-bone/90">
-                  12 weeks · solo
-                </span>
-                <span class="inline-flex items-center gap-2 px-3 py-1.5 bg-void/80 border border-iron rounded-full text-[11px] uppercase tracking-[0.2em] font-mono text-smoke">
-                  Astro · Tailwind · Stripe
-                </span>
+                <div class="md:col-span-7 order-1 md:order-2">
+                  <div class="relative">
+                    <div class="absolute inset-0 -m-6 bg-gold/10 blur-3xl rounded-full transition-all duration-700 group-hover:bg-gold/20"></div>
+                    <img
+                      src={image}
+                      alt={`${title} project preview`}
+                      width="900"
+                      height="900"
+                      loading="lazy"
+                      class={`relative w-full h-auto max-w-[520px] mx-auto transition-transform duration-700 group-hover:scale-[1.04] ${rotationClass}`}
+                    />
+                  </div>
+                </div>
               </div>
             </div>
-
-            <div class="md:col-span-7 order-1 md:order-2">
-              <div class="relative">
-                <div class="absolute inset-0 -m-6 bg-gold/10 blur-3xl rounded-full transition-all duration-700 group-hover:bg-gold/20"></div>
-                <img
-                  src="/projects/unlearn-marketing.png"
-                  alt="Unlearn Your Credit Habits marketing site shown on a MacBook"
-                  width="900"
-                  height="900"
-                  loading="lazy"
-                  class="relative w-full h-auto max-w-[520px] mx-auto transition-transform duration-700 group-hover:scale-[1.04] group-hover:rotate-[0.5deg]"
-                />
-              </div>
-            </div>
-          </div>
-        </div>
-      </article>
+          </article>
+        );
+      })}
     </div>
   </div>
 </section>

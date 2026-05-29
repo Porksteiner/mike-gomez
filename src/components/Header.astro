@@ -1,5 +1,6 @@
 ---
-// Refined personal header — gold MG monogram + Mike Gomez wordmark
+import settings from "../data/settings.json";
+const { name, calendly, availability } = settings;
 ---
 
 <header
@@ -7,7 +8,7 @@
 >
   <div class="max-w-[1600px] mx-auto px-6 sm:px-10 lg:px-14 h-16 flex items-center justify-between">
     {/* Brand */}
-    <a href="/" class="flex items-center gap-2.5 group" aria-label="Mike Gomez — home">
+    <a href="/" class="flex items-center gap-2.5 group" aria-label={`${name} — home`}>
       <svg viewBox="0 0 32 32" class="w-7 h-7" aria-hidden="true">
         <rect width="32" height="32" fill="#050403" stroke="#d4af6d" stroke-width="1.5" />
         <text
@@ -18,7 +19,7 @@
         >MG</text>
       </svg>
       <span class="font-display text-xl tracking-[0.14em] uppercase leading-none">
-        Mike Gomez
+        {name}
       </span>
     </a>
 
@@ -36,12 +37,12 @@
           <span class="absolute inline-flex w-full h-full rounded-full bg-gold opacity-75 animate-ping"></span>
           <span class="relative inline-flex w-2 h-2 rounded-full bg-gold"></span>
         </span>
-        <span>Open for new work</span>
+        <span>{availability}</span>
         <span class="text-iron">/</span>
         <span id="live-time">— PT</span>
       </div>
       <a
-        href="https://calendly.com/mike-mikegomez/30min"
+        href={calendly}
         target="_blank"
         rel="noopener noreferrer"
         data-magnetic
