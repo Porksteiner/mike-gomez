@@ -1,0 +1,65 @@
+---
+interface Props {
+  data?: {
+    heading?: string;
+    intro?: string;
+    columns?: 2 | 3 | 4;
+    features?: { icon?: string; title: string; body: string }[];
+  };
+  blockId?: string;
+}
+const { data = {}, blockId } = Astro.props;
+const heading = data.heading ?? "";
+const intro = data.intro ?? "";
+const columns = data.columns ?? 3;
+const features = data.features ?? [];
+
+const colsClass =
+  columns === 2 ? "md:grid-cols-2" :
+  columns === 4 ? "md:grid-cols-2 lg:grid-cols-4" :
+                  "md:grid-cols-2 lg:grid-cols-3";
+---
+
+<section
+  class="feature-grid-block relative py-24 sm:py-32 bg-coal border-y border-iron"
+  data-block-id={blockId}
+  data-block-type="feature-grid"
+>
+  <div class="max-w-[1400px] mx-auto px-6 sm:px-10 lg:px-14">
+    <div class="max-w-3xl mb-16">
+      {heading && (
+        <h2
+          class="reveal font-display uppercase leading-[0.9] text-[clamp(40px,6vw,88px)] tracking-[-0.01em] mb-6"
+          data-edit="heading"
+        >
+          {heading}
+        </h2>
+      )}
+      {intro && (
+        <p class="reveal reveal-delay-1 text-paper text-lg leading-relaxed" data-edit="intro">
+          {intro}
+        </p>
+      )}
+    </div>
+    <div class={`grid grid-cols-1 ${colsClass} gap-x-10 gap-y-12`}>
+      {features.map((f, i) => (
+        <article class={`reveal reveal-delay-${(i % 4) + 1}`}>
+          {f.icon && (
+            <div class="font-display text-3xl text-gold mb-5">
+              <span data-edit={`features[${i}].icon`}>{f.icon}</span>
+            </div>
+          )}
+          <h3
+            class="font-display uppercase text-[clamp(20px,2vw,28px)] leading-[1.1] tracking-[-0.01em] mb-3"
+            data-edit={`features[${i}].title`}
+          >
+            {f.title}
+          </h3>
+          <p class="text-paper text-[15px] leading-relaxed max-w-md" data-edit={`features[${i}].body`}>
+            {f.body}
+          </p>
+        </article>
+      ))}
+    </div>
+  </div>
+</section>

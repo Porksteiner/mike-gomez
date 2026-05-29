@@ -1,0 +1,17 @@
+{
+  "verse": "Whatever you do, work at it with all your heart, as working for the Lord, not for human masters.",
+  "verseReference": "Colossians 3:23",
+  "tagline": "Built with care.",
+  "taglineAccent": "Shipped on time.",
+  "siteLinks": [
+    { "label": "Work", "href": "#work" },
+    { "label": "How I work", "href": "#how" },
+    { "label": "FAQ", "href": "#faq" },
+    { "label": "Contact", "href": "#contact" }
+  ],
+  "socialLinks": [
+    { "label": "BaitIQ on the App Store", "href": "https://apps.apple.com/us/app/baitiq/id6768169415" }
+  ],
+  "wordmark": "GOMEZ",
+  "fineprint": "Built solo in Astro + Tailwind"
+}

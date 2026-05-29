@@ -1,0 +1,71 @@
+---
+interface Props {
+  data?: {
+    eyebrow?: string;
+    headline?: string;
+    sub?: string;
+    ctaLabel?: string;
+    ctaHref?: string;
+    secondaryLabel?: string;
+    secondaryHref?: string;
+  };
+  blockId?: string;
+}
+const { data = {}, blockId } = Astro.props;
+const { eyebrow = "", headline = "", sub = "", ctaLabel = "", ctaHref = "", secondaryLabel = "", secondaryHref = "" } = data;
+---
+
+<section
+  class="centered-hero-block relative min-h-[72vh] flex items-center bg-void py-28"
+  data-block-id={blockId}
+  data-block-type="centered-hero"
+>
+  <div class="max-w-5xl mx-auto px-6 sm:px-10 lg:px-14 w-full text-center">
+    {eyebrow && (
+      <p
+        class="reveal font-mono text-[11px] uppercase tracking-[0.25em] text-gold mb-7"
+        data-edit="eyebrow"
+      >
+        {eyebrow}
+      </p>
+    )}
+    {headline && (
+      <h1
+        class="reveal reveal-delay-1 font-display uppercase leading-[0.88] text-[clamp(48px,9vw,140px)] tracking-[-0.02em] mb-8 mx-auto max-w-5xl"
+        data-edit="headline"
+      >
+        {headline}
+      </h1>
+    )}
+    {sub && (
+      <p
+        class="reveal reveal-delay-2 text-paper text-lg sm:text-xl leading-snug max-w-2xl mx-auto mb-10"
+        data-edit="sub"
+      >
+        {sub}
+      </p>
+    )}
+    <div class="reveal reveal-delay-3 flex flex-wrap justify-center gap-4">
+      {ctaLabel && (
+        <a
+          href={ctaHref}
+          data-magnetic
+          class="inline-flex items-center gap-3 px-7 py-3.5 bg-bone text-void font-mono text-[12px] uppercase tracking-[0.22em] font-semibold hover:bg-gold transition-colors"
+          data-edit-attr="ctaHref:href"
+        >
+          <span data-edit="ctaLabel">{ctaLabel}</span>
+          <span aria-hidden="true">→</span>
+        </a>
+      )}
+      {secondaryLabel && (
+        <a
+          href={secondaryHref}
+          class="inline-flex items-center gap-3 px-7 py-3.5 border border-bone text-bone font-mono text-[12px] uppercase tracking-[0.22em] font-semibold hover:bg-bone hover:text-void transition-colors"
+          data-edit-attr="secondaryHref:href"
+        >
+          <span data-edit="secondaryLabel">{secondaryLabel}</span>
+        </a>
+      )}
+    </div>
+  </div>
+</section>

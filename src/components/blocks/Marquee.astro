@@ -1,0 +1,61 @@
+---
+interface Props {
+  data?: {
+    words?: (string | { text: string })[];
+    separator?: string;
+    speed?: number;
+    direction?: "left" | "right";
+    style?: "solid" | "outline" | "gold" | "gold-outline";
+  };
+  blockId?: string;
+}
+const { data = {}, blockId } = Astro.props;
+const words = (data.words ?? ["Design", "Development", "Care"]).map((w) =>
+  typeof w === "string" ? w : w.text
+);
+const separator = data.separator ?? "✦";
+const speed = data.speed ?? 40;
+const direction = data.direction ?? "left";
+const style = data.style ?? "outline";
+
+const styleClass = {
+  solid: "text-bone",
+  outline: "text-stroke",
+  gold: "text-gold",
+  "gold-outline": "text-stroke-gold",
+}[style];
+
+// Repeat words twice for seamless loop
+const track = [...words, ...words];
+---
+
+<section
+  class="marquee-block relative py-12 sm:py-16 border-y border-iron bg-coal overflow-hidden"
+  data-block-id={blockId}
+  data-block-type="marquee"
+  style={`--marquee-speed: ${speed}s; --marquee-dir: ${direction === "right" ? "reverse" : "normal"};`}
+>
+  <div class="marquee-track flex gap-12 sm:gap-20 whitespace-nowrap" data-edit-list="words">
+    {track.map((word, i) => (
+      <span class={`font-display uppercase text-[clamp(40px,8vw,120px)] leading-none tracking-[-0.02em] ${styleClass}`}>
+        <span data-edit={`words[${i % words.length}]`}>{word}</span>
+        <span class="text-gold mx-8 sm:mx-12 inline-block align-middle text-[0.6em]" aria-hidden="true">{separator}</span>
+      </span>
+    ))}
+  </div>
+</section>
+
+<style>
+  .marquee-track {
+    width: max-content;
+    animation: marquee-scroll var(--marquee-speed, 40s) linear infinite;
+    animation-direction: var(--marquee-dir, normal);
+  }
+  @keyframes marquee-scroll {
+    from { transform: translateX(0); }
+    to   { transform: translateX(-50%); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .marquee-track { animation: none; }
+  }
+</style>

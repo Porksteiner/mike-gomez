@@ -1,0 +1,22 @@
+{
+  "items": [
+    {
+      "name": "BaitIQ v2",
+      "status": "Active",
+      "detail": "iOS app · AI bait recognition · weather + location · App Store",
+      "update": "Session persistence and scan-to-session shortcut shipped this week."
+    },
+    {
+      "name": "Unlearn Your Credit Habits",
+      "status": "Pre-launch",
+      "detail": "Marketing site · Astro · payment + booking · Cloudflare",
+      "update": "Site built. Awaiting final content from the client before launch."
+    },
+    {
+      "name": "Open slot",
+      "status": "Available",
+      "detail": "Next opening — start within two weeks",
+      "update": "Web, mobile, or hybrid. Reach out below."
+    }
+  ]
+}

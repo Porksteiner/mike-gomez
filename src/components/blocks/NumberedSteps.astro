@@ -1,0 +1,45 @@
+---
+interface Props {
+  data?: {
+    heading?: string;
+    steps?: { title: string; body: string }[];
+  };
+  blockId?: string;
+}
+const { data = {}, blockId } = Astro.props;
+const heading = data.heading ?? "How it works.";
+const steps = data.steps ?? [];
+---
+
+<section
+  class="numbered-steps-block relative py-24 sm:py-32 bg-void"
+  data-block-id={blockId}
+  data-block-type="numbered-steps"
+>
+  <div class="max-w-[1400px] mx-auto px-6 sm:px-10 lg:px-14">
+    <h2
+      class="reveal font-display uppercase leading-[0.9] text-[clamp(40px,6vw,88px)] tracking-[-0.01em] mb-16 max-w-3xl"
+      data-edit="heading"
+    >
+      {heading}
+    </h2>
+    <ol class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-10 gap-y-12">
+      {steps.map((s, i) => (
+        <li class={`reveal reveal-delay-${(i % 4) + 1} relative`}>
+          <span class="block font-display text-[clamp(60px,8vw,120px)] leading-none text-gold mb-4">
+            {String(i + 1).padStart(2, "0")}
+          </span>
+          <h3
+            class="font-display uppercase text-[clamp(22px,2.5vw,32px)] leading-[1.05] tracking-[-0.01em] mb-3"
+            data-edit={`steps[${i}].title`}
+          >
+            {s.title}
+          </h3>
+          <p class="text-paper text-[15px] leading-relaxed max-w-md" data-edit={`steps[${i}].body`}>
+            {s.body}
+          </p>
+        </li>
+      ))}
+    </ol>
+  </div>
+</section>

@@ -1,0 +1,57 @@
+---
+interface Props {
+  data?: {
+    eyebrow?: string;
+    headline?: string;
+    buttonLabel?: string;
+    buttonHref?: string;
+    buttonStyle?: "primary" | "ghost" | "gold";
+  };
+  blockId?: string;
+}
+const { data = {}, blockId } = Astro.props;
+const eyebrow = data.eyebrow ?? "";
+const headline = data.headline ?? "Ready to build?";
+const buttonLabel = data.buttonLabel ?? "Get in touch";
+const buttonHref = data.buttonHref ?? "#contact";
+const buttonStyle = data.buttonStyle ?? "primary";
+
+const btnClass =
+  buttonStyle === "ghost"
+    ? "border border-bone text-bone hover:bg-bone hover:text-void"
+    : buttonStyle === "gold"
+    ? "bg-gold text-void hover:bg-honey"
+    : "bg-bone text-void hover:bg-gold";
+---
+
+<section
+  class="cta-block relative py-28 sm:py-40 bg-coal border-y border-iron"
+  data-block-id={blockId}
+  data-block-type="cta"
+>
+  <div class="max-w-4xl mx-auto px-6 sm:px-10 lg:px-14 text-center">
+    {eyebrow && (
+      <p
+        class="reveal font-mono text-[11px] uppercase tracking-[0.25em] text-gold mb-6"
+        data-edit="eyebrow"
+      >
+        {eyebrow}
+      </p>
+    )}
+    <h2
+      class="reveal reveal-delay-1 font-display uppercase leading-[0.9] text-[clamp(40px,8vw,124px)] tracking-[-0.01em] mb-10"
+      data-edit="headline"
+    >
+      {headline}
+    </h2>
+    <a
+      href={buttonHref}
+      data-magnetic
+      class={`reveal reveal-delay-2 inline-flex items-center gap-3 px-8 py-4 font-mono text-[12px] uppercase tracking-[0.22em] font-semibold transition-colors ${btnClass}`}
+      data-edit-attr="buttonHref:href"
+    >
+      <span data-edit="buttonLabel">{buttonLabel}</span>
+      <span aria-hidden="true">→</span>
+    </a>
+  </div>
+</section>

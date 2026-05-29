@@ -116,22 +116,316 @@
 
   /* ====================================================
      6. Creation of Adam — scroll progress (0 → 1)
+     drives both --creation-p (CSS) and the video's currentTime
      ==================================================== */
   const adamSection = document.getElementById("creation-of-adam");
-  if (adamSection && !reduce) {
-    const update = () => {
+  const adamVideo  = document.getElementById("creation-video");
+  if (adamSection) {
+    let videoReady = false;
+    let lastT = -1;
+
+    const primeVideo = () => {
+      // Chrome quirk: a paused <video> sometimes won't repaint after currentTime
+      // is set unless you call play() then pause() once to "wake" the decoder.
+      if (!adamVideo) return;
+      const p = adamVideo.play();
+      if (p && typeof p.then === "function") {
+        p.then(() => adamVideo.pause()).catch(() => {});
+      } else {
+        adamVideo.pause();
+      }
+    };
+
+    if (adamVideo) {
+      const onMeta = () => {
+        if (videoReady) return;
+        videoReady = !isNaN(adamVideo.duration) && adamVideo.duration > 0;
+        if (videoReady) {
+          primeVideo();
+          update();
+        }
+      };
+      if (adamVideo.readyState >= 1) onMeta();
+      adamVideo.addEventListener("loadedmetadata", onMeta);
+      adamVideo.addEventListener("canplay", onMeta);
+      adamVideo.addEventListener("canplaythrough", onMeta);
+      adamVideo.addEventListener("error", (e) => {
+        console.warn("[creation] video error", adamVideo.error);
+      });
+      // Force fetch — Chrome sometimes won't preload otherwise
+      try { adamVideo.load(); } catch {}
+    }
+
+    let scheduled = false;
+    function update() {
       const rect = adamSection.getBoundingClientRect();
       const vh = window.innerHeight;
       const totalScroll = Math.max(1, adamSection.offsetHeight - vh);
       const scrolled = Math.max(0, -rect.top);
       const p = Math.max(0, Math.min(1, scrolled / totalScroll));
       adamSection.style.setProperty("--creation-p", p.toFixed(4));
+
+      // Seek video — even under prefers-reduced-motion. We're scrubbing,
+      // not auto-playing, so this is fine.
+      if (videoReady && adamVideo) {
+        const dur = adamVideo.duration;
+        const target = p * dur;
+        if (Math.abs(target - lastT) > 0.02) {
+          try {
+            // fastSeek is smoother where available; fall back to currentTime
+            if (typeof adamVideo.fastSeek === "function") {
+              adamVideo.fastSeek(target);
+            } else {
+              adamVideo.currentTime = target;
+            }
+            lastT = target;
+          } catch {}
+        }
+      }
+    }
+    const onScroll = () => {
+      if (scheduled) return;
+      scheduled = true;
+      requestAnimationFrame(() => {
+        update();
+        scheduled = false;
+      });
     };
-    document.addEventListener("scroll", update, { passive: true });
-    window.addEventListener("resize", update, { passive: true });
+    document.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll, { passive: true });
     update();
-  } else if (adamSection && reduce) {
-    // Reduced-motion: hold hands touching, light visible, no animation.
-    adamSection.style.setProperty("--creation-p", "1");
   }
+})();
+
+/* ====================================================================
+   PHASE 2 — Card spotlight, headline split, image parallax, divider IO.
+   Same IIFE-style top-level, additive only.
+   ==================================================================== */
+(() => {
+  const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const fineHover = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+
+  /* ----- 7. Card spotlight ----- */
+  if (fineHover && !reduce) {
+    document.querySelectorAll(".spotlight-host").forEach((el) => {
+      el.addEventListener("mousemove", (e) => {
+        const r = el.getBoundingClientRect();
+        el.style.setProperty("--mx", `${e.clientX - r.left}px`);
+        el.style.setProperty("--my", `${e.clientY - r.top}px`);
+      }, { passive: true });
+    });
+  }
+
+  /* ----- 8. Headline character split + stagger reveal ----- */
+  {
+    const splitNode = (root) => {
+      const wrapText = (text) => {
+        const frag = document.createDocumentFragment();
+        text.split(/(\s+)/).forEach((tok) => {
+          if (!tok) return;
+          if (/^\s+$/.test(tok)) {
+            frag.appendChild(document.createTextNode(tok));
+          } else {
+            const word = document.createElement("span");
+            word.className = "word";
+            [...tok].forEach((ch, i) => {
+              const c = document.createElement("span");
+              c.className = "char";
+              c.textContent = ch;
+              c.style.transitionDelay = `${0.025 * i + 0.04}s`;
+              word.appendChild(c);
+            });
+            frag.appendChild(word);
+          }
+        });
+        return frag;
+      };
+      const walk = (node) => {
+        [...node.childNodes].forEach((child) => {
+          if (child.nodeType === Node.TEXT_NODE) {
+            const wrapped = wrapText(child.textContent);
+            if (wrapped.childNodes.length) child.replaceWith(wrapped);
+          } else if (child.nodeType === Node.ELEMENT_NODE
+                     && !child.classList.contains("char")
+                     && !child.classList.contains("word")) {
+            walk(child);
+          }
+        });
+      };
+      walk(root);
+    };
+
+    // In Studio mode, skip splitting — it shatters text into chars and breaks inline editing
+    const inStudio = location.search.includes("studio=1");
+    document.querySelectorAll("[data-split]").forEach((el) => {
+      if (!inStudio) splitNode(el);
+      if (reduce || inStudio) {
+        el.classList.add("in");
+        return;
+      }
+      const obs = new IntersectionObserver((entries) => {
+        entries.forEach((ent) => {
+          if (ent.isIntersecting) {
+            el.classList.add("in");
+            obs.disconnect();
+          }
+        });
+      }, { threshold: 0.1 });
+      obs.observe(el);
+    });
+  }
+
+  /* ----- 9. Image parallax ----- */
+  if (!reduce) {
+    const parallaxEls = [...document.querySelectorAll("[data-parallax]")];
+    if (parallaxEls.length) {
+      let ticking = false;
+      const update = () => {
+        const vh = window.innerHeight;
+        parallaxEls.forEach((el) => {
+          const r = el.getBoundingClientRect();
+          if (r.bottom < -100 || r.top > vh + 100) return;
+          const p = (r.top + r.height / 2 - vh / 2) / vh;
+          const amount = parseFloat(el.dataset.parallax) || 16;
+          el.style.setProperty("--py", String(-p * amount));
+        });
+        ticking = false;
+      };
+      document.addEventListener("scroll", () => {
+        if (!ticking) {
+          requestAnimationFrame(update);
+          ticking = true;
+        }
+      }, { passive: true });
+      window.addEventListener("resize", update, { passive: true });
+      update();
+    }
+  }
+
+  /* ----- 10. Section divider reveal ----- */
+  {
+    const dividers = document.querySelectorAll(".section-divider");
+    if (!dividers.length) return;
+    if (reduce) {
+      dividers.forEach((d) => d.classList.add("in"));
+      return;
+    }
+    const obs = new IntersectionObserver((entries) => {
+      entries.forEach((ent) => {
+        if (ent.isIntersecting) {
+          ent.target.classList.add("in");
+          obs.unobserve(ent.target);
+        }
+      });
+    }, { threshold: 0.5 });
+    dividers.forEach((d) => obs.observe(d));
+  }
+})();
+
+/* ====================================================================
+   PHASE 3 — Block-level scroll effects (fx-fade-up, fx-staircase,
+             fx-mask, fx-parallax, fx-counter).
+   Driven by IntersectionObserver + scroll handler.
+   ==================================================================== */
+(() => {
+  const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if (reduce) {
+    document.querySelectorAll(".fx-host").forEach((el) => el.classList.add("is-in"));
+    return;
+  }
+
+  /* In-view triggers */
+  const inviewSel = ".fx-fade-up, .fx-staircase, .fx-mask, .fx-counter";
+  const ioInview = new IntersectionObserver((entries) => {
+    entries.forEach((ent) => {
+      if (ent.isIntersecting) {
+        ent.target.classList.add("is-in");
+        if (ent.target.classList.contains("fx-counter")) runCounter(ent.target);
+        ioInview.unobserve(ent.target);
+      }
+    });
+  }, { threshold: 0.12, rootMargin: "0px 0px -8% 0px" });
+  document.querySelectorAll(inviewSel).forEach((el) => ioInview.observe(el));
+
+  /* Parallax (host translates content) */
+  const parallaxHosts = [...document.querySelectorAll(".fx-parallax")];
+  if (parallaxHosts.length) {
+    let ticking = false;
+    const tick = () => {
+      const vh = window.innerHeight;
+      parallaxHosts.forEach((el) => {
+        const r = el.getBoundingClientRect();
+        if (r.bottom < -200 || r.top > vh + 200) return;
+        const p = (r.top + r.height / 2 - vh / 2) / vh;
+        el.style.setProperty("--fxy", String(-p * 30));
+      });
+      ticking = false;
+    };
+    document.addEventListener("scroll", () => {
+      if (!ticking) {
+        requestAnimationFrame(tick);
+        ticking = true;
+      }
+    }, { passive: true });
+    tick();
+  }
+
+  /* Counter — animate numeric values from 0 to current text */
+  function runCounter(host) {
+    host.querySelectorAll("[data-stat-value]").forEach((el) => {
+      const text = el.textContent.trim();
+      const m = text.match(/^(-?[\d,.]+)(\D*)$/);
+      if (!m) return;
+      const end = parseFloat(m[1].replace(/,/g, ""));
+      const suffix = m[2] || "";
+      if (Number.isNaN(end)) return;
+      const start = 0;
+      const dur = 1400;
+      const t0 = performance.now();
+      const step = (now) => {
+        const p = Math.min(1, (now - t0) / dur);
+        const eased = 1 - Math.pow(1 - p, 3);
+        const v = Math.round(start + (end - start) * eased);
+        el.textContent = `${v.toLocaleString()}${suffix}`;
+        if (p < 1) requestAnimationFrame(step);
+        else el.textContent = `${m[1]}${suffix}`;
+      };
+      requestAnimationFrame(step);
+    });
+  }
+})();
+
+/* ====================================================================
+   PHASE 4 — Depth layers parallax engine.
+   Each .depth-layer has data-depth-speed (0..2). The container
+   (.block-shell.has-depth) gets --depth-y per layer via JS that maps
+   the layer's viewport offset times speed.
+   ==================================================================== */
+(() => {
+  const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if (reduce) return;
+  const layers = [...document.querySelectorAll(".depth-layer")];
+  if (!layers.length) return;
+  let ticking = false;
+  const tick = () => {
+    const vh = window.innerHeight;
+    layers.forEach((el) => {
+      const host = el.parentElement;
+      if (!host) return;
+      const r = host.getBoundingClientRect();
+      if (r.bottom < -300 || r.top > vh + 300) return;
+      const speed = parseFloat(el.dataset.depthSpeed) || 0.5;
+      const p = (r.top + r.height / 2 - vh / 2) / vh;
+      el.style.setProperty("--depth-y", String(-p * 60 * speed));
+    });
+    ticking = false;
+  };
+  document.addEventListener("scroll", () => {
+    if (!ticking) {
+      requestAnimationFrame(tick);
+      ticking = true;
+    }
+  }, { passive: true });
+  window.addEventListener("resize", tick, { passive: true });
+  tick();
 })();

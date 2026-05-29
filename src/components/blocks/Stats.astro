@@ -1,0 +1,48 @@
+---
+interface Props {
+  data?: {
+    heading?: string;
+    items?: { value: string; label: string }[];
+  };
+  blockId?: string;
+}
+const { data = {}, blockId } = Astro.props;
+const heading = data.heading ?? "By the numbers.";
+const items = data.items ?? [];
+---
+
+<section
+  class="stats-block relative py-24 sm:py-32 bg-void"
+  data-block-id={blockId}
+  data-block-type="stats"
+>
+  <div class="max-w-[1600px] mx-auto px-6 sm:px-10 lg:px-14">
+    {heading && (
+      <h2
+        class="reveal font-display uppercase leading-[0.9] text-[clamp(40px,7vw,96px)] tracking-[-0.01em] mb-12 sm:mb-16 max-w-3xl"
+        data-edit="heading"
+      >
+        {heading}
+      </h2>
+    )}
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-y-12 gap-x-8 border-t border-iron pt-12">
+      {items.map((s, i) => (
+        <div class={`reveal reveal-delay-${(i % 4) + 1} flex flex-col gap-3`}>
+          <span
+            class="font-display uppercase text-[clamp(48px,7vw,104px)] leading-[0.9] text-gold tracking-[-0.02em]"
+            data-edit={`items[${i}].value`}
+            data-stat-value
+          >
+            {s.value}
+          </span>
+          <span
+            class="font-mono text-[11px] uppercase tracking-[0.22em] text-smoke"
+            data-edit={`items[${i}].label`}
+          >
+            {s.label}
+          </span>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>

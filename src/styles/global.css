@@ -418,3 +418,283 @@ main > section.lift-hatch::after {
     animation: none;
   }
 }
+
+/* ====================================================================
+   COOL EFFECTS — phase 2 additions.
+   All reduced-motion safe (graceful no-op when prefers-reduced-motion).
+   ==================================================================== */
+
+/* --- Card hover spotlight (mouse-tracked radial gold wash) --- */
+.spotlight-host { isolation: isolate; }
+.spotlight-host::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0;
+  transition: opacity 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+  background: radial-gradient(
+    420px circle at var(--mx, 50%) var(--my, 50%),
+    rgba(212, 168, 107, 0.16),
+    transparent 65%
+  );
+  mix-blend-mode: screen;
+}
+.spotlight-host:hover::after,
+.spotlight-host:focus-within::after { opacity: 1; }
+
+/* --- Headline character split — JS wraps chars with .char --- */
+[data-split] .word {
+  display: inline-block;
+  white-space: nowrap;
+}
+[data-split] .char {
+  display: inline-block;
+  opacity: 0;
+  transform: translateY(0.55em);
+  filter: blur(8px);
+  transition:
+    opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.95s cubic-bezier(0.22, 1, 0.36, 1),
+    filter 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+}
+[data-split].in .char {
+  opacity: 1;
+  transform: none;
+  filter: blur(0);
+}
+
+/* --- Image parallax — JS writes --py per element --- */
+[data-parallax] {
+  will-change: transform;
+  transform: translate3d(0, calc(var(--py, 0) * 1px), 0);
+}
+
+/* --- Section divider draw-in — animate the flanking gold lines --- */
+.section-divider .mark::before,
+.section-divider .mark::after {
+  transform: scaleX(0);
+  transition: transform 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.15s;
+}
+.section-divider .mark::before { transform-origin: right; }
+.section-divider .mark::after  { transform-origin: left; }
+.section-divider.in .mark::before,
+.section-divider.in .mark::after { transform: scaleX(1); }
+
+/* --- Reduce-motion guard --- */
+@media (prefers-reduced-motion: reduce) {
+  [data-split] .char,
+  [data-parallax],
+  .section-divider .mark::before,
+  .section-divider .mark::after {
+    transition: none !important;
+    transform: none !important;
+    filter: none !important;
+    opacity: 1 !important;
+  }
+}
+
+/* ====================================================================
+   SCROLL EFFECTS — wrappers applied to any block via the page JSON
+                    `effects` array. The CSS is gentle so the same
+                    effect can apply to any preset without surprises.
+   ==================================================================== */
+
+.fx-host {
+  position: relative;
+}
+
+/* ---- fx-fade-up — translate + fade on viewport enter ---- */
+.fx-fade-up > * {
+  opacity: 0;
+  transform: translateY(28px);
+  transition:
+    opacity 0.9s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.95s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.fx-fade-up.is-in > * {
+  opacity: 1;
+  transform: none;
+}
+
+/* ---- fx-pin — sticky during scroll-through ---- */
+.fx-pin {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+/* ---- fx-staircase — stagger reveal of immediate children ---- */
+.fx-staircase > * > * {
+  opacity: 0;
+  transform: translateY(18px);
+  transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+              transform 0.85s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.fx-staircase.is-in > * > *:nth-child(1) { transition-delay: 0.05s; }
+.fx-staircase.is-in > * > *:nth-child(2) { transition-delay: 0.12s; }
+.fx-staircase.is-in > * > *:nth-child(3) { transition-delay: 0.19s; }
+.fx-staircase.is-in > * > *:nth-child(4) { transition-delay: 0.26s; }
+.fx-staircase.is-in > * > *:nth-child(5) { transition-delay: 0.33s; }
+.fx-staircase.is-in > * > *:nth-child(6) { transition-delay: 0.40s; }
+.fx-staircase.is-in > * > * { opacity: 1; transform: none; }
+
+/* ---- fx-parallax — slower scroll on bg-host (JS sets --fxy) ---- */
+.fx-parallax {
+  overflow: hidden;
+}
+.fx-parallax > * {
+  will-change: transform;
+  transform: translate3d(0, calc(var(--fxy, 0) * 1px), 0);
+}
+
+/* ---- fx-mask — clip-path opens on enter ---- */
+.fx-mask > * {
+  clip-path: inset(0 50% 0 50%);
+  transition: clip-path 1.2s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.fx-mask.is-in > * { clip-path: inset(0 0 0 0); }
+
+/* ---- fx-counter — JS animates numbers; CSS just smooths ---- */
+.fx-counter [data-stat-value] {
+  font-variant-numeric: tabular-nums lining-nums;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fx-fade-up > *,
+  .fx-staircase > * > *,
+  .fx-parallax > *,
+  .fx-mask > * {
+    opacity: 1 !important;
+    transform: none !important;
+    clip-path: none !important;
+    transition: none !important;
+  }
+}
+
+/* Studio wrapper marker — invisible but groups block contents for selection */
+.studio-wrapper { display: block; }
+
+/* ====================================================================
+   BLOCK SHELL — per-block style overrides (bg color, image, overlay,
+   padding, text color, etc.) plus depth layers behind the content.
+
+   When a block has its own bg via .has-bg, the child <section>'s
+   own background is suppressed so the shell bg shows through.
+   ==================================================================== */
+.block-shell {
+  position: relative;
+  --bs-bg-color: transparent;
+  --bs-bg-image: none;
+  --bs-bg-overlay: transparent;
+  --bs-bg-size: cover;
+  --bs-bg-pos: center;
+  --bs-bg-attach: scroll;
+  --bs-pad-top: 0;
+  --bs-pad-bottom: 0;
+}
+.block-shell.has-bg {
+  padding-top: var(--bs-pad-top);
+  padding-bottom: var(--bs-pad-bottom);
+  isolation: isolate;
+}
+.block-shell.has-style {
+  padding-top: var(--bs-pad-top);
+  padding-bottom: var(--bs-pad-bottom);
+}
+.block-shell .block-bg {
+  position: absolute;
+  inset: 0;
+  background-color: var(--bs-bg-color);
+  background-image: var(--bs-bg-image);
+  background-size: var(--bs-bg-size);
+  background-position: var(--bs-bg-pos);
+  background-attachment: var(--bs-bg-attach);
+  background-repeat: no-repeat;
+  z-index: -2;
+  pointer-events: none;
+}
+.block-shell .block-overlay {
+  position: absolute;
+  inset: 0;
+  background: var(--bs-bg-overlay);
+  z-index: -1;
+  pointer-events: none;
+}
+
+/* When the shell has a bg, suppress the child section's own bg so we
+   actually see it through. We also keep the child positioned so its
+   internal absolute children still behave. */
+.block-shell.has-bg > section {
+  background: transparent !important;
+}
+
+/* Depth layers — parallax-style images behind block content */
+.block-shell.has-depth {
+  isolation: isolate;
+  overflow: hidden;
+}
+.block-shell .depth-layer {
+  position: absolute;
+  inset: -120px;
+  background-size: cover;
+  background-position: center;
+  pointer-events: none;
+  will-change: transform;
+  transform: translate3d(0, calc(var(--depth-y, 0) * 1px), 0);
+}
+
+/* Additional FX */
+.fx-zoom-in > * {
+  opacity: 0;
+  transform: scale(0.95);
+  transition: opacity 0.9s cubic-bezier(0.22, 1, 0.36, 1), transform 0.95s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.fx-zoom-in.is-in > * { opacity: 1; transform: none; }
+
+.fx-tilt { will-change: transform; transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1); transform-style: preserve-3d; }
+.fx-tilt:hover { transition-duration: 0.15s; }
+
+.fx-glow {
+  transition: box-shadow 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.fx-glow:hover {
+  box-shadow: 0 0 80px -10px rgba(212, 175, 109, 0.4);
+}
+
+.fx-bg-parallax .block-bg {
+  background-attachment: fixed !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fx-zoom-in > *, .fx-tilt {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+}
+
+/* ====================================================================
+   CREATION VIDEO — full-bleed scroll-synced video that replaces the
+   left/right hand PNGs. The existing --creation-p variable still drives
+   the touch-light glow and the inscription fade. JS in site.js maps
+   --creation-p × video.duration → video.currentTime.
+   ==================================================================== */
+.creation-video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  pointer-events: none;
+  user-select: none;
+  background: var(--color-void);
+}
+
+/* When the video is mounted, hide the old hand images so they don't
+   compete with the video underneath (kept in the JSON for backward
+   compat in case the user wants to flip back). */
+.creation-sticky:has(.creation-video) .hand {
+  display: none;
+}

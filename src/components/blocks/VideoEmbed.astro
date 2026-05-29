@@ -1,0 +1,61 @@
+---
+interface Props {
+  data?: {
+    heading?: string;
+    sub?: string;
+    embedUrl?: string;
+    aspect?: "16/9" | "4/3" | "1/1" | "9/16";
+  };
+  blockId?: string;
+}
+const { data = {}, blockId } = Astro.props;
+const heading = data.heading ?? "";
+const sub = data.sub ?? "";
+const embedUrl = data.embedUrl ?? "";
+const aspect = data.aspect ?? "16/9";
+
+// Coerce common YouTube / Vimeo URLs to embed form
+function toEmbed(url: string): string {
+  if (!url) return "";
+  const yt = url.match(/youtube\.com\/watch\?v=([^&]+)/) || url.match(/youtu\.be\/([^?]+)/);
+  if (yt) return `https://www.youtube.com/embed/${yt[1]}`;
+  const vimeo = url.match(/vimeo\.com\/(\d+)/);
+  if (vimeo) return `https://player.vimeo.com/video/${vimeo[1]}`;
+  return url;
+}
+const finalSrc = toEmbed(embedUrl);
+---
+
+<section
+  class="video-embed-block relative py-24 sm:py-32 bg-void"
+  data-block-id={blockId}
+  data-block-type="video-embed"
+>
+  <div class="max-w-[1400px] mx-auto px-6 sm:px-10 lg:px-14">
+    {heading && (
+      <h2 class="reveal font-display uppercase leading-[0.9] text-[clamp(36px,5vw,72px)] tracking-[-0.01em] mb-4 max-w-3xl" data-edit="heading">
+        {heading}
+      </h2>
+    )}
+    {sub && (
+      <p class="reveal reveal-delay-1 text-paper text-lg leading-relaxed max-w-2xl mb-10" data-edit="sub">
+        {sub}
+      </p>
+    )}
+    <div class="reveal reveal-delay-2 relative w-full overflow-hidden border border-iron bg-coal" style={`aspect-ratio: ${aspect};`}>
+      {finalSrc ? (
+        <iframe
+          src={finalSrc}
+          loading="lazy"
+          allow="autoplay; encrypted-media; picture-in-picture"
+          allowfullscreen
+          class="absolute inset-0 w-full h-full"
+        ></iframe>
+      ) : (
+        <div class="absolute inset-0 flex items-center justify-center text-smoke font-mono text-[11px] uppercase tracking-[0.2em]">
+          Paste a YouTube or Vimeo URL
+        </div>
+      )}
+    </div>
+  </div>
+</section>

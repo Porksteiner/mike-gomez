@@ -1,0 +1,52 @@
+---
+interface Props {
+  data?: {
+    quote?: string;
+    attribution?: string;
+    attributionTitle?: string;
+    image?: string;
+  };
+  blockId?: string;
+}
+const { data = {}, blockId } = Astro.props;
+const quote = data.quote ?? "";
+const attribution = data.attribution ?? "";
+const attributionTitle = data.attributionTitle ?? "";
+const image = data.image ?? "";
+---
+
+<section
+  class="big-quote-block relative py-32 sm:py-48 bg-void border-y border-iron overflow-hidden"
+  data-block-id={blockId}
+  data-block-type="big-quote"
+>
+  <span class="absolute top-12 left-12 font-display text-[clamp(120px,20vw,320px)] leading-none text-gold/10 select-none" aria-hidden="true">"</span>
+  <div class="max-w-5xl mx-auto px-6 sm:px-10 lg:px-14 text-center relative">
+    <blockquote
+      class="reveal font-display uppercase leading-[1.05] text-[clamp(32px,5.5vw,80px)] tracking-[-0.02em] mb-12"
+      data-edit="quote"
+    >
+      {quote}
+    </blockquote>
+    <div class="reveal reveal-delay-1 flex flex-col items-center gap-3">
+      {image && (
+        <img
+          src={image}
+          alt=""
+          class="w-16 h-16 rounded-full object-cover border border-iron"
+          data-edit-attr="image:src"
+        />
+      )}
+      {attribution && (
+        <p class="font-display uppercase text-[clamp(16px,1.5vw,22px)] tracking-[-0.01em]" data-edit="attribution">
+          {attribution}
+        </p>
+      )}
+      {attributionTitle && (
+        <p class="font-mono text-[11px] uppercase tracking-[0.22em] text-smoke" data-edit="attributionTitle">
+          {attributionTitle}
+        </p>
+      )}
+    </div>
+  </div>
+</section>

@@ -1,40 +1,9 @@
 ---
-/*
-  HOW WE'LL WORK TOGETHER — same 4-stage editorial structure, warmer voice.
-  The voice should sound like Mike on a Zoom call: friendly, curious,
-  unhurried.
-*/
-
-const stages = [
-  {
-    n: "I",
-    kicker: "First chat",
-    duration: "Day 0",
-    body:
-      "We start with a 30-minute call. Tell me about what you're making, what's been tricky about it, and what you'd love to see in three months. No deck, no slides, just a real conversation. If we're not a fit, I'll happily point you to someone who is."
-  },
-  {
-    n: "II",
-    kicker: "Brief and estimate",
-    duration: "Day 1",
-    body:
-      "Within twenty-four hours of our call, you'll have a written scope, a timeline, and a fixed price. If anything looks off, we'll talk through it before we start. Real numbers, no surprises."
-  },
-  {
-    n: "III",
-    kicker: "Build",
-    duration: "Weeks 1–N",
-    body:
-      "Design and dev happen together. You'll see real working software inside the first week. I'll send Loom updates as often as you like, daily or weekly, and I'm easy to reach for anything in between."
-  },
-  {
-    n: "IV",
-    kicker: "Ship + stay close",
-    duration: "Final + 30",
-    body:
-      "Launch, walk you through how everything works, and stick around for thirty days after to handle anything that comes up. I'll still be here when you have questions next year too."
-  },
-];
+import data from "../data/howiwork.json";
+const {
+  headingLine1, headingLine2Pre, headingLine2Accent, headingLine2Post,
+  lede, inscription, inscriptionAccent, stages,
+} = data;
 ---
 
 <section id="how" class="relative bg-coal py-32 sm:py-44">
@@ -44,14 +13,13 @@ const stages = [
       <h2
         class="font-display uppercase leading-[0.9] text-[clamp(48px,8vw,124px)] tracking-[-0.01em]"
       >
-        <span class="block">How we&rsquo;ll</span>
-        <span class="block">work <span class="text-gold">together</span>.</span>
+        <span class="block" data-edit="headingLine1">{headingLine1}</span>
+        <span class="block">
+          <span data-edit="headingLine2Pre">{headingLine2Pre}</span><span class="text-gold" data-edit="headingLine2Accent">{headingLine2Accent}</span><span data-edit="headingLine2Post">{headingLine2Post}</span>
+        </span>
       </h2>
-      <p class="mt-8 text-lg sm:text-xl text-paper leading-relaxed max-w-2xl">
-        Most of my projects start with a friendly call. We figure out what
-        you&rsquo;re trying to make, what&rsquo;s realistic for the timeline,
-        and whether I&rsquo;m the right person for it. If we move forward,
-        here&rsquo;s what working together looks like.
+      <p class="mt-8 text-lg sm:text-xl text-paper leading-relaxed max-w-2xl" data-edit="lede">
+        {lede}
       </p>
     </div>
 
@@ -61,33 +29,41 @@ const stages = [
         class="font-[var(--font-inscription)] tracking-[0.06em] text-[clamp(22px,2.4vw,34px)] leading-[1.35] text-ink-900"
         style="font-family: var(--font-inscription);"
       >
-        Care in the work.
-        <span class="text-gold">Care in the conversation.</span>
+        <span data-edit="inscription">{inscription}</span>
+        <span class="text-gold" data-edit="inscriptionAccent">{inscriptionAccent}</span>
       </p>
     </div>
 
     {/* The four stages, as editorial paragraphs */}
     <ol class="divide-y divide-iron max-w-5xl mx-auto">
       {
-        stages.map((s) => (
+        stages.map((s, i) => (
           <li class="reveal grid grid-cols-12 gap-x-8 gap-y-3 py-12 sm:py-16">
             <span
               class="col-span-2 md:col-span-1 text-[clamp(28px,3vw,44px)] text-gold leading-none pt-2"
               style="font-family: var(--font-inscription); letter-spacing: 0.05em;"
+              data-edit={`stages[${i}].n`}
             >
               {s.n}
             </span>
             <div class="col-span-10 md:col-span-3">
               <p
                 class="font-mono text-[11px] uppercase tracking-[0.22em] text-smoke mb-2"
+                data-edit={`stages[${i}].duration`}
               >
                 {s.duration}
               </p>
-              <h3 class="font-display uppercase text-[clamp(22px,2.4vw,32px)] leading-[1.05] tracking-[-0.01em] text-bone">
+              <h3
+                class="font-display uppercase text-[clamp(22px,2.4vw,32px)] leading-[1.05] tracking-[-0.01em] text-bone"
+                data-edit={`stages[${i}].kicker`}
+              >
                 {s.kicker}
               </h3>
             </div>
-            <p class="col-span-12 md:col-span-8 text-lg leading-relaxed text-paper max-w-2xl">
+            <p
+              class="col-span-12 md:col-span-8 text-lg leading-relaxed text-paper max-w-2xl"
+              data-edit={`stages[${i}].body`}
+            >
               {s.body}
             </p>
           </li>

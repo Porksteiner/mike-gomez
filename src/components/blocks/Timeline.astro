@@ -1,0 +1,51 @@
+---
+interface Props {
+  data?: {
+    heading?: string;
+    items?: { date: string; title: string; body: string }[];
+  };
+  blockId?: string;
+}
+const { data = {}, blockId } = Astro.props;
+const heading = data.heading ?? "Timeline.";
+const items = data.items ?? [];
+---
+
+<section
+  class="timeline-block relative py-24 sm:py-32 bg-coal"
+  data-block-id={blockId}
+  data-block-type="timeline"
+>
+  <div class="max-w-5xl mx-auto px-6 sm:px-10 lg:px-14">
+    <h2
+      class="reveal font-display uppercase leading-[0.9] text-[clamp(40px,6vw,88px)] tracking-[-0.01em] mb-16 max-w-2xl"
+      data-edit="heading"
+    >
+      {heading}
+    </h2>
+    <ol class="relative">
+      {/* Vertical line */}
+      <div class="absolute left-4 sm:left-6 top-2 bottom-2 w-px bg-iron"></div>
+      {items.map((it, i) => (
+        <li class={`reveal reveal-delay-${(i % 4) + 1} relative pl-12 sm:pl-16 py-6 sm:py-8`}>
+          <span class="absolute left-2 sm:left-4 top-7 w-5 h-5 rounded-full bg-gold ring-4 ring-coal"></span>
+          <p
+            class="font-mono text-[11px] uppercase tracking-[0.22em] text-smoke mb-2"
+            data-edit={`items[${i}].date`}
+          >
+            {it.date}
+          </p>
+          <h3
+            class="font-display uppercase text-[clamp(22px,2.5vw,32px)] leading-[1.05] tracking-[-0.01em] mb-3"
+            data-edit={`items[${i}].title`}
+          >
+            {it.title}
+          </h3>
+          <p class="text-paper text-lg leading-relaxed max-w-2xl" data-edit={`items[${i}].body`}>
+            {it.body}
+          </p>
+        </li>
+      ))}
+    </ol>
+  </div>
+</section>

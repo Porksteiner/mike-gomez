@@ -1,0 +1,282 @@
+# =================================================================
+#  Sveltia CMS configuration for mikegomez.dev
+#
+#  Mike — before this works in production you need to:
+#    1. Replace `<YOUR_GH_USER>/<YOUR_REPO>` below with your actual
+#       GitHub username and repository name.
+#    2. Set `branch` to whichever branch Vercel deploys from
+#       (usually `main`).
+#
+#  When you visit /admin, Sveltia will prompt you to log in with
+#  GitHub. It uses PKCE auth — no OAuth proxy server required.
+# =================================================================
+
+backend:
+  name: github
+  repo: Porksteiner/mike-gomez
+  branch: main
+  commit_messages:
+    create: "content: create {{collection}} {{slug}}"
+    update: "content: update {{collection}} {{slug}}"
+    delete: "content: delete {{collection}} {{slug}}"
+    uploadMedia: "content: upload {{path}}"
+    deleteMedia: "content: delete {{path}}"
+
+# Where uploaded images go in the repo, and how to reference them on
+# the live site (since public/ is served at the site root).
+media_folder: "public/projects"
+public_folder: "/projects"
+
+# UI niceties
+publish_mode: simple
+site_url: https://mikegomez.dev
+display_url: https://mikegomez.dev
+logo_url: /favicon.svg
+
+collections:
+  # ---------------------------------------------------------------
+  #  PROJECTS — folder collection, one markdown file per project.
+  # ---------------------------------------------------------------
+  - name: projects
+    label: Projects
+    label_singular: Project
+    description: "Add or edit project case studies that appear in the Work section."
+    folder: src/content/projects
+    create: true
+    delete: true
+    extension: md
+    format: yaml-frontmatter
+    slug: "{{slug}}"
+    summary: "{{order}}. {{title}}"
+    sortable_fields: [order, title, year]
+    view_groups:
+      - { label: Drafts, field: draft }
+    fields:
+      - { name: title, label: Title, widget: string }
+      - { name: order, label: Display order (lower = first), widget: number, value_type: int, min: 1, default: 1 }
+      - { name: roman, label: Roman numeral, widget: string, hint: "Shown above the title — I, II, III…", default: "I" }
+      - { name: year, label: Year, widget: string, default: "2026" }
+      - { name: tech, label: Tech / role chips, widget: string, hint: "Shown top-right — e.g. iOS · React Native · OpenAI" }
+      - name: titleSize
+        label: Headline size
+        widget: select
+        options: [xl, lg, md]
+        default: lg
+        hint: "xl = short brand titles like BAITIQ. md = longer titles."
+      - { name: description, label: Description, widget: text }
+      - { name: tail, label: "Description tail (bone-colored)", widget: string, required: false, hint: "Optional bolded sentence at the end of the description." }
+      - { name: icon, label: "Icon (optional, small square)", widget: image, required: false, choose_url: false }
+      - { name: image, label: "Main image / screenshot", widget: image, choose_url: false }
+      - name: imageRotation
+        label: Image hover tilt
+        widget: select
+        options: [left, right, none]
+        default: none
+      - name: pattern
+        label: Card background pattern
+        widget: select
+        options: [grid, dots, none]
+        default: grid
+      - name: badges
+        label: Badges
+        widget: list
+        required: false
+        summary: "{{fields.text}} ({{fields.kind}})"
+        fields:
+          - { name: text, label: Label, widget: string }
+          - name: kind
+            label: Style
+            widget: select
+            options: [live, stars, note]
+            default: note
+            hint: "live = pulsing green dot · stars = ★★★★★ · note = plain"
+      - { name: draft, label: "Draft (hide from live site)", widget: boolean, default: false }
+      - { name: body, label: "Notes (not rendered)", widget: markdown, required: false }
+
+  # ---------------------------------------------------------------
+  #  HERO — top-of-page headline, bio, and bottom row.
+  # ---------------------------------------------------------------
+  - name: hero
+    label: Hero
+    description: "Top-of-page headline + bio + currently-building snippet."
+    files:
+      - name: hero
+        label: Hero copy
+        file: src/data/hero.json
+        fields:
+          - { name: line1, label: "Headline line 1", widget: string }
+          - { name: line2, label: "Headline line 2 (outlined)", widget: string }
+          - { name: line3Accent, label: "Line 3 — italic gold word", widget: string, hint: "Shown italic gold sans (e.g. 'Built')." }
+          - { name: line3Rest, label: "Line 3 — rest of line", widget: string, hint: "Shown in default style. Include leading space." }
+          - { name: line4, label: "Headline line 4 (gold outlined)", widget: string }
+          - { name: bio, label: "Bio paragraph", widget: text }
+          - { name: currentlyBuildingLabel, label: "Building label", widget: string, default: "Currently building" }
+          - name: currentlyBuildingLines
+            label: "Currently-building lines"
+            widget: list
+            summary: "{{fields.line}}"
+            field: { name: line, label: Line, widget: string }
+          - { name: scrollCtaLabel, label: "Scroll CTA label", widget: string, default: "See work" }
+
+  # ---------------------------------------------------------------
+  #  HOW I WORK — section heading, lede, inscription, 4 stages.
+  # ---------------------------------------------------------------
+  - name: howiwork
+    label: How I Work
+    description: "Working-together section. Heading, principle quote, and the four stages."
+    files:
+      - name: howiwork
+        label: Process content
+        file: src/data/howiwork.json
+        fields:
+          - { name: headingLine1, label: "Heading line 1", widget: string, default: "How we'll" }
+          - { name: headingLine2Pre, label: "Heading line 2 — pre-accent", widget: string, default: "work " }
+          - { name: headingLine2Accent, label: "Heading line 2 — gold accent word", widget: string, default: "together" }
+          - { name: headingLine2Post, label: "Heading line 2 — post-accent", widget: string, default: "." }
+          - { name: lede, label: "Lede paragraph", widget: text }
+          - { name: inscription, label: "Inscription (Cinzel, default text)", widget: string }
+          - { name: inscriptionAccent, label: "Inscription (gold half)", widget: string }
+          - name: stages
+            label: Stages
+            widget: list
+            summary: "{{fields.n}} — {{fields.kicker}}"
+            fields:
+              - { name: n, label: "Numeral", widget: string, hint: "I, II, III, IV" }
+              - { name: kicker, label: "Stage name", widget: string }
+              - { name: duration, label: "Duration", widget: string }
+              - { name: body, label: "Body", widget: text }
+
+  # ---------------------------------------------------------------
+  #  FOOTER — verse, tagline, site links, social links.
+  # ---------------------------------------------------------------
+  - name: footer
+    label: Footer
+    description: "Bottom of every page — verse, tagline, navigation, social."
+    files:
+      - name: footer
+        label: Footer content
+        file: src/data/footer.json
+        fields:
+          - { name: verse, label: "Verse / opening line", widget: text }
+          - { name: verseReference, label: "Reference / source", widget: string }
+          - { name: tagline, label: "Big tagline line 1", widget: string, hint: "Italic gold appears on 'care.'" }
+          - { name: taglineAccent, label: "Big tagline line 2", widget: string }
+          - name: siteLinks
+            label: "Site nav"
+            widget: list
+            summary: "{{fields.label}}"
+            fields:
+              - { name: label, label: Label, widget: string }
+              - { name: href, label: "Href (e.g. #work)", widget: string }
+          - name: socialLinks
+            label: "Elsewhere / social links"
+            widget: list
+            summary: "{{fields.label}}"
+            fields:
+              - { name: label, label: Label, widget: string }
+              - { name: href, label: "URL", widget: string }
+          - { name: wordmark, label: "Giant wordmark", widget: string, default: "GOMEZ" }
+          - { name: fineprint, label: "Bottom-row fineprint", widget: string }
+
+  # ---------------------------------------------------------------
+  #  CREATION + DIVIDERS — the scroll-driven moment between Hero
+  #  and Work, plus the three section divider labels.
+  # ---------------------------------------------------------------
+  - name: creation
+    label: Creation Moment + Dividers
+    description: "The Creation-of-Adam scroll inscription, hand images, and the three section divider labels."
+    files:
+      - name: creation
+        label: Settings
+        file: src/data/creation.json
+        fields:
+          - { name: inscription, label: "Inscription (centered text)", widget: string }
+          - { name: handLeftImage, label: "Left hand image", widget: image, choose_url: false }
+          - { name: handRightImage, label: "Right hand image", widget: image, choose_url: false }
+          - { name: ariaLabel, label: "Accessibility label (screen readers)", widget: string }
+          - name: dividers
+            label: "Section dividers"
+            widget: object
+            fields:
+              - { name: work, label: "Before the Work section", widget: string }
+              - { name: workingTogether, label: "Before How-I-Work", widget: string }
+              - { name: getInTouch, label: "Before Contact", widget: string }
+
+  # ---------------------------------------------------------------
+  #  NOW — single JSON file with a list of in-flight items.
+  # ---------------------------------------------------------------
+  - name: now
+    label: Now
+    description: "What you're currently building. Update weekly."
+    files:
+      - name: now
+        label: Currently building
+        file: src/data/now.json
+        fields:
+          - name: items
+            label: Items
+            widget: list
+            summary: "{{fields.name}} — {{fields.status}}"
+            fields:
+              - { name: name, label: Name, widget: string }
+              - { name: status, label: Status, widget: string, hint: "Active · Pre-launch · Available · etc." }
+              - { name: detail, label: Detail line, widget: string }
+              - { name: update, label: Latest update, widget: text }
+
+  # ---------------------------------------------------------------
+  #  TESTIMONIALS — single JSON file. Drafts are hidden from site.
+  # ---------------------------------------------------------------
+  - name: testimonials
+    label: Testimonials
+    description: "Client quotes. Mark an entry as Draft to hide it from the live site."
+    files:
+      - name: testimonials
+        label: Quote wall
+        file: src/data/testimonials.json
+        fields:
+          - name: items
+            label: Quotes
+            widget: list
+            summary: "{{fields.name}} — {{fields.company}}"
+            fields:
+              - { name: quote, label: Quote, widget: text }
+              - { name: name, label: Client name, widget: string }
+              - { name: title, label: Title, widget: string }
+              - { name: company, label: Company, widget: string }
+              - { name: draft, label: "Draft (hidden from live)", widget: boolean, default: false }
+
+  # ---------------------------------------------------------------
+  #  FAQ — single JSON file.
+  # ---------------------------------------------------------------
+  - name: faq
+    label: FAQ
+    description: "Frequently asked questions."
+    files:
+      - name: faq
+        label: FAQ entries
+        file: src/data/faq.json
+        fields:
+          - name: items
+            label: Questions
+            widget: list
+            summary: "{{fields.q}}"
+            fields:
+              - { name: q, label: Question, widget: string }
+              - { name: a, label: Answer, widget: text }
+
+  # ---------------------------------------------------------------
+  #  SITE SETTINGS — global identity & contact details.
+  # ---------------------------------------------------------------
+  - name: settings
+    label: Site Settings
+    description: "Identity, contact, and availability shown across the site."
+    files:
+      - name: site
+        label: Site
+        file: src/data/settings.json
+        fields:
+          - { name: name, label: Your name, widget: string }
+          - { name: email, label: Contact email, widget: string, pattern: ['^\S+@\S+\.\S+$', 'must be a valid email'] }
+          - { name: calendly, label: Calendly URL, widget: string }
+          - { name: availability, label: Availability label, widget: string, hint: '"Open for new work" / "Booked through Q3" / etc.' }
+          - { name: availabilityNote, label: Contact section note, widget: text, hint: "Shown beneath the contact form. Line breaks become <br>." }

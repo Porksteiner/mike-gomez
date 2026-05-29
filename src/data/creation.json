@@ -1,0 +1,12 @@
+{
+  "inscription": "Built with Purpose",
+  "video": "/adam.mp4",
+  "handLeftImage": "/projects/hand-left.png",
+  "handRightImage": "/projects/hand-right.png",
+  "ariaLabel": "Where vision meets reality",
+  "dividers": {
+    "work": "The work",
+    "workingTogether": "Working together",
+    "getInTouch": "Get in touch"
+  }
+}
