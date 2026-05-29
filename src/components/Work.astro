@@ -31,7 +31,7 @@ const titleSizeClass: Record<string, string> = {
 
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-6 auto-rows-[minmax(280px,auto)]">
       {projects.map((project, idx) => {
-        const { title, roman, year, tech, titleSize, description, tail, icon, image, imageRotation, pattern, badges } = project.data;
+        const { title, roman, year, tech, titleSize, description, tail, icon, image, imageRotation, pattern, badges, liveUrl } = project.data;
         const rotationClass =
           imageRotation === "left" ? "group-hover:-rotate-[0.5deg]"
           : imageRotation === "right" ? "group-hover:rotate-[0.5deg]"
@@ -116,6 +116,19 @@ const titleSizeClass: Record<string, string> = {
                         </span>
                       ))}
                     </div>
+                  )}
+
+                  {liveUrl && (
+                    <a
+                      href={liveUrl}
+                      target="_blank"
+                      rel="noopener"
+                      data-magnetic
+                      class="inline-flex items-center gap-2 mt-4 px-5 py-2.5 bg-bone text-void font-mono text-[11px] uppercase tracking-[0.22em] font-semibold hover:bg-gold transition-colors w-fit"
+                    >
+                      <span>View live</span>
+                      <span aria-hidden="true">↗</span>
+                    </a>
                   )}
                 </div>
 

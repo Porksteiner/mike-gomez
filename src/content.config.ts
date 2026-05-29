@@ -24,6 +24,7 @@ const projects = defineCollection({
     image: z.string(), // path to main screenshot — "/projects/baitiq-marketing.png"
     imageRotation: z.enum(["left", "right", "none"]).default("none"),
     pattern: z.enum(["grid", "dots", "none"]).default("grid"),
+    liveUrl: z.string().url().optional(), // optional live link (App Store, deployed site, etc.)
     badges: z
       .array(
         z.object({

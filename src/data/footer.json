@@ -10,10 +10,7 @@
     { "label": "Contact", "href": "#contact" }
   ],
   "socialLinks": [
-    { "label": "GitHub", "href": "#" },
-    { "label": "Twitter / X", "href": "#" },
-    { "label": "App Store", "href": "#" },
-    { "label": "LinkedIn", "href": "#" }
+    { "label": "BaitIQ on the App Store", "href": "https://apps.apple.com/us/app/baitiq/id6768169415" }
   ],
   "wordmark": "GOMEZ",
   "fineprint": "Built solo in Astro + Tailwind"

@@ -120,20 +120,42 @@
      ==================================================== */
   const adamSection = document.getElementById("creation-of-adam");
   const adamVideo  = document.getElementById("creation-video");
-  if (adamSection && !reduce) {
+  if (adamSection) {
     let videoReady = false;
     let lastT = -1;
+
+    const primeVideo = () => {
+      // Chrome quirk: a paused <video> sometimes won't repaint after currentTime
+      // is set unless you call play() then pause() once to "wake" the decoder.
+      if (!adamVideo) return;
+      const p = adamVideo.play();
+      if (p && typeof p.then === "function") {
+        p.then(() => adamVideo.pause()).catch(() => {});
+      } else {
+        adamVideo.pause();
+      }
+    };
+
     if (adamVideo) {
       const onMeta = () => {
+        if (videoReady) return;
         videoReady = !isNaN(adamVideo.duration) && adamVideo.duration > 0;
-        update();
+        if (videoReady) {
+          primeVideo();
+          update();
+        }
       };
       if (adamVideo.readyState >= 1) onMeta();
       adamVideo.addEventListener("loadedmetadata", onMeta);
+      adamVideo.addEventListener("canplay", onMeta);
       adamVideo.addEventListener("canplaythrough", onMeta);
+      adamVideo.addEventListener("error", (e) => {
+        console.warn("[creation] video error", adamVideo.error);
+      });
       // Force fetch — Chrome sometimes won't preload otherwise
-      adamVideo.load();
+      try { adamVideo.load(); } catch {}
     }
+
     let scheduled = false;
     function update() {
       const rect = adamSection.getBoundingClientRect();
@@ -143,13 +165,14 @@
       const p = Math.max(0, Math.min(1, scrolled / totalScroll));
       adamSection.style.setProperty("--creation-p", p.toFixed(4));
 
-      // Seek video — only when sufficiently changed, to avoid jank
+      // Seek video — even under prefers-reduced-motion. We're scrubbing,
+      // not auto-playing, so this is fine.
       if (videoReady && adamVideo) {
         const dur = adamVideo.duration;
         const target = p * dur;
         if (Math.abs(target - lastT) > 0.02) {
-          // Use fastSeek when available (smoother) — else assign directly
           try {
+            // fastSeek is smoother where available; fall back to currentTime
             if (typeof adamVideo.fastSeek === "function") {
               adamVideo.fastSeek(target);
             } else {
@@ -171,14 +194,6 @@
     document.addEventListener("scroll", onScroll, { passive: true });
     window.addEventListener("resize", onScroll, { passive: true });
     update();
-  } else if (adamSection && reduce) {
-    // Reduced-motion: hold the end state — hands touching, light visible.
-    adamSection.style.setProperty("--creation-p", "1");
-    if (adamVideo) {
-      adamVideo.addEventListener("loadedmetadata", () => {
-        try { adamVideo.currentTime = adamVideo.duration; } catch {}
-      });
-    }
   }
 })();
 
