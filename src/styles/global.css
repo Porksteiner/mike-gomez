@@ -2,29 +2,31 @@
 
 @theme {
   /* ========================================================
-     PALETTE — light desert (inverted from previous dark theme)
+     PALETTE — dark desert (black + sand, Hermes-inspired)
+     re-inverted from the light theme; component contrast roles
+     are unchanged (void = surface, bone = text, gold = accent)
      ======================================================== */
 
-  /* Cream backgrounds (where the dark blacks used to be) */
-  --color-void: #faf6ed;        /* page base */
-  --color-coal: #f0e8d4;        /* alt/elevated sections */
-  --color-graphite: #e4d4b0;
-  --color-iron: #d4c4a0;        /* borders */
-  --color-ash: #a89070;
-  --color-smoke: #6b5a3f;       /* muted text — still readable on cream */
+  /* Warm near-black surfaces */
+  --color-void: #0b0907;        /* page base */
+  --color-coal: #14100a;        /* alt/elevated sections */
+  --color-graphite: #1e1710;    /* cards / hover lift */
+  --color-iron: #2e2418;        /* borders / hairlines */
+  --color-ash: #8c7b5a;         /* dim / decorative */
+  --color-smoke: #b0a07c;       /* muted text — readable on black */
 
-  /* Dark text (where the cream text used to be) */
-  --color-bone: #2d1f0a;        /* primary text — deep espresso */
-  --color-paper: #4a3a24;       /* body copy */
+  /* Sand text (where the espresso text used to be) */
+  --color-bone: #ede4d2;        /* primary text — sand-bone */
+  --color-paper: #cdbfa4;       /* body copy */
 
-  /* Accents — deeper gold + bronze for contrast on cream */
-  --color-honey: #d4a86b;
-  --color-gold: #a8854a;
-  --color-bronze: #7d4719;
-  --color-earth: #3d2814;
+  /* Accents — desert gold + bronze, lifted for dark */
+  --color-honey: #e3ba7a;
+  --color-gold: #c9a36a;
+  --color-bronze: #b5743c;
+  --color-earth: #d9c7a4;       /* light sand — inscriptions on dark */
 
-  /* One deep accent for moments that need gravity (used sparingly) */
-  --color-clay: #9c3528;
+  /* One ember accent for moments that need gravity (used sparingly) */
+  --color-clay: #cf5638;
 
   /* ========================================================
      TYPOGRAPHY
@@ -45,16 +47,37 @@
 html {
   scroll-behavior: smooth;
   background: var(--color-void);
-  color-scheme: light;
+  color-scheme: dark;
 }
 
 body {
   font-family: var(--font-sans);
-  background: var(--color-void);
+  /* gold light pooling out of black + edge vignette — the grunge "lit room"
+     base. Real texture images layer on top of this per-section. */
+  background:
+    radial-gradient(125% 80% at 50% -12%, rgba(201, 163, 106, 0.13), transparent 55%),
+    radial-gradient(80% 60% at 88% 112%, rgba(181, 116, 60, 0.10), transparent 60%),
+    radial-gradient(140% 105% at 50% 46%, transparent 40%, rgba(0, 0, 0, 0.62) 100%),
+    var(--color-void);
+  background-attachment: fixed;
   color: var(--color-bone);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   overflow-x: hidden;
+}
+
+/* plaster mottle — large-scale organic grit over the whole page
+   (same soft technique as the grain, lower frequency, soft-light) */
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 99;
+  opacity: 0.07;
+  mix-blend-mode: soft-light;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='600' height='600'><filter id='m'><feTurbulence type='fractalNoise' baseFrequency='0.015' numOctaves='4' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23m)'/></svg>");
+  background-size: 600px 600px;
 }
 
 ::selection {
@@ -78,8 +101,8 @@ body {
   inset: -50%;
   pointer-events: none;
   z-index: 100;
-  opacity: 0.06;
-  mix-blend-mode: multiply;
+  opacity: 0.05;
+  mix-blend-mode: screen;
   background-image: url("data:image/svg+xml;utf8,<svg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)' opacity='1'/></svg>");
 }
 
@@ -225,11 +248,7 @@ main > section::before {
   position: absolute;
   inset: 0;
   pointer-events: none;
-  background-image: radial-gradient(
-    rgba(45, 31, 10, 0.06) 1px,
-    transparent 1px
-  );
-  background-size: 28px 28px;
+  background-image: none;
 }
 
 main > section.lift-hatch::after {
@@ -241,8 +260,8 @@ main > section.lift-hatch::after {
     -45deg,
     transparent,
     transparent 38px,
-    rgba(45, 31, 10, 0.035) 38px,
-    rgba(45, 31, 10, 0.035) 39px
+    rgba(237, 228, 210, 0.03) 38px,
+    rgba(237, 228, 210, 0.03) 39px
   );
 }
 
@@ -251,8 +270,8 @@ main > section.lift-hatch::after {
   height: 48px;
   background: var(--color-void);
   overflow: hidden;
-  border-top: 1px solid rgba(45, 31, 10, 0.1);
-  border-bottom: 1px solid rgba(45, 31, 10, 0.1);
+  border-top: 1px solid rgba(237, 228, 210, 0.08);
+  border-bottom: 1px solid rgba(237, 228, 210, 0.08);
 }
 .section-divider::before {
   content: "";
@@ -260,8 +279,8 @@ main > section.lift-hatch::after {
   inset: 0;
   background-image: repeating-linear-gradient(
     90deg,
-    rgba(45, 31, 10, 0.12),
-    rgba(45, 31, 10, 0.12) 1px,
+    rgba(237, 228, 210, 0.1),
+    rgba(237, 228, 210, 0.1) 1px,
     transparent 1px,
     transparent 14px
   );
@@ -296,7 +315,7 @@ main > section.lift-hatch::after {
   position: absolute;
   width: 14px;
   height: 14px;
-  border: 1px solid rgba(45, 31, 10, 0.3);
+  border: 1px solid rgba(237, 228, 210, 0.22);
   pointer-events: none;
 }
 .corner-mark.tl { top: 18px; left: 18px; border-right: none; border-bottom: none; }

@@ -6,10 +6,13 @@
   the words.
 */
 import hero from "../data/hero.json";
+import settings from "../data/settings.json";
 const {
-  line1, line2, line3Accent, line3Rest, line4,
+  eyebrow, line1, line2, line3Accent, line3Rest, line4,
   bio, currentlyBuildingLabel, currentlyBuildingLines, scrollCtaLabel,
+  ctaPrimaryLabel, ctaSecondaryLabel,
 } = hero;
+const { calendly } = settings;
 ---
 
 <section
@@ -31,6 +34,14 @@ const {
       <circle cx="100" cy="100" r="60" fill="none" stroke="currentColor" stroke-width="1" stroke-dasharray="2 6" />
       <circle cx="100" cy="100" r="28" fill="currentColor" />
     </svg>
+  </div>
+
+  {/* Eyebrow — mono technical label */}
+  <div class="relative max-w-[1600px] w-full mx-auto px-6 sm:px-10 lg:px-14 mb-6 sm:mb-8 reveal">
+    <p class="inline-flex items-center gap-3 font-mono text-[11px] sm:text-xs uppercase tracking-[0.28em] text-gold">
+      <span class="inline-block w-8 h-px bg-gold align-middle"></span>
+      <span data-edit="eyebrow">{eyebrow}</span>
+    </p>
   </div>
 
   {/* Headline — per-line styling preserved; text from JSON. */}
@@ -59,6 +70,23 @@ const {
       <p class="text-lg sm:text-xl text-paper max-w-md leading-snug" data-edit="bio">
         {bio}
       </p>
+      <div class="mt-7 flex flex-wrap items-center gap-3">
+        <a
+          href={calendly}
+          class="inline-flex items-center gap-2 bg-gold text-void font-mono text-[12px] uppercase tracking-[0.18em] px-6 py-3.5 hover:bg-honey transition-colors"
+        >
+          <span data-edit="ctaPrimaryLabel">{ctaPrimaryLabel}</span>
+          <svg viewBox="0 0 24 24" class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M5 12h14M13 6l6 6-6 6" stroke-linecap="square" />
+          </svg>
+        </a>
+        <a
+          href="#work"
+          class="inline-flex items-center gap-2 border border-iron text-bone font-mono text-[12px] uppercase tracking-[0.18em] px-6 py-3.5 hover:border-gold hover:text-gold transition-colors"
+        >
+          <span data-edit="ctaSecondaryLabel">{ctaSecondaryLabel}</span>
+        </a>
+      </div>
     </div>
 
     <div class="col-span-12 md:col-span-3 md:col-start-8 reveal reveal-delay-4">

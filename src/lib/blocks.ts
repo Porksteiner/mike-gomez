@@ -27,6 +27,7 @@ import HowIWork from "../components/HowIWork.astro";
 import FAQ from "../components/FAQ.astro";
 import Contact from "../components/Contact.astro";
 import Footer from "../components/Footer.astro";
+import Capabilities from "../components/Capabilities.astro";
 import Divider from "../components/blocks/Divider.astro";
 import Marquee from "../components/blocks/Marquee.astro";
 import Stats from "../components/blocks/Stats.astro";
@@ -113,6 +114,12 @@ export const BLOCKS: Record<string, BlockMeta> = {
     component: CreationOfAdam,
     label: "Creation Moment",
     category: "Hero",
+    kind: "singleton",
+  },
+  capabilities: {
+    component: Capabilities,
+    label: "Capabilities",
+    category: "Content",
     kind: "singleton",
   },
   work: {
