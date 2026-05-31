@@ -18,7 +18,16 @@
       "type": "divider",
       "data": { "label": "Get in touch" }
     },
-    { "id": "contact-1", "type": "contact" },
+    {
+      "id": "contact-1",
+      "type": "contact",
+      "style": {
+        "bgImage": "/textures/cross.png",
+        "bgOverlay": "rgba(11,9,7,0.62)",
+        "bgSize": "cover",
+        "bgPosition": "center"
+      }
+    },
     { "id": "footer-1", "type": "footer" }
   ]
 }
