@@ -55,7 +55,7 @@ body {
   /* the real grunge texture as the global backdrop, under a dark vignette
      veil tuned so sand text stays readable over it */
   background:
-    radial-gradient(150% 120% at 50% 36%, rgba(11, 9, 7, 0.34), rgba(11, 9, 7, 0.82) 100%),
+    radial-gradient(155% 125% at 50% 34%, rgba(11, 9, 7, 0.26), rgba(11, 9, 7, 0.72) 100%),
     url("/textures/plaster.png") center / cover no-repeat,
     var(--color-void);
   background-attachment: fixed;

@@ -3,7 +3,16 @@
   "blocks": [
     { "id": "header-1", "type": "header", "effects": [] },
     { "id": "hero-1", "type": "hero" },
-    { "id": "cap-1", "type": "capabilities" },
+    {
+      "id": "cap-1",
+      "type": "capabilities",
+      "style": {
+        "bgImage": "/textures/fresco.png",
+        "bgOverlay": "rgba(11,9,7,0.80)",
+        "bgSize": "cover",
+        "bgPosition": "center"
+      }
+    },
     { "id": "creation-1", "type": "creation" },
     {
       "id": "div-work",
