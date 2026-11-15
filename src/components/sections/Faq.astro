@@ -1,0 +1,54 @@
+---
+import faq from '../../data/faq.json';
+const { items } = faq;
+---
+<section id="faq" class="faq">
+  <div class="shell faq-grid">
+    <div class="faq-head">
+      <p class="eyebrow reveal">FAQ</p>
+      <h2 class="display faq-title reveal">Questions,<br />answered.</h2>
+    </div>
+
+    <div class="faq-list">
+      {items.map((it) => (
+        <details class="faq-item reveal">
+          <summary>
+            <span>{it.q}</span>
+            <span class="faq-icon" aria-hidden="true"></span>
+          </summary>
+          <p>{it.a}</p>
+        </details>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .faq { border-top: 1px solid var(--line); }
+  .faq-grid { display: grid; gap: 3rem; grid-template-columns: 1fr; }
+  .faq-title { font-size: var(--t-3); }
+
+  .faq-list { display: flex; flex-direction: column; }
+  .faq-item { border-top: 1px solid var(--line); }
+  .faq-item:last-child { border-bottom: 1px solid var(--line); }
+  .faq-item summary {
+    list-style: none; cursor: pointer; display: flex; align-items: center; justify-content: space-between;
+    gap: 1.5rem; padding: 1.5rem 0; font-size: var(--t-2); color: var(--color-ink);
+    transition: color var(--d-std) var(--ease);
+  }
+  .faq-item summary::-webkit-details-marker { display: none; }
+  .faq-item summary:hover { color: var(--color-accent); }
+  .faq-icon { position: relative; flex: none; width: 16px; height: 16px; }
+  .faq-icon::before, .faq-icon::after {
+    content: ""; position: absolute; background: var(--color-accent); transition: transform var(--d-std) var(--ease);
+  }
+  .faq-icon::before { top: 7px; left: 0; width: 16px; height: 2px; }
+  .faq-icon::after { left: 7px; top: 0; width: 2px; height: 16px; }
+  .faq-item[open] .faq-icon::after { transform: scaleY(0); }
+  .faq-item p { color: var(--color-ink-2); max-width: 64ch; padding-bottom: 1.5rem; }
+
+  @media (min-width: 900px) {
+    .faq-grid { grid-template-columns: minmax(240px, 0.7fr) 1.3fr; gap: 4rem; }
+    .faq-head { position: sticky; top: 100px; align-self: start; }
+  }
+</style>

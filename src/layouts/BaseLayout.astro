@@ -1,63 +1,66 @@
 ---
-import "../styles/global.css";
+import '../styles/global.css';
+import Seo from '../components/Seo.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
 
 interface Props {
   title?: string;
   description?: string;
+  image?: string;
+  type?: string;
+  jsonld?: unknown;
 }
-
 const {
-  title = "Mike Gomez — Freelance web & mobile developer",
-  description = "Mike Gomez is a freelance developer building websites and mobile apps for founders and small businesses. Honest work, built with care, shipped on time.",
+  title = 'Mike Gomez — Systems engineer. Software, apps, private AI, and websites.',
+  description = 'Mike Gomez designs, builds, and ships software, mobile apps, private AI systems, and websites for businesses that need them to work.',
+  image,
+  type,
+  jsonld,
 } = Astro.props;
 ---
-
 <!doctype html>
 <html lang="en">
   <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="generator" content={Astro.generator} />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
-    <link rel="icon" href="/favicon.ico" sizes="any" />
-    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
-    <meta name="theme-color" content="#0b0907" />
-
-    <title>{title}</title>
-    <meta name="description" content={description} />
-
-    <meta property="og:type" content="website" />
-    <meta property="og:title" content={title} />
-    <meta property="og:description" content={description} />
-
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Anton&family=Cinzel:wght@400;500;600;700&family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap"
-      rel="stylesheet"
-    />
-
-    <script is:inline>
-      document.documentElement.classList.add("js");
-    </script>
+    <Seo title={title} description={description} image={image} type={type} jsonld={jsonld} />
+    <script is:inline>document.documentElement.classList.add('js');</script>
   </head>
-  <body class="bg-void text-bone font-sans grain">
-    <div id="scroll-progress" class="scroll-progress"></div>
-    <div id="cursor-dot" class="cursor-dot hidden md:block"></div>
-    <div id="cursor-ring" class="cursor-ring hidden md:block"></div>
+  <body>
+    <a href="#main" class="skip-link">Skip to content</a>
+    <Header />
+    <main id="main"><slot /></main>
+    <Footer />
 
-    <slot />
-
-    <script src="/scripts/site.js" is:inline></script>
     <script is:inline>
-      // Studio injection — only loads when the URL carries ?studio=1
-      if (typeof window !== "undefined" && location.search.includes("studio=1")) {
-        const s = document.createElement("script");
-        s.src = "/studio/inject.js";
-        s.async = true;
-        document.head.appendChild(s);
-      }
+      (function () {
+        var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        var items = document.querySelectorAll('.reveal');
+        var vids = document.querySelectorAll('video[data-inview]');
+        if (!('IntersectionObserver' in window)) {
+          items.forEach(function (el) { el.classList.add('is-in'); });
+          vids.forEach(function (v) { v.controls = true; });
+          return;
+        }
+        var io = new IntersectionObserver(function (entries) {
+          entries.forEach(function (e) {
+            if (e.isIntersecting) { e.target.classList.add('is-in'); io.unobserve(e.target); }
+          });
+        }, { rootMargin: '0px 0px -8% 0px' });
+        items.forEach(function (el) { io.observe(el); });
+        // Safety net: never leave content hidden.
+        setTimeout(function () { items.forEach(function (el) { el.classList.add('is-in'); }); }, 3500);
+
+        // Videos load and play only while on screen; reduced motion gets controls instead.
+        if (reduce) { vids.forEach(function (v) { v.controls = true; }); return; }
+        var vio = new IntersectionObserver(function (entries) {
+          entries.forEach(function (e) {
+            var v = e.target;
+            if (e.isIntersecting) { var p = v.play(); if (p && p.catch) p.catch(function () { v.controls = true; }); }
+            else { v.pause(); }
+          });
+        }, { threshold: 0.35 });
+        vids.forEach(function (v) { vio.observe(v); });
+      })();
     </script>
   </body>
 </html>

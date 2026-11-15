@@ -1,0 +1,73 @@
+---
+import { getCollection } from 'astro:content';
+const projects = (await getCollection('projects'))
+  .filter((p) => !p.data.draft)
+  .sort((a, b) => a.data.order - b.data.order);
+---
+<section id="work" class="work">
+  <div class="shell">
+    <div class="work-head">
+      <p class="eyebrow reveal">Selected work</p>
+      <h2 class="display work-title reveal">Recent builds</h2>
+    </div>
+
+    <div class="work-list">
+      {projects.map((p) => (
+        <article class={`work-item reveal ${p.data.imageRotation === 'right' ? 'is-right' : ''}`}>
+          <div class="work-media">
+            <img src={p.data.image} alt={`${p.data.title} — ${p.data.tech}`} loading="lazy" width="1200" height="800" />
+          </div>
+          <div class="work-info">
+            <span class="num">{p.data.roman}</span>
+            <h3 class="display work-name">{p.data.title}</h3>
+            <p class="work-tech">{p.data.year} · {p.data.tech}</p>
+            <p class="work-desc">{p.data.description}</p>
+            {p.data.tail && <p class="work-tail">{p.data.tail}</p>}
+            {p.data.badges && (
+              <ul class="badges">
+                {p.data.badges.map((b) => <li class={`badge badge--${b.kind}`}>{b.text}</li>)}
+              </ul>
+            )}
+            {p.data.liveUrl && (
+              <a href={p.data.liveUrl} target="_blank" rel="noopener noreferrer" class="work-live" data-magnetic>View live →</a>
+            )}
+          </div>
+        </article>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .work { border-top: 1px solid var(--line); }
+  .work-title { font-size: var(--t-3); margin-top: 0.5rem; }
+  .work-list { margin-top: clamp(3rem, 6vw, 5rem); display: flex; flex-direction: column; gap: clamp(4rem, 8vw, 7rem); }
+
+  .work-item { display: grid; gap: 2rem; grid-template-columns: 1fr; align-items: center; }
+  .work-media {
+    border: 1px solid var(--line-2); border-radius: var(--radius-lg); overflow: hidden;
+    background: var(--color-card); aspect-ratio: 3 / 2;
+  }
+  .work-media img { width: 100%; height: 100%; object-fit: cover; transition: transform var(--d-slow) var(--ease); }
+  .work-item:hover .work-media img { transform: scale(1.04); }
+
+  .work-info { display: flex; flex-direction: column; gap: 0.5rem; }
+  .work-info .num { font-family: var(--font-mono); font-size: 0.8rem; letter-spacing: 0.1em; color: var(--color-accent); }
+  .work-name { font-size: clamp(2rem, 5vw, 3.2rem); line-height: 1; margin-top: 0.25rem; }
+  .work-tech { font-family: var(--font-mono); font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.14em; color: var(--color-ink-3); }
+  .work-desc { color: var(--color-ink-2); max-width: 48ch; margin-top: 0.5rem; }
+  .work-tail { color: var(--color-accent-soft); font-style: italic; }
+
+  .badges { list-style: none; padding: 0; display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.75rem; }
+  .badge { font-family: var(--font-mono); font-size: 0.64rem; text-transform: uppercase; letter-spacing: 0.12em; padding: 0.35em 0.7em; border-radius: var(--radius-pill); border: 1px solid var(--line-2); color: var(--color-ink-3); }
+  .badge--live { background: var(--color-accent); color: var(--color-bg); border-color: transparent; }
+  .badge--stars { color: var(--color-accent); border-color: color-mix(in srgb, var(--color-accent) 45%, transparent); }
+
+  .work-live { margin-top: 1rem; width: fit-content; font-family: var(--font-mono); font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.14em; color: var(--color-accent); transition: gap var(--d-std) var(--ease); }
+  .work-live:hover { color: var(--color-accent-hi); }
+
+  @media (min-width: 860px) {
+    .work-item { grid-template-columns: 1.1fr 1fr; gap: 3.5rem; }
+    .work-item.is-right .work-media { order: 2; }
+  }
+</style>

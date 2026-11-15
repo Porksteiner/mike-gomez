@@ -1,704 +1,96 @@
-@import "tailwindcss";
+/* ============================================================
+   mikegomez.dev — matte black, bone ink, one gold accent.
+   Editorial and quiet: the work carries the page.
+   ============================================================ */
+:root {
+  --bg: #0c0b09;
+  --bg-2: #131210;
+  --card: #181613;
+  --ink: #efe9dc;
+  --ink-2: #b9b1a1;
+  --ink-3: #7d766a;
+  --gold: #c9a36a;
+  --gold-hi: #e0bd85;
+  --line: rgba(239, 233, 220, 0.1);
+  --line-2: rgba(239, 233, 220, 0.2);
 
-@theme {
-  /* ========================================================
-     PALETTE — dark desert (black + sand, Hermes-inspired)
-     re-inverted from the light theme; component contrast roles
-     are unchanged (void = surface, bone = text, gold = accent)
-     ======================================================== */
+  --font-display: "Fraunces", "Iowan Old Style", Georgia, serif;
+  --font-sans: "Instrument Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SF Mono", Consolas, monospace;
 
-  /* Warm near-black surfaces */
-  --color-void: #0b0907;        /* page base */
-  --color-coal: #14100a;        /* alt/elevated sections */
-  --color-graphite: #1e1710;    /* cards / hover lift */
-  --color-iron: #2e2418;        /* borders / hairlines */
-  --color-ash: #8c7b5a;         /* dim / decorative */
-  --color-smoke: #b0a07c;       /* muted text — readable on black */
-
-  /* Sand text (where the espresso text used to be) */
-  --color-bone: #ede4d2;        /* primary text — sand-bone */
-  --color-paper: #cdbfa4;       /* body copy */
-
-  /* Accents — desert gold + bronze, lifted for dark */
-  --color-honey: #e3ba7a;
-  --color-gold: #c9a36a;
-  --color-bronze: #b5743c;
-  --color-earth: #d9c7a4;       /* light sand — inscriptions on dark */
-
-  /* One ember accent for moments that need gravity (used sparingly) */
-  --color-clay: #cf5638;
-
-  /* ========================================================
-     TYPOGRAPHY
-     ======================================================== */
-  --font-display: "Anton", "Impact", "Arial Black", sans-serif;
-  --font-sans:
-    "Space Grotesk", "Inter", ui-sans-serif, system-ui, sans-serif;
-  --font-mono: "JetBrains Mono", "Menlo", "Monaco", ui-monospace, monospace;
-  /* Inscription — Roman cap-style serif for the sacred moments
-     (Creation touch, contact close, footer verse). Used sparingly. */
-  --font-inscription:
-    "Cinzel", "Trajan Pro", "Times New Roman", serif;
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --maxw: 1200px;
+  --gutter: clamp(1.25rem, 4vw, 3rem);
+  --radius: 10px;
 }
 
-/* ========================================================
-   BASE
-   ======================================================== */
-html {
-  scroll-behavior: smooth;
-  background: var(--color-void);
-  color-scheme: dark;
-}
-
+*, *::before, *::after { box-sizing: border-box; }
+* { margin: 0; }
+html { color-scheme: dark; scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
 body {
+  background: var(--bg);
+  color: var(--ink);
   font-family: var(--font-sans);
-  /* the real grunge texture as the global backdrop, under a dark vignette
-     veil tuned so sand text stays readable over it */
-  background:
-    radial-gradient(155% 125% at 50% 34%, rgba(11, 9, 7, 0.26), rgba(11, 9, 7, 0.72) 100%),
-    url("/textures/plaster.png") center / cover no-repeat,
-    var(--color-void);
-  background-attachment: fixed;
-  color: var(--color-bone);
+  font-size: clamp(1rem, 0.97rem + 0.15vw, 1.0625rem);
+  line-height: 1.65;
   -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  overflow-x: hidden;
+  text-rendering: optimizeLegibility;
+  overflow-x: clip;
 }
+img, svg, video { display: block; max-width: 100%; height: auto; }
+a { color: inherit; text-decoration: none; }
+ul { list-style: none; padding: 0; }
+::selection { background: var(--gold); color: var(--bg); }
+:focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; border-radius: 3px; }
 
-::selection {
-  background: var(--color-gold);
-  color: var(--color-void);
+h1, h2, h3 {
+  font-family: var(--font-display);
+  font-weight: 400;
+  line-height: 1.06;
+  letter-spacing: -0.015em;
+  font-optical-sizing: auto;
+  text-wrap: balance;
 }
+p { text-wrap: pretty; }
 
-@media (hover: hover) and (pointer: fine) {
-  body.cursor-on,
-  body.cursor-on * {
-    cursor: none !important;
-  }
-}
+.shell { width: 100%; max-width: var(--maxw); margin-inline: auto; padding-inline: var(--gutter); }
+section { padding-block: clamp(4.5rem, 9vw, 8rem); }
+.rule { border-top: 1px solid var(--line); }
 
-/* ========================================================
-   FILM GRAIN — multiply on light so the noise reads
-   ======================================================== */
-.grain::before {
-  content: "";
-  position: fixed;
-  inset: -50%;
-  pointer-events: none;
-  z-index: 100;
-  opacity: 0.05;
-  mix-blend-mode: screen;
-  background-image: url("data:image/svg+xml;utf8,<svg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)' opacity='1'/></svg>");
-}
-
-/* ========================================================
-   MARQUEE
-   ======================================================== */
-@keyframes marquee {
-  from { transform: translateX(0); }
-  to   { transform: translateX(-50%); }
-}
-.marquee {
-  display: flex;
-  width: max-content;
-  animation: marquee 40s linear infinite;
-}
-.marquee--fast { animation-duration: 22s; }
-.marquee--reverse { animation-direction: reverse; }
-
-/* ========================================================
-   SCROLL REVEAL
-   ======================================================== */
-.reveal { opacity: 1; transform: none; }
-html.js .reveal {
-  opacity: 0;
-  transform: translateY(28px);
-  transition:
-    opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1),
-    transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
-}
-html.js .reveal.in { opacity: 1; transform: translateY(0); }
-.reveal-delay-1 { transition-delay: 0.08s; }
-.reveal-delay-2 { transition-delay: 0.16s; }
-.reveal-delay-3 { transition-delay: 0.24s; }
-.reveal-delay-4 { transition-delay: 0.32s; }
-
-/* ========================================================
-   ROTATING MARK
-   ======================================================== */
-@keyframes slow-spin {
-  from { transform: rotate(0deg); }
-  to   { transform: rotate(360deg); }
-}
-.slow-spin { animation: slow-spin 80s linear infinite; }
-
-/* ========================================================
-   OUTLINED TYPE — outline in dark espresso on cream bg
-   ======================================================== */
-.text-stroke {
-  color: transparent;
-  -webkit-text-stroke: 1.5px var(--color-bone);
-}
-.text-stroke-gold {
-  color: transparent;
-  -webkit-text-stroke: 1.5px var(--color-gold);
-}
-
-/* ========================================================
-   CUSTOM CURSOR — dark dot, dark ring (visible on cream)
-   ======================================================== */
-.cursor-dot {
-  position: fixed;
-  top: 0; left: 0;
-  width: 8px; height: 8px;
-  background: var(--color-bone);
-  border-radius: 50%;
-  pointer-events: none;
-  z-index: 9999;
-  transform: translate(-50%, -50%);
-  transition: width 0.2s ease, height 0.2s ease, background 0.2s ease;
-}
-.cursor-ring {
-  position: fixed;
-  top: 0; left: 0;
-  width: 36px; height: 36px;
-  border: 1px solid var(--color-bone);
-  border-radius: 50%;
-  pointer-events: none;
-  z-index: 9998;
-  transform: translate(-50%, -50%);
-  transition: width 0.25s ease, height 0.25s ease,
-    border-color 0.25s ease, opacity 0.25s ease;
-}
-.cursor-hover .cursor-dot { width: 0; height: 0; }
-.cursor-hover .cursor-ring {
-  width: 64px; height: 64px;
-  border-color: var(--color-gold);
-}
-
-/* ========================================================
-   SCROLL-PROGRESS BAR
-   ======================================================== */
-.scroll-progress {
-  position: fixed;
-  top: 0; left: 0;
-  height: 2px;
-  background: var(--color-gold);
-  z-index: 9999;
-  transform-origin: left;
-  transform: scaleX(0);
-  transition: transform 0.05s linear;
-}
-
-/* ========================================================
-   EDITORIAL LINK UNDERLINE
-   ======================================================== */
-.link-flare {
-  position: relative;
-  display: inline-block;
-}
-.link-flare::after {
-  content: "";
-  position: absolute;
-  left: 0; bottom: -3px;
-  width: 100%;
-  height: 1px;
-  background: currentColor;
-  transform: scaleX(1);
-  transform-origin: right;
-  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-}
-.link-flare:hover::after {
-  transform: scaleX(0);
-  transform-origin: left;
-}
-
-/* ========================================================
-   FOCUS
-   ======================================================== */
-*:focus-visible {
-  outline: 2px solid var(--color-gold);
-  outline-offset: 3px;
-  border-radius: 2px;
-}
-
-/* ========================================================
-   LIGHTER TEXTURE — dark patterns on cream
-   ======================================================== */
-main > section {
-  position: relative;
-}
-main > section::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  background-image: none;
-}
-
-main > section.lift-hatch::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  background-image: repeating-linear-gradient(
-    -45deg,
-    transparent,
-    transparent 38px,
-    rgba(237, 228, 210, 0.03) 38px,
-    rgba(237, 228, 210, 0.03) 39px
-  );
-}
-
-.section-divider {
-  position: relative;
-  height: 48px;
-  background: var(--color-void);
-  overflow: hidden;
-  border-top: 1px solid rgba(237, 228, 210, 0.08);
-  border-bottom: 1px solid rgba(237, 228, 210, 0.08);
-}
-.section-divider::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background-image: repeating-linear-gradient(
-    90deg,
-    rgba(237, 228, 210, 0.1),
-    rgba(237, 228, 210, 0.1) 1px,
-    transparent 1px,
-    transparent 14px
-  );
-  pointer-events: none;
-}
-.section-divider .mark {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background: var(--color-void);
-  padding: 0 18px;
+.label {
   font-family: var(--font-mono);
-  font-size: 11px;
-  letter-spacing: 0.2em;
+  font-size: 0.7rem;
+  letter-spacing: 0.16em;
   text-transform: uppercase;
-  color: var(--color-gold);
-  display: flex;
-  align-items: center;
-  gap: 10px;
+  color: var(--ink-3);
 }
-.section-divider .mark::before,
-.section-divider .mark::after {
-  content: "";
-  width: 14px;
-  height: 1px;
-  background: var(--color-gold);
-  opacity: 0.5;
+.label--gold { color: var(--gold); }
+.lead { font-size: clamp(1.1rem, 1rem + 0.5vw, 1.3rem); color: var(--ink-2); line-height: 1.55; }
+.muted { color: var(--ink-2); }
+em.gold { font-style: italic; color: var(--gold); }
+
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 0.55em;
+  min-height: 46px; padding: 0.7em 1.35em;
+  border-radius: 6px; border: 1px solid transparent;
+  font-family: var(--font-sans); font-size: 0.95rem; font-weight: 500;
+  transition: background 200ms var(--ease), border-color 200ms var(--ease), color 200ms var(--ease), transform 200ms var(--ease);
 }
+.btn:active { transform: translateY(1px); }
+.btn--primary { background: var(--gold); color: #17130c; }
+.btn--primary:hover { background: var(--gold-hi); }
+.btn--ghost { border-color: var(--line-2); color: var(--ink); }
+.btn--ghost:hover { border-color: var(--gold); color: var(--gold-hi); }
+.link { color: var(--gold); border-bottom: 1px solid color-mix(in srgb, var(--gold) 40%, transparent); transition: border-color 200ms var(--ease), color 200ms var(--ease); }
+.link:hover { color: var(--gold-hi); border-color: var(--gold-hi); }
 
-.corner-mark {
-  position: absolute;
-  width: 14px;
-  height: 14px;
-  border: 1px solid rgba(237, 228, 210, 0.22);
-  pointer-events: none;
-}
-.corner-mark.tl { top: 18px; left: 18px; border-right: none; border-bottom: none; }
-.corner-mark.tr { top: 18px; right: 18px; border-left: none; border-bottom: none; }
-.corner-mark.bl { bottom: 18px; left: 18px; border-right: none; border-top: none; }
-.corner-mark.br { bottom: 18px; right: 18px; border-left: none; border-top: none; }
+.skip-link { position: absolute; left: -9999px; top: 0; padding: 0.7rem 1rem; background: var(--gold); color: var(--bg); z-index: 100; }
+.skip-link:focus { left: 1rem; top: 1rem; }
 
-/* ========================================================
-   CREATION OF ADAM — scroll-driven hands + light
-   ======================================================== */
-.creation-section {
-  position: relative;
-  min-height: 160vh;
-  /* default value so layout doesn't jump before JS sets it */
-  --creation-p: 0;
-}
-
-/* suppress the global section dot pattern — the visual is the focus */
-.creation-section::before { display: none; }
-
-.creation-sticky {
-  position: sticky;
-  top: 0;
-  height: 100vh;
-  overflow: hidden;
-}
-
-.hand {
-  position: absolute;
-  top: 50%;
-  /* Arm content fills ~46% of each image. Sized so the arm reads
-     huge AND the flat shoulder end sits well off-screen. */
-  width: clamp(900px, 115vw, 1900px);
-  height: auto;
-  pointer-events: none;
-  user-select: none;
-  filter: drop-shadow(0 20px 40px rgba(45, 31, 10, 0.2));
-}
-
-/* Left hand: shoulder pushed off-screen left, fingertip starts
-   ~40vw (left of center), needs only ~8vw of travel to touch. */
-.hand-left {
-  left: -12vw;
-  transform: translate(calc(8vw * var(--creation-p)), -50%);
-}
-
-/* Right hand mirrored */
-.hand-right {
-  right: -12vw;
-  transform: translate(calc(-8vw * var(--creation-p)), -50%);
-}
-
-.touch-light {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 420px;
-  height: 420px;
-  border-radius: 50%;
-  pointer-events: none;
-  transform: translate(-50%, -50%);
-  /* ramp opacity from 0 at p=0.85 to 1 at p=1.0 */
-  opacity: calc(max(0, var(--creation-p) - 0.85) * 6.67);
-  background: radial-gradient(
-    circle,
-    rgba(255, 248, 224, 1) 0%,
-    rgba(232, 198, 136, 0.7) 20%,
-    rgba(212, 175, 109, 0.35) 45%,
-    transparent 70%
-  );
-  filter: blur(14px);
-}
-
-/* Cinzel inscription that fades in at the touch moment.
-   Sits underneath the light, breathes with it. */
-.creation-inscription {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, calc(-50% + 220px));
-  text-align: center;
-  pointer-events: none;
-  font-family: var(--font-inscription);
-  font-weight: 500;
-  letter-spacing: 0.35em;
-  font-size: clamp(11px, 1.05vw, 15px);
-  color: var(--color-earth);
-  text-transform: uppercase;
-  white-space: nowrap;
-  /* same ramp as the light */
-  opacity: calc(max(0, var(--creation-p) - 0.88) * 8.33);
-}
-
-/* Inner pulsing glow — animates continuously, multiplies w/ opacity above */
-.touch-light::after {
-  content: "";
-  position: absolute;
-  inset: -25%;
-  border-radius: 50%;
-  background: radial-gradient(
-    circle,
-    rgba(255, 240, 200, 0.55) 0%,
-    transparent 65%
-  );
-  filter: blur(28px);
-  animation: creation-pulse 1.8s ease-in-out infinite;
-}
-
-@keyframes creation-pulse {
-  0%, 100% { transform: scale(0.85); opacity: 0.55; }
-  50%      { transform: scale(1.25); opacity: 1; }
-}
-
+/* Reveal: content is visible by default; JS only adds a gentle rise. */
+.js .reveal { opacity: 0; transform: translateY(14px); transition: opacity 700ms var(--ease), transform 700ms var(--ease); }
+.js .reveal.is-in { opacity: 1; transform: none; }
 @media (prefers-reduced-motion: reduce) {
-  .hand-left, .hand-right {
-    transition: none;
-  }
-  .touch-light::after {
-    animation: none;
-  }
-}
-
-/* ====================================================================
-   COOL EFFECTS — phase 2 additions.
-   All reduced-motion safe (graceful no-op when prefers-reduced-motion).
-   ==================================================================== */
-
-/* --- Card hover spotlight (mouse-tracked radial gold wash) --- */
-.spotlight-host { isolation: isolate; }
-.spotlight-host::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  z-index: 1;
-  opacity: 0;
-  transition: opacity 0.5s cubic-bezier(0.22, 1, 0.36, 1);
-  background: radial-gradient(
-    420px circle at var(--mx, 50%) var(--my, 50%),
-    rgba(212, 168, 107, 0.16),
-    transparent 65%
-  );
-  mix-blend-mode: screen;
-}
-.spotlight-host:hover::after,
-.spotlight-host:focus-within::after { opacity: 1; }
-
-/* --- Headline character split — JS wraps chars with .char --- */
-[data-split] .word {
-  display: inline-block;
-  white-space: nowrap;
-}
-[data-split] .char {
-  display: inline-block;
-  opacity: 0;
-  transform: translateY(0.55em);
-  filter: blur(8px);
-  transition:
-    opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
-    transform 0.95s cubic-bezier(0.22, 1, 0.36, 1),
-    filter 0.7s cubic-bezier(0.22, 1, 0.36, 1);
-}
-[data-split].in .char {
-  opacity: 1;
-  transform: none;
-  filter: blur(0);
-}
-
-/* --- Image parallax — JS writes --py per element --- */
-[data-parallax] {
-  will-change: transform;
-  transform: translate3d(0, calc(var(--py, 0) * 1px), 0);
-}
-
-/* --- Section divider draw-in — animate the flanking gold lines --- */
-.section-divider .mark::before,
-.section-divider .mark::after {
-  transform: scaleX(0);
-  transition: transform 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.15s;
-}
-.section-divider .mark::before { transform-origin: right; }
-.section-divider .mark::after  { transform-origin: left; }
-.section-divider.in .mark::before,
-.section-divider.in .mark::after { transform: scaleX(1); }
-
-/* --- Reduce-motion guard --- */
-@media (prefers-reduced-motion: reduce) {
-  [data-split] .char,
-  [data-parallax],
-  .section-divider .mark::before,
-  .section-divider .mark::after {
-    transition: none !important;
-    transform: none !important;
-    filter: none !important;
-    opacity: 1 !important;
-  }
-}
-
-/* ====================================================================
-   SCROLL EFFECTS — wrappers applied to any block via the page JSON
-                    `effects` array. The CSS is gentle so the same
-                    effect can apply to any preset without surprises.
-   ==================================================================== */
-
-.fx-host {
-  position: relative;
-}
-
-/* ---- fx-fade-up — translate + fade on viewport enter ---- */
-.fx-fade-up > * {
-  opacity: 0;
-  transform: translateY(28px);
-  transition:
-    opacity 0.9s cubic-bezier(0.22, 1, 0.36, 1),
-    transform 0.95s cubic-bezier(0.22, 1, 0.36, 1);
-}
-.fx-fade-up.is-in > * {
-  opacity: 1;
-  transform: none;
-}
-
-/* ---- fx-pin — sticky during scroll-through ---- */
-.fx-pin {
-  position: sticky;
-  top: 0;
-  z-index: 1;
-}
-
-/* ---- fx-staircase — stagger reveal of immediate children ---- */
-.fx-staircase > * > * {
-  opacity: 0;
-  transform: translateY(18px);
-  transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
-              transform 0.85s cubic-bezier(0.22, 1, 0.36, 1);
-}
-.fx-staircase.is-in > * > *:nth-child(1) { transition-delay: 0.05s; }
-.fx-staircase.is-in > * > *:nth-child(2) { transition-delay: 0.12s; }
-.fx-staircase.is-in > * > *:nth-child(3) { transition-delay: 0.19s; }
-.fx-staircase.is-in > * > *:nth-child(4) { transition-delay: 0.26s; }
-.fx-staircase.is-in > * > *:nth-child(5) { transition-delay: 0.33s; }
-.fx-staircase.is-in > * > *:nth-child(6) { transition-delay: 0.40s; }
-.fx-staircase.is-in > * > * { opacity: 1; transform: none; }
-
-/* ---- fx-parallax — slower scroll on bg-host (JS sets --fxy) ---- */
-.fx-parallax {
-  overflow: hidden;
-}
-.fx-parallax > * {
-  will-change: transform;
-  transform: translate3d(0, calc(var(--fxy, 0) * 1px), 0);
-}
-
-/* ---- fx-mask — clip-path opens on enter ---- */
-.fx-mask > * {
-  clip-path: inset(0 50% 0 50%);
-  transition: clip-path 1.2s cubic-bezier(0.22, 1, 0.36, 1);
-}
-.fx-mask.is-in > * { clip-path: inset(0 0 0 0); }
-
-/* ---- fx-counter — JS animates numbers; CSS just smooths ---- */
-.fx-counter [data-stat-value] {
-  font-variant-numeric: tabular-nums lining-nums;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .fx-fade-up > *,
-  .fx-staircase > * > *,
-  .fx-parallax > *,
-  .fx-mask > * {
-    opacity: 1 !important;
-    transform: none !important;
-    clip-path: none !important;
-    transition: none !important;
-  }
-}
-
-/* Studio wrapper marker — invisible but groups block contents for selection */
-.studio-wrapper { display: block; }
-
-/* ====================================================================
-   BLOCK SHELL — per-block style overrides (bg color, image, overlay,
-   padding, text color, etc.) plus depth layers behind the content.
-
-   When a block has its own bg via .has-bg, the child <section>'s
-   own background is suppressed so the shell bg shows through.
-   ==================================================================== */
-.block-shell {
-  position: relative;
-  --bs-bg-color: transparent;
-  --bs-bg-image: none;
-  --bs-bg-overlay: transparent;
-  --bs-bg-size: cover;
-  --bs-bg-pos: center;
-  --bs-bg-attach: scroll;
-  --bs-pad-top: 0;
-  --bs-pad-bottom: 0;
-}
-.block-shell.has-bg {
-  padding-top: var(--bs-pad-top);
-  padding-bottom: var(--bs-pad-bottom);
-  isolation: isolate;
-}
-.block-shell.has-style {
-  padding-top: var(--bs-pad-top);
-  padding-bottom: var(--bs-pad-bottom);
-}
-.block-shell .block-bg {
-  position: absolute;
-  inset: 0;
-  background-color: var(--bs-bg-color);
-  background-image: var(--bs-bg-image);
-  background-size: var(--bs-bg-size);
-  background-position: var(--bs-bg-pos);
-  background-attachment: var(--bs-bg-attach);
-  background-repeat: no-repeat;
-  z-index: -2;
-  pointer-events: none;
-}
-.block-shell .block-overlay {
-  position: absolute;
-  inset: 0;
-  background: var(--bs-bg-overlay);
-  z-index: -1;
-  pointer-events: none;
-}
-
-/* When the shell has a bg, suppress the child section's own bg so we
-   actually see it through. We also keep the child positioned so its
-   internal absolute children still behave. */
-.block-shell.has-bg > section {
-  background: transparent !important;
-}
-
-/* Depth layers — parallax-style images behind block content */
-.block-shell.has-depth {
-  isolation: isolate;
-  overflow: hidden;
-}
-.block-shell .depth-layer {
-  position: absolute;
-  inset: -120px;
-  background-size: cover;
-  background-position: center;
-  pointer-events: none;
-  will-change: transform;
-  transform: translate3d(0, calc(var(--depth-y, 0) * 1px), 0);
-}
-
-/* Additional FX */
-.fx-zoom-in > * {
-  opacity: 0;
-  transform: scale(0.95);
-  transition: opacity 0.9s cubic-bezier(0.22, 1, 0.36, 1), transform 0.95s cubic-bezier(0.22, 1, 0.36, 1);
-}
-.fx-zoom-in.is-in > * { opacity: 1; transform: none; }
-
-.fx-tilt { will-change: transform; transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1); transform-style: preserve-3d; }
-.fx-tilt:hover { transition-duration: 0.15s; }
-
-.fx-glow {
-  transition: box-shadow 0.4s cubic-bezier(0.22, 1, 0.36, 1);
-}
-.fx-glow:hover {
-  box-shadow: 0 0 80px -10px rgba(212, 175, 109, 0.4);
-}
-
-.fx-bg-parallax .block-bg {
-  background-attachment: fixed !important;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .fx-zoom-in > *, .fx-tilt {
-    opacity: 1 !important;
-    transform: none !important;
-    transition: none !important;
-  }
-}
-
-/* ====================================================================
-   CREATION VIDEO — full-bleed scroll-synced video that replaces the
-   left/right hand PNGs. The existing --creation-p variable still drives
-   the touch-light glow and the inscription fade. JS in site.js maps
-   --creation-p × video.duration → video.currentTime.
-   ==================================================================== */
-.creation-video {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  pointer-events: none;
-  user-select: none;
-  background: var(--color-void);
-}
-
-/* When the video is mounted, hide the old hand images so they don't
-   compete with the video underneath (kept in the JSON for backward
-   compat in case the user wants to flip back). */
-.creation-sticky:has(.creation-video) .hand {
-  display: none;
+  html { scroll-behavior: auto; }
+  .js .reveal { opacity: 1; transform: none; transition: none; }
 }

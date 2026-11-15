@@ -1,0 +1,31 @@
+---
+import settings from '../../data/settings.json';
+const { email, calendly, availabilityNote } = settings;
+---
+<section id="contact" class="contact">
+  <div class="shell shell--narrow contact-inner">
+    <p class="eyebrow reveal">Contact</p>
+    <h2 class="display contact-title reveal">Let's build<br />something real.</h2>
+    <p class="contact-note reveal">{availabilityNote}</p>
+    <div class="contact-cta reveal">
+      <a href={calendly} target="_blank" rel="noopener noreferrer" class="btn btn--primary" data-magnetic>Book a call</a>
+      <a href={`mailto:${email}`} class="contact-mail">{email}</a>
+    </div>
+    <p class="inscription contact-inscription reveal">Care in the work. Care in the conversation.</p>
+  </div>
+</section>
+
+<style>
+  .contact { border-top: 1px solid var(--line); text-align: center; }
+  .contact-inner { display: flex; flex-direction: column; align-items: center; gap: 1.4rem; }
+  .contact-title { font-size: var(--t-3); }
+  .contact-note { color: var(--color-ink-2); max-width: 42ch; }
+  .contact-cta { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 1.25rem 2rem; margin-top: 0.5rem; }
+  .contact-mail {
+    font-family: var(--font-mono); font-size: 0.95rem; color: var(--color-accent);
+    border-bottom: 1px solid color-mix(in srgb, var(--color-accent) 40%, transparent); padding-bottom: 0.15em;
+    transition: color var(--d-std) var(--ease);
+  }
+  .contact-mail:hover { color: var(--color-accent-hi); }
+  .contact-inscription { margin-top: 1.5rem; font-size: 1.05rem; }
+</style>

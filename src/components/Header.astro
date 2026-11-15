@@ -1,55 +1,42 @@
 ---
-import settings from "../data/settings.json";
-const { name, calendly, availability } = settings;
+import settings from '../data/settings.json';
+const nav = [
+  { label: 'Work', href: '/#work' },
+  { label: 'Private AI', href: '/private-ai/' },
+  { label: 'About', href: '/#about' },
+  { label: 'Contact', href: '/#contact' },
+];
 ---
-
-<header
-  class="fixed top-0 inset-x-0 z-40 bg-void/70 backdrop-blur-md border-b border-iron"
->
-  <div class="max-w-[1600px] mx-auto px-6 sm:px-10 lg:px-14 h-16 flex items-center justify-between">
-    {/* Brand */}
-    <a href="/" class="flex items-center gap-2.5 group" aria-label={`${name} — home`}>
-      <svg viewBox="0 0 32 32" class="w-7 h-7" aria-hidden="true">
-        <rect width="32" height="32" fill="#050403" stroke="#d4af6d" stroke-width="1.5" />
-        <text
-          x="16" y="23" text-anchor="middle"
-          font-family="Anton, Impact, sans-serif"
-          font-size="18" font-weight="700"
-          fill="#d4af6d" letter-spacing="-0.5"
-        >MG</text>
-      </svg>
-      <span class="font-display text-xl tracking-[0.14em] uppercase leading-none">
-        {name}
-      </span>
+<header class="site-head">
+  <div class="shell head-inner">
+    <a href="/" class="brand" aria-label="Mike Gomez, home">
+      <span class="brand-name">Mike Gomez</span>
+      <span class="brand-role">Systems engineer</span>
     </a>
-
-    {/* Nav */}
-    <nav class="hidden md:flex items-center gap-8 text-[12px] uppercase tracking-[0.18em] font-mono text-smoke">
-      <a href="#work" class="link-flare hover:text-bone transition">Work</a>
-      <a href="#how" class="link-flare hover:text-bone transition">How I work</a>
-      <a href="#faq" class="link-flare hover:text-bone transition">FAQ</a>
+    <nav aria-label="Primary">
+      <ul class="nav">
+        {nav.map((n) => <li><a href={n.href}>{n.label}</a></li>)}
+      </ul>
     </nav>
-
-    {/* Status + CTA */}
-    <div class="flex items-center gap-4">
-      <div class="hidden sm:flex items-center gap-2 text-[11px] uppercase tracking-[0.2em] font-mono text-smoke">
-        <span class="relative flex w-2 h-2">
-          <span class="absolute inline-flex w-full h-full rounded-full bg-gold opacity-75 animate-ping"></span>
-          <span class="relative inline-flex w-2 h-2 rounded-full bg-gold"></span>
-        </span>
-        <span>{availability}</span>
-        <span class="text-iron">/</span>
-        <span id="live-time">— PT</span>
-      </div>
-      <a
-        href={calendly}
-        target="_blank"
-        rel="noopener noreferrer"
-        data-magnetic
-        class="inline-flex items-center gap-2 px-4 py-2 bg-bone text-void font-mono text-[11px] uppercase tracking-[0.2em] font-semibold hover:bg-gold hover:text-void transition-colors will-change-transform"
-      >
-        Book a call
-      </a>
-    </div>
+    <a href={settings.calendly} target="_blank" rel="noopener noreferrer" class="btn btn--ghost head-cta">Book a call</a>
   </div>
 </header>
+
+<style>
+  .site-head {
+    position: sticky; top: 0; z-index: 50;
+    background: color-mix(in srgb, var(--bg) 86%, transparent);
+    backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--line);
+  }
+  .head-inner { display: flex; align-items: center; justify-content: space-between; gap: 1rem; min-height: 64px; }
+  .brand { display: flex; align-items: baseline; gap: 0.75rem; white-space: nowrap; }
+  .brand-name { font-family: var(--font-display); font-size: 1.2rem; letter-spacing: -0.01em; }
+  .brand-role { font-family: var(--font-mono); font-size: 0.66rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-3); display: none; }
+  .nav { display: none; gap: 2rem; }
+  .nav a { font-size: 0.92rem; color: var(--ink-2); padding: 0.75rem 0; transition: color 200ms var(--ease); }
+  .nav a:hover { color: var(--ink); }
+  .head-cta { min-height: 40px; padding: 0.45em 1em; font-size: 0.88rem; }
+  @media (min-width: 560px) { .brand-role { display: inline; } }
+  @media (min-width: 860px) { .nav { display: flex; } }
+</style>

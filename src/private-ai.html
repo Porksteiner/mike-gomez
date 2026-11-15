@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Private AI for Law Firms — Mike Gomez</title>
+<meta name="description" content="An AI assistant that runs on a machine inside your office. Draft, summarize, and search your own files without sending client information to anyone.">
+<style>
+:root{--bg:#0d0d0c;--panel:#151513;--line:#2a2925;--text:#ece7dc;--muted:#a39d8f;--gold:#c8a25a;--sand:#d9c7a3}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--text);font-family:"Segoe UI",system-ui,-apple-system,Helvetica,Arial,sans-serif;font-size:17px;line-height:1.6;-webkit-font-smoothing:antialiased}
+a{color:var(--gold)}
+.wrap{max-width:1040px;margin:0 auto;padding:0 24px}
+header{border-bottom:1px solid var(--line)}
+header .wrap{display:flex;justify-content:space-between;align-items:center;padding-top:20px;padding-bottom:20px;gap:16px}
+.mark{font-family:Georgia,"Times New Roman",serif;font-size:19px;letter-spacing:.3px}
+.mark span{color:var(--gold)}
+.btn{display:inline-block;padding:12px 22px;border:1px solid var(--gold);color:var(--bg);background:var(--gold);text-decoration:none;font-weight:600;font-size:15px;border-radius:2px}
+.btn.ghost{background:transparent;color:var(--gold)}
+.btn:hover{background:var(--sand);border-color:var(--sand);color:var(--bg)}
+.btn:focus-visible,a:focus-visible{outline:2px solid var(--sand);outline-offset:3px}
+.kicker{font-size:13px;letter-spacing:3px;text-transform:uppercase;color:var(--gold)}
+.wrap.hero{padding:96px 24px 80px}
+h1{font-family:Georgia,"Times New Roman",serif;font-weight:normal;font-size:clamp(38px,6.2vw,72px);line-height:1.06;margin:22px 0 26px;max-width:15ch;letter-spacing:-.5px}
+h1 em{font-style:normal;color:var(--gold)}
+.lede{font-size:clamp(18px,2.1vw,22px);color:var(--muted);max-width:54ch;margin:0 0 36px}
+.cta{display:flex;gap:14px;flex-wrap:wrap}
+section{padding:80px 0;border-top:1px solid var(--line)}
+h2{font-family:Georgia,"Times New Roman",serif;font-weight:normal;font-size:clamp(28px,3.6vw,42px);line-height:1.15;margin:14px 0 18px;max-width:20ch}
+.sub{color:var(--muted);max-width:58ch;margin:0 0 44px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);border:1px solid var(--line)}
+.cell{background:var(--bg);padding:32px 28px}
+.cell h3{font-family:Georgia,serif;font-weight:normal;font-size:22px;margin:0 0 10px}
+.cell p{margin:0;color:var(--muted);font-size:16px}
+.num{font-family:Georgia,serif;color:var(--gold);font-size:15px;letter-spacing:2px;margin-bottom:18px}
+.split{display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:start}
+.diagram{border:1px solid var(--line);background:var(--panel);padding:32px}
+.office{border:1px solid var(--gold);padding:22px;position:relative}
+.office::before{content:"Your office network";position:absolute;top:-11px;left:16px;background:var(--panel);padding:0 8px;font-size:12px;letter-spacing:2px;text-transform:uppercase;color:var(--gold)}
+.node{border:1px solid var(--line);padding:12px 14px;margin-top:12px;font-size:15px}
+.node b{display:block;font-weight:600}
+.node span{color:var(--muted);font-size:14px}
+.outside{margin-top:20px;padding:14px;border:1px dashed #4a4841;color:var(--muted);font-size:15px;text-align:center}
+.outside s{color:#7d786c}
+ul.plain{list-style:none;padding:0;margin:0}
+ul.plain li{padding:14px 0 14px 30px;border-bottom:1px solid var(--line);position:relative}
+ul.plain li::before{content:"";position:absolute;left:2px;top:23px;width:12px;height:6px;border-left:2px solid var(--gold);border-bottom:2px solid var(--gold);transform:rotate(-45deg)}
+ul.plain.no li::before{width:12px;height:0;border-left:0;transform:none;top:27px;border-color:#6d685d}
+.price{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.card{border:1px solid var(--line);background:var(--panel);padding:30px 26px}
+.card.feature{border-color:var(--gold)}
+.card h3{font-size:13px;letter-spacing:2.5px;text-transform:uppercase;color:var(--gold);margin:0 0 14px;font-weight:600}
+.card .amt{font-family:Georgia,serif;font-size:38px;line-height:1.1}
+.card .amt small{font-size:16px;color:var(--muted);font-family:"Segoe UI",system-ui,sans-serif}
+.card p{color:var(--muted);font-size:15.5px;margin:14px 0 0}
+.note{color:var(--muted);font-size:15px;margin-top:22px;max-width:70ch}
+.about{display:grid;grid-template-columns:1.1fr .9fr;gap:56px}
+.creds{border:1px solid var(--line);padding:26px 28px;background:var(--panel)}
+.creds div{padding:11px 0;border-bottom:1px solid var(--line);font-size:16px}
+.creds div:last-child{border-bottom:0}
+details{border-bottom:1px solid var(--line);padding:18px 0}
+summary{cursor:pointer;font-family:Georgia,serif;font-size:20px;list-style:none;display:flex;justify-content:space-between;gap:20px}
+summary::-webkit-details-marker{display:none}
+summary::after{content:"+";color:var(--gold);font-family:"Segoe UI",sans-serif}
+details[open] summary::after{content:"–"}
+details p{color:var(--muted);margin:12px 0 0;max-width:68ch}
+.final{text-align:center;padding:100px 0}
+.final h2{margin-left:auto;margin-right:auto;max-width:18ch}
+.final .sub{margin-left:auto;margin-right:auto}
+footer{border-top:1px solid var(--line);padding:28px 0;color:var(--muted);font-size:14px}
+footer .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
+@media (max-width:820px){
+  .grid3,.price,.split,.about{grid-template-columns:1fr}
+  .split,.about{gap:36px}
+  .wrap.hero{padding:64px 24px 56px}
+  section{padding:60px 0}
+  header .btn{padding:9px 14px;font-size:14px}
+}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+
+<header><div class="wrap">
+  <div class="mark">Mike Gomez <span>/</span> Private AI</div>
+  <a class="btn ghost" href="#call">Book a fit call</a>
+</div></header>
+
+<main>
+<div class="wrap hero">
+  <div class="kicker">For law firms of 3 to 25 people</div>
+  <h1>AI for your firm that <em>never leaves</em> your office.</h1>
+  <p class="lede">A private assistant that runs on a machine you own. It drafts, summarizes, and answers questions from your own files. Client information is not sent to any outside AI company.</p>
+  <div class="cta">
+    <a class="btn" href="#call">Book a 20-minute fit call</a>
+    <a class="btn ghost" href="#how">See how it works</a>
+  </div>
+</div>
+
+<section><div class="wrap">
+  <div class="kicker">The problem</div>
+  <h2>Your staff want AI. Your duty of confidentiality says be careful.</h2>
+  <p class="sub">ABA Formal Opinion 512 treats generative AI as a confidentiality and competence question. Pasting a client's file into a public chatbot hands it to a third party. Banning AI outright means your people fall behind, or use it quietly anyway.</p>
+  <div class="grid3">
+    <div class="cell"><div class="num">01</div><h3>Draft</h3><p>Letters, memos, discovery responses, and client updates in your firm's voice, from a few lines of instruction.</p></div>
+    <div class="cell"><div class="num">02</div><h3>Summarize</h3><p>Depositions, contracts, medical records, and long email threads reduced to what matters, with page references.</p></div>
+    <div class="cell"><div class="num">03</div><h3>Find</h3><p>Ask a question in plain English and get an answer drawn from your own documents, with the source file shown.</p></div>
+  </div>
+</div></section>
+
+<section id="how"><div class="wrap split">
+  <div>
+    <div class="kicker">How it works</div>
+    <h2>One machine. Inside your walls.</h2>
+    <p class="sub" style="margin-bottom:24px">I build and test a workstation sized for your firm, then ship it. You plug it into power and your network. Your staff open it in a web browser like any other site, except this one only exists in your office.</p>
+    <ul class="plain">
+      <li>Prompts and documents are processed on your machine</li>
+      <li>No subscription to an outside AI service</li>
+      <li>You own the hardware and can switch it off at any time</li>
+      <li>A written AI usage policy for your firm is included</li>
+    </ul>
+  </div>
+  <div class="diagram" role="img" aria-label="Diagram: staff computers and your documents connect to the private AI machine inside your office network. Nothing is sent to outside AI companies.">
+    <div class="office">
+      <div class="node"><b>Staff computers</b><span>Open the assistant in a browser</span></div>
+      <div class="node" style="border-color:var(--gold)"><b>Private AI machine</b><span>The model and your document index live here</span></div>
+      <div class="node"><b>Your files</b><span>Read in place, never copied out</span></div>
+    </div>
+    <div class="outside"><s>Outside AI companies</s> &nbsp;—&nbsp; nothing sent</div>
+  </div>
+</div></section>
+
+<section><div class="wrap split">
+  <div>
+    <div class="kicker">Straight answers</div>
+    <h2>What it is good at</h2>
+    <ul class="plain">
+      <li>First drafts and rewrites</li>
+      <li>Summaries of long documents</li>
+      <li>Searching your own matter files</li>
+      <li>Translation and plain-English explanations for clients</li>
+    </ul>
+  </div>
+  <div>
+    <div class="kicker">&nbsp;</div>
+    <h2>What it is not</h2>
+    <ul class="plain no">
+      <li>Not a legal research database. A lawyer checks every citation.</li>
+      <li>Not as capable as the largest cloud models on the hardest reasoning</li>
+      <li>Not a substitute for professional judgment</li>
+      <li>Not a compliance certificate. It removes one specific risk.</li>
+    </ul>
+  </div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="kicker">Pricing</div>
+  <h2>Clear numbers, no per-seat fees.</h2>
+  <p class="sub">Everyone in the firm can use it. The price does not go up when you hire.</p>
+  <div class="price">
+    <div class="card"><h3>Setup</h3><div class="amt">$6,500 <small>once</small></div><p>Configuration, indexing of your documents, a one-hour staff training session, and a written usage policy.</p></div>
+    <div class="card"><h3>Hardware</h3><div class="amt">At cost</div><p>Typically $3,000 to $6,000 depending on firm size. Bought in your name, with no markup.</p></div>
+    <div class="card feature"><h3>Care plan</h3><div class="amt">$750 <small>/ month</small></div><p>Updates, newer models as they are released, monitoring, re-indexing, and support during set hours.</p></div>
+  </div>
+  <p class="note">Founding offer: the first three firms pay $3,500 for setup in exchange for a testimonial and a reference call.</p>
+</div></section>
+
+<section><div class="wrap about">
+  <div>
+    <div class="kicker">Who builds it</div>
+    <h2>A security professional, not a software salesman.</h2>
+    <p class="sub" style="margin-bottom:0">I'm Mike Gomez. I manage systems and networks for a living. I build private AI systems because the firms that most need AI are the ones that can least afford to leak what they put into it.</p>
+  </div>
+  <div class="creds">
+    <div>Systems and network manager</div>
+    <div>Based in Alabama, serving firms nationwide</div>
+  </div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="kicker">Questions</div>
+  <h2>Before you ask.</h2>
+  <details><summary>Does anything go to the internet?</summary><p>Your prompts and documents do not. They are processed on the machine in your office. I use a separate secure connection to maintain the system, and you can switch that connection off whenever you like.</p></details>
+  <details><summary>How does it compare to ChatGPT?</summary><p>For drafting, summarizing, and working with your own files, it is very useful. On the most difficult reasoning tasks, the largest cloud models are still stronger. The trade is capability at the top end for full control of your data.</p></details>
+  <details><summary>What do we need on our side?</summary><p>A power outlet, a network port, and a place to put a computer about the size of a desktop tower. No server room and no IT department.</p></details>
+  <details><summary>What if we stop the care plan?</summary><p>The machine is yours and keeps working. You stop receiving updates, new models, and support.</p></details>
+  <details><summary>Do you work with firms outside Alabama?</summary><p>Yes. The system ships to you and setup is finished remotely, followed by a video training session.</p></details>
+</div></section>
+
+<section id="call"><div class="wrap final">
+  <div class="kicker">Next step</div>
+  <h2>Twenty minutes to find out if it fits.</h2>
+  <p class="sub">We talk through how your firm works and what you would want it to do. If it is not a fit, I will say so.</p>
+  <a class="btn" id="contactBtn" href="mailto:mike@mikegomez.dev?subject=Private%20AI%20fit%20call">Email to book a fit call</a>
+</div></section>
+</main>
+
+<footer><div class="wrap">
+  <span>© 2026 Mike Gomez</span>
+  <span>Private AI systems for professional firms</span>
+</div></footer>
+
+</body>
+</html>

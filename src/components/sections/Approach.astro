@@ -1,0 +1,56 @@
+---
+import howiwork from '../../data/howiwork.json';
+const {
+  headingLine1, headingLine2Pre, headingLine2Accent, headingLine2Post,
+  lede, inscription, inscriptionAccent, stages,
+} = howiwork;
+---
+<section id="how" class="approach">
+  <div class="shell approach-grid">
+    <div class="approach-head">
+      <p class="eyebrow reveal">How I work</p>
+      <h2 class="display approach-title reveal">
+        {headingLine1}<br />{headingLine2Pre}<span class="accent">{headingLine2Accent}</span>{headingLine2Post}
+      </h2>
+      <p class="approach-lede reveal">{lede}</p>
+      <p class="inscription approach-inscription reveal">{inscription} <span class="accent">{inscriptionAccent}</span></p>
+    </div>
+
+    <ol class="approach-list">
+      {stages.map((s) => (
+        <li class="approach-item reveal">
+          <span class="num">{s.n}</span>
+          <div class="approach-body">
+            <div class="kicker-row">
+              <h3>{s.kicker}</h3>
+              <span class="duration">{s.duration}</span>
+            </div>
+            <p>{s.body}</p>
+          </div>
+        </li>
+      ))}
+    </ol>
+  </div>
+</section>
+
+<style>
+  .approach { border-top: 1px solid var(--line); }
+  .approach-grid { display: grid; gap: 3rem; grid-template-columns: 1fr; }
+  .approach-title { font-size: var(--t-3); }
+  .approach-lede { color: var(--color-ink-2); max-width: 34ch; margin-top: 1.25rem; }
+  .approach-inscription { margin-top: 1.5rem; font-size: 1.05rem; }
+
+  .approach-list { list-style: none; padding: 0; display: flex; flex-direction: column; }
+  .approach-item { display: grid; grid-template-columns: auto 1fr; gap: 1.5rem; padding: 1.75rem 0; border-top: 1px solid var(--line); }
+  .approach-item:last-child { border-bottom: 1px solid var(--line); }
+  .approach-item .num { font-family: var(--font-mono); font-size: 0.85rem; letter-spacing: 0.1em; color: var(--color-accent); padding-top: 0.5rem; }
+  .kicker-row { display: flex; align-items: baseline; justify-content: space-between; gap: 1rem; flex-wrap: wrap; margin-bottom: 0.5rem; }
+  .approach-body h3 { font-size: var(--t-2); font-weight: 400; }
+  .duration { font-family: var(--font-mono); font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.16em; color: var(--color-ink-3); white-space: nowrap; }
+  .approach-body p { color: var(--color-ink-2); max-width: 56ch; }
+
+  @media (min-width: 900px) {
+    .approach-grid { grid-template-columns: minmax(280px, 0.9fr) 1.3fr; gap: 4rem; }
+    .approach-head { position: sticky; top: 100px; align-self: start; }
+  }
+</style>

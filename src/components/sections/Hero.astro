@@ -1,0 +1,60 @@
+---
+import hero from '../../data/hero.json';
+import settings from '../../data/settings.json';
+const {
+  eyebrow, line1, line2, line3Accent, line3Rest, line4, bio,
+  currentlyBuildingLabel, currentlyBuildingLines, ctaPrimaryLabel, ctaSecondaryLabel,
+} = hero;
+---
+<section id="top" class="hero">
+  <div class="hero-ambient" aria-hidden="true"></div>
+
+  <div class="shell hero-inner">
+    <p class="eyebrow reveal">{eyebrow}</p>
+
+    <h1 class="display hero-title">
+      <span class="hl"><span class="hl-in">{line1}</span></span>
+      <span class="hl"><span class="hl-in">{line2}</span></span>
+      <span class="hl"><span class="hl-in"><span class="accent">{line3Accent}</span>{line3Rest}</span></span>
+      <span class="hl-underline" aria-hidden="true">
+        <svg viewBox="0 0 240 14" preserveAspectRatio="none" fill="none">
+          <path d="M4 9 C 52 3.5, 104 3.5, 142 8 S 212 12.5, 236 5.5" stroke="currentColor" stroke-width="3" stroke-linecap="round" />
+        </svg>
+      </span>
+      <span class="hl"><span class="hl-in">{line4}</span></span>
+    </h1>
+
+    <p class="hero-sub reveal">{bio}</p>
+    <div class="hero-cta reveal">
+      <a href={settings.calendly} target="_blank" rel="noopener noreferrer" class="btn btn--primary" data-magnetic>{ctaPrimaryLabel}</a>
+      <a href="#work" class="btn btn--ghost">{ctaSecondaryLabel}</a>
+    </div>
+    <div class="hero-building reveal">
+      <span class="eyebrow">{currentlyBuildingLabel}</span>
+      <ul>
+        {currentlyBuildingLines.map((l) => <li>{l}</li>)}
+      </ul>
+    </div>
+  </div>
+</section>
+
+<style>
+  .hero { position: relative; min-height: 100svh; display: grid; align-items: center; overflow: clip; isolation: isolate; }
+  /* calm, warm ambient — a soft gold light, not a spectacle */
+  .hero-ambient {
+    position: absolute; inset: 0; z-index: -1; pointer-events: none;
+    background: radial-gradient(56% 46% at 50% 32%, color-mix(in srgb, var(--color-accent) 13%, transparent), transparent 72%);
+  }
+  .hero-inner { display: flex; flex-direction: column; gap: 1.4rem; padding-block: 7rem 3rem; }
+  .hero-title { font-size: var(--t-hero); max-width: 16ch; }
+  .hero-sub { font-size: var(--t-lead); color: var(--color-ink-2); max-width: 46ch; }
+  .hero-cta { display: flex; flex-wrap: wrap; gap: 1rem; margin-top: 0.5rem; }
+  .hero-building { margin-top: 1.75rem; display: flex; flex-direction: column; gap: 0.6rem; }
+  .hero-building ul { list-style: none; padding: 0; display: flex; flex-wrap: wrap; gap: 0.6rem 1.5rem; }
+  .hero-building li { font-family: var(--font-mono); font-size: 0.78rem; color: var(--color-ink-2); padding-left: 1rem; position: relative; }
+  .hero-building li::before { content: "→"; position: absolute; left: 0; color: var(--color-accent); }
+
+  /* hand-drawn underline under "Built with care." — the human, made-by-hand touch */
+  .hl-underline { display: block; width: min(99%, 56rem); height: 0.34em; margin: -0.04em 0 0.06em; color: var(--color-accent); }
+  .hl-underline svg { width: 100%; height: 100%; overflow: visible; }
+</style>
