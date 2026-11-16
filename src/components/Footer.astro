@@ -13,13 +13,15 @@ const year = new Date().getFullYear();
       <p class="foot-name">Mike Gomez <span class="muted">— Systems engineer, Alabama</span></p>
       <ul class="foot-links">
         <li><a href="/#work">Work</a></li>
+        <li><a href="/work/falkryn/">FALKRYN case study</a></li>
+        <li><a href="/work/baitiq/">BaitIQ case study</a></li>
         <li><a href="/private-ai/">Private AI</a></li>
         <li><a href="/#about">About</a></li>
         <li><a href={`mailto:${settings.email}`}>{settings.email}</a></li>
         <li><a href="https://apps.apple.com/us/app/baitiq/id6768169415" target="_blank" rel="noopener noreferrer">BaitIQ on the App Store</a></li>
       </ul>
     </div>
-    <p class="label fine">© {year} Mike Gomez. Designed and built in-house.</p>
+    <p class="label fine">© {year} Mike Gomez. Designed and built in-house. Last updated November 2026.</p>
   </div>
 </footer>
 
@@ -35,5 +37,5 @@ const year = new Date().getFullYear();
   .foot-links a { color: var(--ink-2); font-size: 0.95rem; display: inline-block; padding: 0.35rem 0; transition: color 200ms var(--ease); }
   .foot-links a:hover { color: var(--gold-hi); }
   .fine { margin-top: 2.5rem; }
-  @media (min-width: 860px) { .foot-row { grid-template-columns: 1fr auto; align-items: center; } }
+  @media (min-width: 860px) { .foot-row { grid-template-columns: auto 1fr; gap: 3rem; align-items: center; } .foot-name { white-space: nowrap; } .foot-links { justify-content: flex-end; } }
 </style>

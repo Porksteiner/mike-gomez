@@ -57,17 +57,11 @@ p { text-wrap: pretty; }
 section { padding-block: clamp(4.5rem, 9vw, 8rem); }
 .rule { border-top: 1px solid var(--line); }
 
-.label {
-  font-family: var(--font-mono);
-  font-size: 0.7rem;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: var(--ink-3);
-}
+.label { font-size: 0.88rem; color: var(--ink-3); }
 .label--gold { color: var(--gold); }
 .lead { font-size: clamp(1.1rem, 1rem + 0.5vw, 1.3rem); color: var(--ink-2); line-height: 1.55; }
 .muted { color: var(--ink-2); }
-em.gold { font-style: italic; color: var(--gold); }
+
 
 .btn {
   display: inline-flex; align-items: center; justify-content: center; gap: 0.55em;
@@ -87,10 +81,4 @@ em.gold { font-style: italic; color: var(--gold); }
 .skip-link { position: absolute; left: -9999px; top: 0; padding: 0.7rem 1rem; background: var(--gold); color: var(--bg); z-index: 100; }
 .skip-link:focus { left: 1rem; top: 1rem; }
 
-/* Reveal: content is visible by default; JS only adds a gentle rise. */
-.js .reveal { opacity: 0; transform: translateY(14px); transition: opacity 700ms var(--ease), transform 700ms var(--ease); }
-.js .reveal.is-in { opacity: 1; transform: none; }
-@media (prefers-reduced-motion: reduce) {
-  html { scroll-behavior: auto; }
-  .js .reveal { opacity: 1; transform: none; transition: none; }
-}
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }

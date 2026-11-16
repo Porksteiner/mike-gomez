@@ -2,44 +2,63 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import settings from '../data/settings.json';
 
-const disciplines = [
-  { n: '01', name: 'Software', note: 'Desktop tools that run offline and keep records straight.' },
-  { n: '02', name: 'Mobile apps', note: 'Designed, built, and shipped to the App Store.' },
-  { n: '03', name: 'Private AI', note: 'Assistants that run on your own machine, not someone else’s cloud.' },
-  { n: '04', name: 'Websites', note: 'Fast, clear sites for businesses that need customers to call.' },
+const lanes = [
+  { name: 'Software', note: 'Desktop tools that run offline and keep records straight.' },
+  { name: 'Mobile apps', note: 'Designed, built, and shipped to the App Store.' },
+  { name: 'Private AI', note: 'Assistants that run on your own machine, not someone else’s cloud.' },
+  { name: 'Websites', note: 'Fast, clear sites for businesses that need customers to call.' },
 ];
 
 const more = [
   {
     group: 'Software',
     items: [
-      { name: 'Helm', kind: 'AI operations dashboard', status: 'In daily use', desc: 'A desktop command center that hands approved tasks to a crew of AI agents and reports back, including over Telegram.', stack: 'Electron · Node · Three.js' },
-      { name: 'WISP Builder', kind: 'Compliance tool', status: 'Complete', img: '/media/wisp.jpg', desc: 'Answers a tax preparer’s plain-English questions and writes their required security plan. Runs offline in a single file.', stack: 'HTML · JavaScript' },
+      { name: 'Helm', kind: 'AI operations dashboard', status: 'In use', href: '/work/helm/', desc: 'A desktop command center that hands approved tasks to a crew of AI agents and reports back, including over Telegram.', stack: 'Electron, Node, Three.js' },
+      { name: 'WISP Builder', kind: 'Compliance tool', status: 'Complete', img: '/media/wisp.jpg', desc: 'Answers a tax preparer’s plain-English questions and writes their required security plan. Runs offline in a single file.', stack: 'HTML, JavaScript' },
     ],
   },
   {
     group: 'Websites',
     items: [
-      { name: 'BaitIQ website', kind: 'Product site · baitiq.dev', status: 'Live', img: '/media/baitiq-site.jpg', href: 'https://baitiq.dev', desc: 'The marketing site for BaitIQ: what the app does, pricing, and a fishing blog built to be found on Google.', stack: 'Astro · Vercel' },
-      { name: 'Credit Habit Academy', kind: 'Credit education', status: 'Client · in progress', img: '/media/credit.jpg', desc: 'Brand and booking site for a credit education practice, with scheduling and payment built in.', stack: 'Astro · Stripe' },
+      { name: 'BaitIQ website', kind: 'Product site, baitiq.dev', status: 'Live', img: '/media/baitiq-site.jpg', href: 'https://baitiq.dev', ext: true, desc: 'The marketing site for BaitIQ: what the app does, pricing, and a fishing blog built to be found on Google.', stack: 'Astro, Vercel' },
+      { name: 'Credit Habit Academy', kind: 'Credit education', status: 'Client, in progress', img: '/media/credit.jpg', desc: 'Brand and booking site for a credit education practice, with scheduling and payment built in.', stack: 'Astro, Stripe' },
     ],
   },
   {
     group: 'Concepts',
     note: 'Designs I made on my own for local businesses. They are not clients.',
     items: [
-      { name: 'Dinosaur Tattoo Company', kind: 'Tattoo studio · Dothan, AL', status: 'Concept · not a client', concept: true, img: '/media/concept-dino.jpg', desc: 'Tap an artist, see that artist\u2019s work, and book with them directly.', stack: 'HTML · CSS' },
-      { name: 'S&A Hair Co.', kind: 'Salon · Dothan, AL', status: 'Concept · not a client', concept: true, img: '/media/concept-sahair.jpg', desc: 'Every chair gets its own page: the stylist, her work, and her booking link.', stack: 'HTML · CSS' },
-      { name: 'Vittles Cafe', kind: 'Diner · Ozark, AL', status: 'Concept · not a client', concept: true, img: '/media/concept-vittles.jpg', desc: 'A menu-first site for a country diner, with call-to-order and directions up top.', stack: 'HTML · CSS' },
+      { name: 'Dinosaur Tattoo Company', kind: 'Tattoo studio, Dothan, AL', status: 'Concept, not a client', concept: true, img: '/media/concept-dino.jpg', desc: 'Tap an artist, see that artist’s work, and book with them directly.', stack: 'HTML, CSS' },
+      { name: 'S&A Hair Co.', kind: 'Salon, Dothan, AL', status: 'Concept, not a client', concept: true, img: '/media/concept-sahair.jpg', desc: 'Every chair gets its own page: the stylist, her work, and her booking link.', stack: 'HTML, CSS' },
+      { name: 'Vittles Cafe', kind: 'Diner, Ozark, AL', status: 'Concept, not a client', concept: true, img: '/media/concept-vittles.jpg', desc: 'A menu-first site for a country diner, with call-to-order and directions up top.', stack: 'HTML, CSS' },
     ],
   },
+];
+
+// Each row names where the skill was actually used.
+const engineering = [
+  { area: 'Systems languages', tools: 'Rust', proof: 'FALKRYN core: parsers, ledger, video, and local AI', href: '/work/falkryn/' },
+  { area: 'Mobile', tools: 'React Native, Expo', proof: 'BaitIQ, live on the App Store', href: '/work/baitiq/' },
+  { area: 'Backend and data', tools: 'PostgreSQL, Supabase, Axum, SQLite', proof: 'BaitIQ backend and the FALKRYN team portal', href: '/work/falkryn/' },
+  { area: 'AI integration', tools: 'Local models, GPT-4o, ONNX Runtime', proof: 'Fact-checked report drafts, photo analysis, object detection', href: '/work/falkryn/' },
+  { area: 'Security', tools: 'Encryption at rest, signed records', proof: 'FALKRYN’s tamper-evident ledger and evidence packages', href: '/work/falkryn/' },
+  { area: 'Desktop', tools: 'Tauri, Electron', proof: 'FALKRYN and Helm', href: '/work/helm/' },
+  { area: 'Payments', tools: 'RevenueCat', proof: 'BaitIQ subscriptions', href: '/work/baitiq/' },
+  { area: 'Web and hosting', tools: 'Astro, Vercel, Fly.io', proof: 'This site, baitiq.dev, and app.falkryn.com' },
 ];
 
 const steps = [
   { t: 'A call', d: 'Thirty minutes on what you need and whether I’m the right person for it. If I’m not, I’ll say so.' },
   { t: 'A fixed price', d: 'A written scope, timeline, and price within a day. No hourly meter.' },
   { t: 'Working software early', d: 'You see something real inside the first week, and regular updates after.' },
-  { t: 'Launch and support', d: 'I ship it, walk you through it, and stay on for thirty days. You own the code.' },
+  { t: 'Launch and support', d: 'I ship it, walk you through it, and stay on for thirty days.' },
+];
+
+const faq = [
+  { q: 'Who owns the code?', a: 'You do. Once the project is paid, the source code, designs, and assets are yours. I keep only the right to mention the work, and only if you agree.' },
+  { q: 'What if the scope changes?', a: 'The price we agree on is the price you pay. If you add something mid-build, I give you a clear estimate before any extra work starts. If I underestimated, that is on me.' },
+  { q: 'How does payment work?', a: 'Usually half up front and half at launch. Longer projects can split the second half into milestones.' },
+  { q: 'Will you sign an NDA?', a: 'Yes. Send yours, or I can share a one-page mutual NDA.' },
 ];
 
 const jsonld = {
@@ -54,20 +73,17 @@ const jsonld = {
 };
 ---
 <BaseLayout jsonld={jsonld}>
-  <!-- HERO -->
   <section class="hero">
     <div class="shell">
-      <p class="label label--gold">Systems engineer · Alabama</p>
-      <h1>I build what the business <em class="gold">actually needs.</em></h1>
-      <p class="lead hero-lead">Software, mobile apps, private AI, and websites. One engineer who designs it, builds it, secures it, and ships it.</p>
-      <div class="hero-cta">
+      <h1>I build what the business actually needs.</h1>
+      <p class="lead hero-lead">Software, mobile apps, private AI, and websites. One systems engineer in Alabama who designs it, builds it, secures it, and ships it.</p>
+      <div class="cta-row">
         <a href={settings.calendly} target="_blank" rel="noopener noreferrer" class="btn btn--primary">Book a 30-minute call</a>
         <a href="#work" class="btn btn--ghost">See the work</a>
       </div>
-      <ul class="disc">
-        {disciplines.map((d) => (
+      <ul class="lanes">
+        {lanes.map((d) => (
           <li>
-            <span class="label label--gold">{d.n}</span>
             <h2>{d.name}</h2>
             <p>{d.note}</p>
           </li>
@@ -76,104 +92,95 @@ const jsonld = {
     </div>
   </section>
 
-  <!-- FEATURED: FALKRYN -->
   <section id="work" class="rule feat">
     <div class="shell">
-      <header class="feat-head reveal">
-        <p class="label">Featured · Software</p>
+      <header class="feat-head">
         <h2>FALKRYN</h2>
         <p class="lead">A flight logbook for drone teams that has to work with no internet and hold up as a record.</p>
       </header>
 
-      <figure class="screen reveal">
-        <div class="screen-bar"><i></i><i></i><i></i><span class="label">FALKRYN · desktop</span></div>
+      <figure class="screen">
         <video data-inview muted loop playsinline preload="none" poster="/media/falkryn.jpg" width="1280" height="800"
           aria-label="Screens from FALKRYN: live drone tracking, a flight replayed over aerial imagery, fleet readiness, and the evidence ledger">
           <source src="/media/falkryn.webm" type="video/webm" />
           <source src="/media/falkryn.mp4" type="video/mp4" />
         </video>
-        <figcaption class="label">Screens from the working build</figcaption>
+        <figcaption>Screens from the working build</figcaption>
       </figure>
 
       <div class="feat-body">
-        <div class="reveal">
+        <div>
           <p>Police and agriculture drone units need to prove what flew, where, and who was at the controls. FALKRYN keeps aircraft, batteries, pilots, and every flight in one place on the team’s own computer.</p>
-          <p class="feat-status"><span class="dot"></span>Version 0.2 · Windows · team portal live</p>
+          <p class="feat-status"><span class="dot"></span>Version 0.3 on Windows, team portal live</p>
+          <p class="feat-stack">Rust, Tauri, React, SQLite, PostgreSQL</p>
+          <a class="btn btn--ghost" href="/work/falkryn/">Read the FALKRYN case study</a>
         </div>
-        <ul class="facts reveal">
-          <li><strong>Live tracking.</strong> Watches aircraft in the air on a 3D map, receive-only.</li>
-          <li><strong>Flight replay.</strong> Imports flight logs and replays them over the team’s own maps.</li>
+        <ul class="facts">
+          <li><strong>Live tracking and video.</strong> Aircraft on a 3D map with the drone’s video feed, receive-only.</li>
           <li><strong>Tamper-evident ledger.</strong> Every change is signed and chained, so edits can’t be hidden.</li>
+          <li><strong>Local AI report drafts.</strong> Written on the same computer, then fact-checked against the record.</li>
           <li><strong>Works offline.</strong> Encrypted on disk, with maps stored locally for the field.</li>
         </ul>
-        <p class="label stack reveal">Rust · Tauri · React · SQLite · Postgres</p>
       </div>
     </div>
   </section>
 
-  <!-- FEATURED: BAITIQ -->
-  <section class="rule feat feat--phone">
+  <section class="rule feat">
     <div class="shell phone-grid">
-      <figure class="phone reveal">
+      <figure class="phone">
         <video data-inview muted loop playsinline preload="none" poster="/media/baitiq-scan.jpg" width="480" height="1044"
           aria-label="BaitIQ on an iPhone: a photo of a pond is analysed and three ranked bait recommendations appear">
           <source src="/media/baitiq-scan.webm" type="video/webm" />
           <source src="/media/baitiq-scan.mp4" type="video/mp4" />
         </video>
-        <figcaption class="label">Recorded on an iPhone</figcaption>
+        <figcaption>Recorded on an iPhone</figcaption>
       </figure>
 
-      <div>
-        <header class="feat-head reveal">
-          <p class="label">Featured · Mobile app</p>
+      <div class="phone-copy">
+        <header class="feat-head">
           <h2>BaitIQ</h2>
           <p class="lead">Point your phone at the water. It tells you what to throw and where to cast.</p>
         </header>
-        <div class="reveal">
-          <p>An AI fishing companion I designed, built, and shipped on my own. It is live on the App Store with subscriptions, accounts, and a social side.</p>
-          <p class="feat-status"><span class="dot"></span>Live on the App Store</p>
-        </div>
-        <ul class="facts reveal">
+        <p>An AI fishing companion I designed, built, and shipped on my own, with accounts, subscriptions, and a social side.</p>
+        <p class="feat-status"><span class="dot"></span>Live on the App Store since May 2026</p>
+        <ul class="facts">
           <li><strong>AI spot analysis.</strong> One photo becomes ranked bait picks, casting zones, and a confidence score.</li>
           <li><strong>Bite score.</strong> Weather, moon phase, and pressure combined into one number for today.</li>
           <li><strong>Catch log and crews.</strong> Logged catches, friends, and a leaderboard.</li>
         </ul>
-        <p class="label stack reveal">React Native · Expo · Supabase · GPT-4o</p>
-        <p class="reveal"><a class="link" href="https://apps.apple.com/us/app/baitiq/id6768169415" target="_blank" rel="noopener noreferrer">View on the App Store</a></p>
+        <p class="feat-stack">React Native, Expo, Supabase, GPT-4o</p>
+        <div class="cta-row">
+          <a class="btn btn--ghost" href="/work/baitiq/">Read the BaitIQ case study</a>
+          <a class="link" href="https://apps.apple.com/us/app/baitiq/id6768169415" target="_blank" rel="noopener noreferrer">View on the App Store</a>
+        </div>
       </div>
     </div>
   </section>
 
-  <!-- PRIVATE AI -->
   <section class="rule ai">
     <div class="shell ai-grid">
-      <div class="reveal">
-        <p class="label">Service · Private AI</p>
-        <h2>AI that never leaves <em class="gold">your office.</em></h2>
+      <div>
+        <h2>AI that never leaves your office.</h2>
         <p class="lead">For law firms and other offices that can’t paste client files into a public chatbot.</p>
         <p class="muted">I build and install an assistant that runs on a machine you own. It drafts, summarizes, and answers questions from your own documents. Nothing is sent to an outside AI company.</p>
-        <a href="/private-ai/" class="btn btn--ghost">How it works and what it costs</a>
+        <a href="/private-ai/" class="btn btn--ghost">See how Private AI works and what it costs</a>
       </div>
-      <a href="/private-ai/" class="ai-shot reveal" aria-label="Open the Private AI page">
+      <a href="/private-ai/" class="ai-shot" aria-label="Open the Private AI page">
         <img src="/media/privateai.jpg" alt="The Private AI offer page" loading="lazy" width="1200" height="750" />
       </a>
     </div>
   </section>
 
-  <!-- MORE WORK -->
   <section class="rule more">
     <div class="shell">
-      <header class="reveal">
-        <p class="label">More work</p>
-        <h2>Different problems. Same standard.</h2>
-      </header>
+      <h2>More work</h2>
       {more.map((g) => (
         <div class="group">
-          <h3 class="label label--gold group-name">{g.group}</h3>
+          <h3 class="group-name">{g.group}</h3>
           {g.note && <p class="group-note">{g.note}</p>}
           <ul class="ledger">
             {g.items.map((it) => (
-              <li class="row reveal">
+              <li class="row">
                 <div class="row-thumb">
                   {it.concept && <span class="concept-stamp">Concept</span>}
                   {it.img
@@ -181,13 +188,13 @@ const jsonld = {
                     : <span class="mono-mark" aria-hidden="true">{it.name.slice(0, 1)}</span>}
                 </div>
                 <div class="row-main">
-                  <h4>{it.href ? <a class="row-link" href={it.href} target="_blank" rel="noopener noreferrer">{it.name}</a> : it.name}</h4>
+                  <h4>{it.href ? <a class="row-link" href={it.href} target={it.ext ? '_blank' : undefined} rel={it.ext ? 'noopener noreferrer' : undefined}>{it.name}</a> : it.name}</h4>
                   <p class="row-kind">{it.kind}</p>
                   <p class="row-desc">{it.desc}</p>
                 </div>
                 <div class="row-meta">
-                  <span class="label">{it.status}</span>
-                  <span class="label">{it.stack}</span>
+                  <span class="row-status">{it.status}</span>
+                  <span>{it.stack}</span>
                 </div>
               </li>
             ))}
@@ -197,35 +204,63 @@ const jsonld = {
     </div>
   </section>
 
-  <!-- ABOUT -->
   <section id="about" class="rule about">
-    <div class="shell about-grid">
-      <div class="reveal">
-        <p class="label">About</p>
+    <div class="shell">
+      <div class="about-grid">
         <h2>One person, start to finish.</h2>
+        <div>
+          <p class="lead">I’m Mike. I manage systems and networks for a living, and I build software because the tools I needed didn’t exist.</p>
+          <p class="muted">That mix is the point. The person designing your app also knows how it gets secured, hosted, and kept running. You talk to me, I build it, and I’m the one who answers when something needs attention.</p>
+        </div>
       </div>
-      <div class="reveal">
-        <p class="lead">I’m Mike. I manage systems and networks for a living, and I build software because the tools I needed didn’t exist.</p>
-        <p class="muted">That mix is the point. The person designing your app also knows how it gets secured, hosted, and kept running. You talk to me, I build it, and I’m the one who answers when something needs attention.</p>
+
+      <div class="eng">
+        <h3>What I work in, and where I’ve used it</h3>
+        <table>
+          <thead><tr><th scope="col">Area</th><th scope="col">Tools</th><th scope="col">Used in</th></tr></thead>
+          <tbody>
+            {engineering.map((e) => (
+              <tr>
+                <th scope="row">{e.area}</th>
+                <td class="tools">{e.tools}</td>
+                <td>{e.href ? <a class="row-link" href={e.href}>{e.proof}</a> : e.proof}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+      <div class="about-grid process">
+        <h3 class="process-title">How a project runs</h3>
         <ol class="steps">
           {steps.map((s, i) => (
             <li>
-              <span class="label label--gold">0{i + 1}</span>
-              <div><h3>{s.t}</h3><p>{s.d}</p></div>
+              <span class="step-n">{i + 1}</span>
+              <div><h4>{s.t}</h4><p>{s.d}</p></div>
             </li>
           ))}
         </ol>
       </div>
+
+      <div class="about-grid process">
+        <h3 class="process-title">Common questions</h3>
+        <div class="faq">
+          {faq.map((f) => (
+            <details>
+              <summary>{f.q}</summary>
+              <p>{f.a}</p>
+            </details>
+          ))}
+        </div>
+      </div>
     </div>
   </section>
 
-  <!-- CONTACT -->
   <section id="contact" class="rule contact">
-    <div class="shell contact-inner reveal">
-      <p class="label label--gold">Contact</p>
+    <div class="shell">
       <h2>Tell me what you need built.</h2>
       <p class="lead">An idea, a broken process, or a full spec. I reply within one business day.</p>
-      <div class="hero-cta">
+      <div class="cta-row">
         <a href={settings.calendly} target="_blank" rel="noopener noreferrer" class="btn btn--primary">Book a 30-minute call</a>
         <a href={`mailto:${settings.email}`} class="btn btn--ghost">{settings.email}</a>
       </div>
@@ -235,55 +270,53 @@ const jsonld = {
 </BaseLayout>
 
 <style>
+  .cta-row { display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem 1.5rem; margin-top: 2rem; }
+
   /* HERO */
   .hero { padding-block: clamp(4rem, 10vw, 8.5rem) clamp(3.5rem, 7vw, 6rem); }
-  .hero h1 { font-size: clamp(2.6rem, 1.2rem + 6.4vw, 6rem); max-width: 14ch; margin-top: 1.25rem; font-weight: 350; }
-  .hero-lead { max-width: 44ch; margin-top: 1.75rem; }
-  .hero-cta { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 2rem; }
-  .disc { display: grid; gap: 0; margin-top: clamp(3.5rem, 7vw, 6rem); border-top: 1px solid var(--line); }
-  .disc li { padding: 1.5rem 0; border-bottom: 1px solid var(--line); }
-  .disc h2 { font-size: 1.45rem; margin-top: 0.6rem; }
-  .disc p { color: var(--ink-2); font-size: 0.95rem; margin-top: 0.5rem; max-width: 30ch; }
+  .hero h1 { font-size: clamp(2.6rem, 1.2rem + 6.4vw, 6rem); max-width: 14ch; font-weight: 350; }
+  .hero-lead { max-width: 46ch; margin-top: 1.75rem; }
+  .lanes { display: grid; margin-top: clamp(3.5rem, 7vw, 6rem); border-top: 1px solid var(--line); }
+  .lanes li { padding: 1.5rem 0; border-bottom: 1px solid var(--line); }
+  .lanes h2 { font-size: 1.45rem; }
+  .lanes p { color: var(--ink-2); font-size: 0.95rem; margin-top: 0.5rem; max-width: 30ch; }
   @media (min-width: 640px) {
-    .disc { grid-template-columns: repeat(2, 1fr); }
-    .disc li { padding: 1.75rem 1.5rem 1.75rem 0; }
+    .lanes { grid-template-columns: repeat(2, 1fr); }
+    .lanes li { padding: 1.75rem 1.5rem 1.75rem 0; }
   }
   @media (min-width: 1000px) {
-    .disc { grid-template-columns: repeat(4, 1fr); }
-    .disc li { border-bottom: 0; border-right: 1px solid var(--line); padding: 1.75rem 1.5rem 0.5rem; }
-    .disc li:first-child { padding-left: 0; }
-    .disc li:last-child { border-right: 0; }
+    .lanes { grid-template-columns: repeat(4, 1fr); }
+    .lanes li { border-bottom: 0; border-right: 1px solid var(--line); padding: 1.75rem 1.5rem 0.5rem; }
+    .lanes li:first-child { padding-left: 0; }
+    .lanes li:last-child { border-right: 0; }
   }
 
-  /* SHARED SECTION TYPE */
-  section h2 { font-size: clamp(2rem, 1.3rem + 3vw, 3.6rem); margin-top: 0.9rem; }
-  .feat-head .lead, .ai .lead { max-width: 40ch; margin-top: 1rem; }
+  /* SECTION HEADINGS */
+  .feat-head h2 { font-size: clamp(2.6rem, 1.4rem + 5vw, 5rem); }
+  .ai h2, .more > .shell > h2, .about h2, .contact h2 { font-size: clamp(2rem, 1.3rem + 3vw, 3.6rem); }
+  .feat-head .lead, .ai .lead, .contact .lead { max-width: 40ch; margin-top: 1rem; }
 
   /* FEATURED */
-  .feat-head h2 { font-size: clamp(2.6rem, 1.4rem + 5vw, 5rem); }
-  .screen { margin-top: clamp(2rem, 4vw, 3.25rem); border: 1px solid var(--line-2); border-radius: var(--radius); overflow: hidden; background: #070807; }
-  .screen-bar { display: flex; align-items: center; gap: 6px; padding: 0.6rem 0.9rem; border-bottom: 1px solid var(--line); background: var(--card); }
-  .screen-bar i { width: 9px; height: 9px; border-radius: 50%; background: var(--line-2); }
-  .screen-bar .label { margin-left: 0.6rem; }
-  .screen video { width: 100%; aspect-ratio: 1280 / 800; object-fit: cover; }
-  .screen figcaption { padding: 0.7rem 0.9rem; border-top: 1px solid var(--line); background: var(--card); }
-
-  .feat-body { display: grid; gap: 1.75rem; margin-top: clamp(2rem, 4vw, 3rem); }
-  .feat-body p, .phone-grid p { color: var(--ink-2); max-width: 52ch; }
-  .feat-status { display: flex; align-items: center; gap: 0.6rem; margin-top: 1.1rem; font-size: 0.92rem; color: var(--ink) !important; }
+  .screen { margin: clamp(2rem, 4vw, 3.25rem) 0 0; }
+  .screen video { width: 100%; aspect-ratio: 1280 / 800; object-fit: cover; border: 1px solid var(--line-2); border-radius: var(--radius); background: #070807; }
+  .screen figcaption, .phone figcaption { font-size: 0.85rem; color: var(--ink-3); margin-top: 0.75rem; }
+  .feat-body { display: grid; gap: 2rem; margin-top: clamp(2rem, 4vw, 3rem); }
+  .feat-body p, .phone-copy > p { color: var(--ink-2); max-width: 52ch; }
+  .feat-status { display: flex; align-items: center; gap: 0.6rem; margin-top: 1.1rem; font-size: 0.95rem; }
+  p.feat-status { color: var(--ink); }
   .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--gold); flex: none; }
-  .facts { display: grid; gap: 0; border-top: 1px solid var(--line); }
+  .feat-stack { font-size: 0.9rem; margin-top: 0.5rem; }
+  p.feat-stack { color: var(--ink-3); }
+  .feat-body .btn { margin-top: 1.75rem; }
+  .facts { border-top: 1px solid var(--line); }
   .facts li { padding: 0.9rem 0; border-bottom: 1px solid var(--line); color: var(--ink-2); font-size: 0.97rem; }
   .facts strong { color: var(--ink); font-weight: 500; }
-  .stack { grid-column: 1 / -1; }
-  @media (min-width: 900px) {
-    .feat-body { grid-template-columns: 1fr 1fr; gap: 2rem 4rem; }
-  }
+  @media (min-width: 900px) { .feat-body { grid-template-columns: 1fr 1fr; gap: 4rem; } }
 
   .phone-grid { display: grid; gap: 2.5rem; align-items: center; }
-  .phone-grid .facts, .phone-grid .stack, .phone-grid .reveal { margin-top: 1.5rem; }
-  .phone-grid .feat-head { margin-top: 0; }
-  .phone { justify-self: center; width: min(100%, 300px); }
+  .phone-copy > p:first-of-type { margin-top: 1.5rem; }
+  .phone-copy .facts { margin-top: 1.5rem; }
+  .phone { margin: 0; justify-self: center; width: min(100%, 300px); }
   .phone video { width: 100%; aspect-ratio: 480 / 1044; object-fit: cover; border-radius: 34px; border: 1px solid var(--line-2); box-shadow: 0 0 0 7px #161513, 0 30px 60px -30px rgba(0, 0, 0, 0.9); background: #05080c; }
   .phone figcaption { text-align: center; margin-top: 1.5rem; }
   @media (min-width: 900px) {
@@ -296,53 +329,75 @@ const jsonld = {
   .ai-grid { display: grid; gap: 2.5rem; align-items: center; }
   .ai .muted { max-width: 50ch; margin-top: 1rem; }
   .ai .btn { margin-top: 1.75rem; }
-  .ai-shot { display: block; border: 1px solid var(--line-2); border-radius: var(--radius); overflow: hidden; transition: border-color 250ms var(--ease); }
+  .ai-shot { display: block; border: 1px solid var(--line-2); border-radius: var(--radius); overflow: hidden; }
   .ai-shot:hover { border-color: var(--gold); }
   .ai-shot img { width: 100%; aspect-ratio: 16 / 10; object-fit: cover; object-position: top; }
   @media (min-width: 900px) { .ai-grid { grid-template-columns: 1fr 1fr; gap: 4.5rem; } }
 
   /* MORE WORK */
-  .group { margin-top: clamp(2.5rem, 5vw, 4rem); }
-  .group-name { font-family: var(--font-mono); font-weight: 400; padding-bottom: 1rem; border-bottom: 1px solid var(--line-2); }
+  .group { margin-top: clamp(2.5rem, 5vw, 3.5rem); }
+  .group-name { font-family: var(--font-sans); font-size: 0.95rem; font-weight: 600; letter-spacing: 0; color: var(--gold); padding-bottom: 0.9rem; border-bottom: 1px solid var(--line-2); }
+  .group-note { color: var(--ink-2); font-size: 0.95rem; padding: 1rem 0; border-bottom: 1px solid var(--line); }
   .row { display: grid; grid-template-columns: 84px 1fr; gap: 0.75rem 1.1rem; padding: 1.35rem 0; border-bottom: 1px solid var(--line); align-items: start; }
-  .row-thumb { width: 84px; aspect-ratio: 4 / 3; border-radius: 6px; overflow: hidden; border: 1px solid var(--line); background: var(--card); display: grid; place-items: center; }
+  .row-thumb { position: relative; width: 84px; aspect-ratio: 4 / 3; border-radius: 6px; overflow: hidden; border: 1px solid var(--line); background: var(--card); display: grid; place-items: center; }
   .row-thumb img { width: 100%; height: 100%; object-fit: cover; object-position: top left; }
   .mono-mark { font-family: var(--font-display); font-size: 1.6rem; color: var(--gold); }
-  .row h4 { font-family: var(--font-display); font-weight: 400; font-size: 1.4rem; line-height: 1.15; letter-spacing: -0.01em; }
-  .group-note { color: var(--ink-2); font-size: 0.95rem; padding: 1rem 0; border-bottom: 1px solid var(--line); }
-  .row-thumb { position: relative; }
   .concept-stamp {
     position: absolute; top: 14px; left: -30px; width: 110px; padding: 3px 0; z-index: 1;
     transform: rotate(-45deg); text-align: center;
     background: rgba(200, 40, 40, 0.82); color: #fff;
-    font-family: var(--font-mono); font-size: 0.56rem; font-weight: 500; letter-spacing: 0.14em; text-transform: uppercase;
+    font-size: 0.56rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase;
   }
-  .row-link { border-bottom: 1px solid var(--line-2); transition: color 200ms var(--ease), border-color 200ms var(--ease); }
+  .row h4 { font-family: var(--font-display); font-weight: 400; font-size: 1.4rem; line-height: 1.15; }
+  .row-link { border-bottom: 1px solid var(--line-2); }
   .row-link:hover { color: var(--gold-hi); border-color: var(--gold); }
   .row-kind { color: var(--ink-3); font-size: 0.88rem; margin-top: 0.15rem; }
   .row-desc { color: var(--ink-2); font-size: 0.95rem; margin-top: 0.5rem; max-width: 54ch; }
-  .row-meta { grid-column: 2; display: flex; flex-wrap: wrap; gap: 0.4rem 1.25rem; }
-  .row-meta .label:first-child { color: var(--ink); }
+  .row-meta { grid-column: 2; display: flex; flex-wrap: wrap; gap: 0.25rem 1.25rem; font-size: 0.85rem; color: var(--ink-3); }
+  .row-status { color: var(--ink); }
   @media (min-width: 900px) {
-    .row { grid-template-columns: 132px 1fr 230px; gap: 2rem; padding: 1.6rem 0; }
+    .row { grid-template-columns: 132px 1fr 210px; gap: 2rem; padding: 1.6rem 0; }
     .row-thumb { width: 132px; }
-    .row-meta { grid-column: auto; flex-direction: column; align-items: flex-end; text-align: right; gap: 0.5rem; padding-top: 0.35rem; }
+    .row-meta { grid-column: auto; flex-direction: column; align-items: flex-end; text-align: right; padding-top: 0.35rem; }
   }
 
-  /* ABOUT */
-  .about-grid { display: grid; gap: 2rem; }
+  /* ABOUT + ENGINEERING */
+  .about-grid { display: grid; gap: 1.5rem; }
   .about .muted { margin-top: 1.1rem; max-width: 56ch; }
   .about .lead { max-width: 44ch; }
-  .steps { list-style: none; padding: 0; margin-top: 2.5rem; border-top: 1px solid var(--line); }
-  .steps li { display: grid; grid-template-columns: 2.5rem 1fr; gap: 1rem; padding: 1.2rem 0; border-bottom: 1px solid var(--line); }
-  .steps .label { padding-top: 0.45rem; }
-  .steps h3 { font-size: 1.25rem; }
-  .steps p { color: var(--ink-2); font-size: 0.95rem; margin-top: 0.3rem; max-width: 52ch; }
   @media (min-width: 900px) { .about-grid { grid-template-columns: 0.8fr 1.2fr; gap: 5rem; } }
+
+  .eng { margin-top: clamp(3rem, 6vw, 5rem); }
+  .eng h3, .process-title { font-size: clamp(1.4rem, 1.1rem + 1.2vw, 1.9rem); }
+  .eng table { width: 100%; border-collapse: collapse; margin-top: 1.25rem; font-size: 0.95rem; }
+  .eng thead th { text-align: left; font-weight: 400; font-size: 0.85rem; color: var(--ink-3); padding: 0 1rem 0.6rem 0; border-bottom: 1px solid var(--line-2); }
+  .eng tbody th, .eng td { text-align: left; vertical-align: top; padding: 0.9rem 1rem 0.9rem 0; border-bottom: 1px solid var(--line); }
+  .eng tbody th { font-weight: 600; color: var(--ink); white-space: nowrap; }
+  .eng td { color: var(--ink-2); }
+  .eng .tools { font-family: var(--font-mono); font-size: 0.84rem; color: var(--gold); }
+  @media (max-width: 719px) {
+    .eng thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+    .eng tr { display: block; padding: 0.9rem 0; border-bottom: 1px solid var(--line); }
+    .eng tbody th, .eng td { display: block; padding: 0.1rem 0; border: 0; white-space: normal; }
+  }
+
+  .process { margin-top: clamp(3rem, 6vw, 5rem); }
+  .steps { list-style: none; padding: 0; border-top: 1px solid var(--line); }
+  .steps li { display: grid; grid-template-columns: 2rem 1fr; gap: 1rem; padding: 1.2rem 0; border-bottom: 1px solid var(--line); }
+  .step-n { font-family: var(--font-display); font-size: 1.25rem; color: var(--gold); line-height: 1.2; }
+  .steps h4 { font-family: var(--font-display); font-weight: 400; font-size: 1.25rem; line-height: 1.2; }
+  .steps p { color: var(--ink-2); font-size: 0.95rem; margin-top: 0.3rem; max-width: 52ch; }
+
+  .faq { border-top: 1px solid var(--line); }
+  .faq details { border-bottom: 1px solid var(--line); }
+  .faq summary { cursor: pointer; padding: 1.1rem 2rem 1.1rem 0; font-weight: 500; list-style: none; position: relative; }
+  .faq summary::-webkit-details-marker { display: none; }
+  .faq summary::after { content: "+"; position: absolute; right: 0.25rem; top: 0.95rem; font-size: 1.3rem; color: var(--gold); }
+  .faq details[open] summary::after { content: "\2212"; }
+  .faq details p { color: var(--ink-2); padding: 0 0 1.2rem; max-width: 60ch; }
 
   /* CONTACT */
   .contact { background: var(--bg-2); }
   .contact h2 { max-width: 16ch; }
-  .contact .lead { margin-top: 1rem; max-width: 40ch; }
   .fineprint { margin-top: 1.75rem; font-size: 0.9rem; }
 </style>

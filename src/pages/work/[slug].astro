@@ -1,0 +1,184 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import settings from '../../data/settings.json';
+import { cases } from '../../data/cases';
+
+export function getStaticPaths() {
+  return cases.map((c) => ({ params: { slug: c.slug }, props: { c } }));
+}
+const { c } = Astro.props;
+const others = cases.filter((o) => o.slug !== c.slug);
+---
+<BaseLayout
+  title={`${c.title} case study — Mike Gomez`}
+  description={c.summary}
+  image={c.media?.poster}
+  type="article"
+>
+  <article class="case">
+    <header class="shell case-head">
+      <p class="crumb"><a href="/#work">Work</a> <span aria-hidden="true">/</span> {c.kind}</p>
+      <h1>{c.title}</h1>
+      <p class="lead">{c.summary}</p>
+      <p class="status"><span class="dot"></span>{c.status}</p>
+      <dl class="facts">
+        {c.facts.map((f) => <div><dt>{f.label}</dt><dd>{f.value}</dd></div>)}
+      </dl>
+    </header>
+
+    {c.media && (
+      <div class="shell">
+        <figure class={`media media--${c.media.shape}`}>
+          {c.media.type === 'video' ? (
+            <video data-inview muted loop playsinline preload="none" poster={c.media.poster} aria-label={c.media.alt}>
+              {c.media.webm && <source src={c.media.webm} type="video/webm" />}
+              <source src={c.media.src} type="video/mp4" />
+            </video>
+          ) : <img src={c.media.src} alt={c.media.alt} loading="lazy" />}
+          <figcaption>{c.media.caption}</figcaption>
+        </figure>
+      </div>
+    )}
+
+    <div class="shell body">
+      <section class="block">
+        <h2>The problem</h2>
+        <div class="prose">{c.problem.map((p) => <p>{p}</p>)}</div>
+      </section>
+
+      <section class="block">
+        <h2>What I built</h2>
+        <ul class="list">{c.built.map((b) => <li>{b}</li>)}</ul>
+      </section>
+
+      <section class="block block--wide">
+        <h2>How it’s built</h2>
+        <ol class="layers">
+          {c.layers.map((l) => (
+            <li>
+              <h3>{l.name}</h3>
+              <p class="tech">{l.tech}</p>
+              <p class="does">{l.does}</p>
+            </li>
+          ))}
+        </ol>
+      </section>
+
+      <section class="block">
+        <h2>The hard parts</h2>
+        <div class="hard">
+          {c.hard.map((h) => (
+            <div>
+              <h3>{h.title}</h3>
+              <p>{h.body}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {c.done && c.planned && (
+        <section class="block block--wide">
+          <h2>Built and not built</h2>
+          <div class="split">
+            <div>
+              <h3>Working today</h3>
+              <ul class="list list--done">{c.done.map((d) => <li>{d}</li>)}</ul>
+            </div>
+            <div>
+              <h3>Not built yet</h3>
+              <ul class="list list--todo">{c.planned.map((d) => <li>{d}</li>)}</ul>
+            </div>
+          </div>
+        </section>
+      )}
+
+      <section class="block">
+        <h2>Where it stands</h2>
+        <div class="prose">{c.outcome.map((p) => <p>{p}</p>)}</div>
+        {c.link && <p class="out"><a class="link" href={c.link.href} target="_blank" rel="noopener noreferrer">{c.link.label}</a></p>}
+        <p class="checked">Figures on this page were checked on {c.checked}.</p>
+      </section>
+    </div>
+
+    <footer class="shell case-foot">
+      <div>
+        <h2>Need something like this built?</h2>
+        <div class="cta">
+          <a href={settings.calendly} target="_blank" rel="noopener noreferrer" class="btn btn--primary">Book a 30-minute call</a>
+          <a href={`mailto:${settings.email}`} class="btn btn--ghost">{settings.email}</a>
+        </div>
+      </div>
+      <nav aria-label="Other case studies">
+        <p class="small">Other case studies</p>
+        <ul>{others.map((o) => <li><a class="link" href={`/work/${o.slug}/`}>{o.title}</a> <span class="muted">{o.kind}</span></li>)}</ul>
+      </nav>
+    </footer>
+  </article>
+</BaseLayout>
+
+<style>
+  .case-head { padding-block: clamp(3rem, 7vw, 5.5rem) clamp(2rem, 4vw, 3rem); }
+  .crumb { font-size: 0.9rem; color: var(--ink-3); }
+  .crumb a { color: var(--ink-2); border-bottom: 1px solid var(--line-2); }
+  .crumb a:hover { color: var(--gold-hi); }
+  h1 { font-size: clamp(3rem, 1.5rem + 7vw, 6.5rem); margin-top: 1rem; font-weight: 350; }
+  .case-head .lead { max-width: 46ch; margin-top: 1.5rem; }
+  .status { display: flex; align-items: center; gap: 0.6rem; margin-top: 1.5rem; font-size: 0.95rem; }
+  .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--gold); flex: none; }
+  .facts { display: grid; grid-template-columns: repeat(2, 1fr); margin-top: clamp(2rem, 4vw, 3rem); border-top: 1px solid var(--line-2); }
+  .facts div { padding: 1rem 1rem 1rem 0; border-bottom: 1px solid var(--line); }
+  .facts dt { font-size: 0.82rem; color: var(--ink-3); }
+  .facts dd { margin: 0.2rem 0 0; font-size: 1rem; color: var(--ink); }
+  @media (min-width: 900px) {
+    .facts { grid-template-columns: repeat(4, 1fr); }
+    .facts div { border-bottom: 0; border-right: 1px solid var(--line); padding: 1.1rem 1.25rem; }
+    .facts div:first-child { padding-left: 0; }
+    .facts div:last-child { border-right: 0; }
+  }
+
+  .media { margin: 0; }
+  .media figcaption { font-size: 0.85rem; color: var(--ink-3); margin-top: 0.75rem; }
+  .media--wide video, .media--wide img { width: 100%; aspect-ratio: 16 / 10; object-fit: cover; border: 1px solid var(--line-2); border-radius: var(--radius); background: #070807; }
+  .media--phone { width: min(100%, 300px); }
+  .media--phone video { width: 100%; aspect-ratio: 480 / 1044; object-fit: cover; border-radius: 34px; border: 1px solid var(--line-2); box-shadow: 0 0 0 7px #161513; background: #05080c; }
+  .media--phone figcaption { text-align: center; margin-top: 1.25rem; }
+
+  .body { padding-block: clamp(2rem, 5vw, 4rem); }
+  .block { max-width: 720px; padding-block: clamp(2rem, 4vw, 3rem); border-top: 1px solid var(--line); }
+  .block--wide { max-width: none; }
+  .block h2 { font-size: clamp(1.6rem, 1.2rem + 1.6vw, 2.3rem); }
+  .prose p, .hard p { color: var(--ink-2); margin-top: 1rem; max-width: 64ch; }
+  .list { margin-top: 1.25rem; }
+  .list li { position: relative; padding: 0.7rem 0 0.7rem 1.5rem; border-bottom: 1px solid var(--line); color: var(--ink-2); max-width: 64ch; }
+  .list li::before { content: ""; position: absolute; left: 0; top: 1.25rem; width: 7px; height: 7px; border-radius: 50%; background: var(--gold); }
+  .list--todo li::before { background: transparent; border: 1px solid var(--ink-3); }
+
+  /* Architecture: a real stack, top layer to bottom layer. */
+  .layers { list-style: none; padding: 0; margin-top: 1.5rem; border: 1px solid var(--line-2); border-radius: var(--radius); overflow: hidden; }
+  .layers li { display: grid; gap: 0.3rem; padding: 1.1rem 1.25rem; background: var(--card); border-bottom: 1px solid var(--line-2); }
+  .layers li:last-child { border-bottom: 0; }
+  .layers h3 { font-family: var(--font-sans); font-size: 1rem; font-weight: 600; letter-spacing: 0; }
+  .tech { font-family: var(--font-mono); font-size: 0.82rem; color: var(--gold); }
+  .does { color: var(--ink-2); font-size: 0.95rem; }
+  @media (min-width: 900px) {
+    .layers li { grid-template-columns: 170px 300px 1fr; gap: 1.5rem; align-items: baseline; }
+  }
+
+  .hard { display: grid; gap: 2rem; margin-top: 1.5rem; }
+  .hard h3 { font-size: 1.3rem; }
+  .hard p { margin-top: 0.5rem; }
+  .split { display: grid; gap: 2rem; margin-top: 1.5rem; }
+  .split h3 { font-family: var(--font-sans); font-size: 0.95rem; font-weight: 600; letter-spacing: 0; color: var(--ink); }
+  .split .list { margin-top: 0.5rem; }
+  @media (min-width: 800px) { .split { grid-template-columns: 1fr 1fr; gap: 4rem; } }
+  .out { margin-top: 1.5rem; }
+  .checked { margin-top: 1.5rem; font-size: 0.85rem; color: var(--ink-3); }
+
+  .case-foot { display: grid; gap: 2.5rem; padding-block: clamp(3rem, 6vw, 5rem); border-top: 1px solid var(--line-2); }
+  .case-foot h2 { font-size: clamp(1.8rem, 1.2rem + 2.4vw, 3rem); max-width: 16ch; }
+  .cta { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 1.5rem; }
+  .small { font-size: 0.85rem; color: var(--ink-3); }
+  .case-foot li { padding: 0.6rem 0; border-bottom: 1px solid var(--line); }
+  .case-foot .muted { font-size: 0.9rem; margin-left: 0.5rem; }
+  @media (min-width: 900px) { .case-foot { grid-template-columns: 1.3fr 1fr; gap: 5rem; align-items: end; } }
+</style>
