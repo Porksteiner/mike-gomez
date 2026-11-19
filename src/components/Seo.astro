@@ -44,11 +44,12 @@ const siteName = 'Mike Gomez';
 <link rel="icon" href="/favicon.ico" sizes="any" />
 <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
 
-<link rel="preconnect" href="https://fonts.googleapis.com" />
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link
-  href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..600;1,9..144,300..600&family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap"
-  rel="stylesheet"
-/>
+<!-- Self-hosted fonts: no request goes to Google -->
+<link rel="preload" href="/fonts/fraunces-normal-latin-3.woff2" as="font" type="font/woff2" crossorigin />
+<link rel="stylesheet" href="/fonts/fonts.css" />
+
+<!-- Consent gate: any third-party script or embed added later must be gated (The Sauce 04 §7) -->
+<link rel="stylesheet" href="/consent.css" />
+<script is:inline src="/consent.js" defer data-services="third-party services"></script>
 
 {jsonld && <script type="application/ld+json" set:html={JSON.stringify(jsonld)} />}
